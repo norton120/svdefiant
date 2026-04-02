@@ -1,0 +1,18 @@
+############################
+## Author
+############################
+
+author:
+  name: "S/V Defiant"
+  image: author.jpeg
+  greeting: "Refit, restore, and sail a 1989 Bayfield 36 :sailboat:"
+  icon: ":anchor:"
+
+###############################
+## OpenGraph & Twitter Cards
+###############################
+
+title: "S/V Defiant"
+description: "Build log and voyage journal for Sailing Vessel Defiant, a 1989 Bayfield 36"
+images:
+  - thumbnail.jpeg
