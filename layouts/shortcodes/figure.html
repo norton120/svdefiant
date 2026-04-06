@@ -1,0 +1,17 @@
+<figure class="not-prose flex w-full flex-col items-center my-4">
+  {{ if .Get "link" }}<a href="{{ .Get "link" }}">{{ end }}
+  <img
+    src="{{ .Get "src" }}"
+    {{ with .Get "alt" }}alt="{{ . }}"{{ end }}
+    {{ with .Get "width" }}width="{{ . }}"{{ end }}
+    {{ with .Get "height" }}height="{{ . }}"{{ end }}
+    class="mx-auto"
+    loading="lazy"
+  />
+  {{ if .Get "link" }}</a>{{ end }}
+  {{ with .Get "caption" }}
+    <figcaption class="mt-1 text-center text-sm text-slate-700 dark:text-slate-200">
+      {{ . | emojify }}
+    </figcaption>
+  {{ end }}
+</figure>

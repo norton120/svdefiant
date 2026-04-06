@@ -2,7 +2,7 @@ main:
 - name: Home
   url: /
   weight: 10
-- name: Blog
+- name: Posts
   url: /blog/
   weight: 20
 - name: About

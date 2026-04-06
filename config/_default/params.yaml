@@ -5,7 +5,7 @@
 author:
   name: "S/V Defiant"
   image: author.jpeg
-  greeting: "Refit, restore, and sail a 1989 Bayfield 36 :sailboat:"
+  greeting: "Refitting, restoring, and sailing <i>Defiant</i>, a 1989 Bayfield 36 Cutter :sailboat:"
   icon: ":anchor:"
 
 ###############################
@@ -13,6 +13,6 @@ author:
 ###############################
 
 title: "S/V Defiant"
-description: "Build log and voyage journal for Sailing Vessel Defiant, a 1989 Bayfield 36"
+description: "Build log and voyage journal for Sailing Vessel Defiant"
 images:
   - thumbnail.jpeg
