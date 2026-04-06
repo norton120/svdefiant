@@ -283,8 +283,8 @@ _warm and sunny!_
 - [ ] Clean out groco filter  
 
 **running rigging**:  
-- [ ] solid red/green for jib
-- [ ] checked red/green for staysail
+- [x] solid red/green for jib
+- [x] checked red/green for staysail
 - [ ] some solid color for main (needs replacing)
 
 **Icebox**:  
