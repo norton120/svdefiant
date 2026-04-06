@@ -1,13 +1,35 @@
 <figure class="not-prose flex w-full flex-col items-center my-4">
   {{ if .Get "link" }}<a href="{{ .Get "link" }}">{{ end }}
+  {{- $src := .Get "src" -}}
+  {{- $img := .Page.Resources.GetMatch $src -}}
+  {{- if and $img (ne $img.MediaType.SubType "gif") -}}
+    {{- $maxWidth := 1200 -}}
+    {{- if gt $img.Width $maxWidth -}}
+      {{- $img = $img.Resize (printf "%dx webp" $maxWidth) -}}
+    {{- else -}}
+      {{- $img = $img.Process "webp" -}}
+    {{- end -}}
   <img
-    src="{{ .Get "src" }}"
+    src="{{ $img.RelPermalink }}"
+    {{ with .Get "alt" }}alt="{{ . }}"{{ end }}
+    width="{{ $img.Width }}"
+    height="{{ $img.Height }}"
+    {{ with .Get "width" }}style="max-width: {{ . }}px"{{ end }}
+    class="mx-auto"
+    loading="lazy"
+    decoding="async"
+  />
+  {{- else -}}
+  <img
+    src="{{ $src }}"
     {{ with .Get "alt" }}alt="{{ . }}"{{ end }}
     {{ with .Get "width" }}width="{{ . }}"{{ end }}
     {{ with .Get "height" }}height="{{ . }}"{{ end }}
     class="mx-auto"
     loading="lazy"
+    decoding="async"
   />
+  {{- end -}}
   {{ if .Get "link" }}</a>{{ end }}
   {{ with .Get "caption" }}
     <figcaption class="mt-1 text-center text-sm text-slate-700 dark:text-slate-200">
