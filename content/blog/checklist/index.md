@@ -210,32 +210,31 @@ _warm and sunny!_
 - [ ] Air filter 
 - [ ] Replace zip tie on transmission
 - [ ] Clean out groco filter  
-</details>
 
 ## Sunday 04/05
-- [ ] borrow screws in multiplus cover for west trip
-
-- [ ] Hang new main 
-- [ ] Hang mack pack
-- [ ] Hank on Staysail and bag it up 
+- [x] borrow screws in multiplus cover for west trip
 - [X] Go to west and get: 
     - :x: new jib sheets need to order, none in stock?
     - :white_check_mark: whipping twine
     - :white_check_mark: new fenders
     - :x: multiplus replacement screws need to order none in stock
 	- :white_check_mark: Secure anchor to roller: _need a few links of anchor chain_  
-
-- [ ] Drill clam and run/terminate davit solar wires
+</details>
 
 ## Monday -> Wednesday
+
+- [ ] Replace intake (go to chesapeke cove)
+- [ ] Drill clam and run/terminate davit solar wires
+- [ ] Hang new main 
+- [ ] Hang mack pack
+- [ ] Hank on Staysail and bag it up 
 - [ ] Go up and mount cheek blocks, hang lazy jacks (need a calm wind day to do this)
 - [ ] Move sailing gear to quarterbirth locker
 - [ ] Stow and clean up everything in cabin
 
-- [ ] Finish jib stitching
 - [ ] Mount and wire new davit solar array
-- [ ] Hang the jib 
-- [ ] Rig staysail and jib sheets
+
+- [ ] Rig staysail
 - [ ] Finish Nav Desk:
     - build starboard divider 
     - 5v rail
@@ -255,6 +254,12 @@ _warm and sunny!_
 - [ ] fill water tanks
 - [ ] groceries/drinking water
 - [ ] top off fuel tank
+
+**Jib (stretch goal)**
+- [ ] Finish jib stitching
+- [ ] Hang the jib 
+- [ ] Rig jib sheets
+
 
 # Before St. Michaels
 - [ ] Mount Kennedy quote
