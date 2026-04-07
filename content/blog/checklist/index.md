@@ -221,45 +221,51 @@ _warm and sunny!_
 	- :white_check_mark: Secure anchor to roller: _need a few links of anchor chain_  
 </details>
 
-## Monday -> Wednesday
+## Monday
+- [x] Hang new main 
 
-- [ ] Replace intake (go to chesapeke cove)
+## Tuesday
 - [ ] Drill clam and run/terminate davit solar wires
-- [ ] Hang new main 
-- [ ] Hang mack pack
+- [ ] Temporary mount davit solar panels w/rope lashings
+- [ ] Install mack pack topping bracket
+- [ ] Pull off new main
+- [ ] Clean and re-mount downahul
+  - replace harken clamp if I have one
+- [ ] See if king starboard reminants are large enough for nav desk divider
+
+## Wednesday
+- [ ] Install lower brackets for mack pack
+- [ ] Install old air intake on motor
 - [ ] Hank on Staysail and bag it up 
-- [ ] Go up and mount cheek blocks, hang lazy jacks (need a calm wind day to do this)
+- [ ] Rig staysail
+
+## Thursday
+- [ ] Go up mast and mount cheek blocks
+- [ ] Re-hang main 
+- [ ] Swap in USB SSD on openplotter & re-build
+
+## Friday
 - [ ] Move sailing gear to quarterbirth locker
 - [ ] Stow and clean up everything in cabin
 
-- [ ] Mount and wire new davit solar array
-
-- [ ] Rig staysail
-- [ ] Finish Nav Desk:
-    - build starboard divider 
-    - 5v rail
-    - zip down wires and pis 
-    - Mount all Pis (NAS, manager vs Jfin) even if they are not set up
-- [ ] Running lights both bow and stern need to be wired and replaced
-
-**Clean Up**
-- [ ] Wash down the cockpit and deck
-- [ ] Clean every portlight (and screen) so things are pretty out the window
+**Provision**
+- [ ] Fill water tanks
+- [ ] Groceries
+- [ ] Drinking water
+- [ ] Top off fuel tank
 
 **Dinghy**
 - [ ] Inflate and pull up
 - [ ] strap in so it doesn't swing
 
-**Provision**
-- [ ] fill water tanks
-- [ ] groceries/drinking water
-- [ ] top off fuel tank
+## Stretch For EOW
+- [ ] Mount davit solar array properly
+- [ ] Running lights both bow and stern need to be wired and replaced
 
-**Jib (stretch goal)**
+**Jib**
 - [ ] Finish jib stitching
 - [ ] Hang the jib 
 - [ ] Rig jib sheets
-
 
 # Before St. Michaels
 - [ ] Mount Kennedy quote
@@ -272,8 +278,15 @@ _warm and sunny!_
 - [ ] Sew staysail webbing
 - [ ] Go through sheet bag and find ropes to keep - specifically docklines
 - [ ] Improve how solar panels on bimini are attached
+- [ ] Finish Nav Desk:
+    - build starboard divider 
+    - 5v rail
+    - zip down wires and pis 
+    - Mount all Pis (NAS, manager vs Jfin) even if they are not set up
+
 
 **Engine**
+- [ ] Replace air intake (go to chesapeke cove)
 - [ ] Proper oil change (drain current oil completely first!)
 - [ ] Change water pump oil
 - [ ] Change impeller
