@@ -2,7 +2,7 @@
 title: "Nameboards"
 date: 2026-04-05T22:52:32Z
 draft: false
-cardimage: image2.png
+cardimage: author.jpeg
 summary: An imperfect improvement
 ---
  

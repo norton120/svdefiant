@@ -219,10 +219,10 @@ _warm and sunny!_
     - :white_check_mark: new fenders
     - :x: multiplus replacement screws need to order none in stock
 	- :white_check_mark: Secure anchor to roller: _need a few links of anchor chain_  
-</details>
 
 ## Monday
 - [x] Hang new main 
+</details>
 
 ## Tuesday
 - [ ] Drill clam and run/terminate davit solar wires
