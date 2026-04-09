@@ -222,43 +222,53 @@ _warm and sunny!_
 
 ## Monday
 - [x] Hang new main 
-</details>
 
 ## Tuesday
-- [ ] Drill clam and run/terminate davit solar wires
-- [ ] Temporary mount davit solar panels w/rope lashings
-- [ ] Install mack pack topping bracket
-- [ ] Pull off new main
-- [ ] Clean and re-mount downahul
-  - replace harken clamp if I have one
-- [ ] See if king starboard reminants are large enough for nav desk divider
+- [X] Drill clam and run/terminate davit solar wires
+- [X] Temporary mount davit solar panels w/rope lashings
+
 
 ## Wednesday
-- [ ] Install lower brackets for mack pack
+- [X] Clean and re-mount downahul
+  - replace harken clamp if I have one
+- [X] See if king starboard reminants are large enough for nav desk divider
+
+</details>
+
+## Before Saturday 4/11
 - [ ] Install old air intake on motor
-- [ ] Hank on Staysail and bag it up 
-- [ ] Rig staysail
-
-## Thursday
-- [ ] Go up mast and mount cheek blocks
-- [ ] Re-hang main 
-- [ ] Swap in USB SSD on openplotter & re-build
-
-## Friday
 - [ ] Move sailing gear to quarterbirth locker
 - [ ] Stow and clean up everything in cabin
+- [ ] Double-check anchor
+- [ ] Bring motor to temp and check pigmat for leaks
+
+**Solar**
+- [ ] Lash solar properly (4 points)
+- [ ] :package: Extend solar wires and zip them all in place
+
+**Mainsail**
+
+1. [ ] Pull off new main
+2. [ ] Install mack pack topping bracket
+3. [ ] Install lower brackets for mack pack
+4. [ ] Go up mast and mount cheek blocks
+5. [ ] Re-hang main 
+
+**Staysail**
+- [ ] Hank on Staysail and bag it up 
+- [ ] Rig staysail
 
 **Provision**
 - [ ] Fill water tanks
 - [ ] Groceries
-- [ ] Drinking water
-- [ ] Top off fuel tank
+- [X] Drinking water
+- [ ] Top off fuel tank (10 gal)
 
 **Dinghy**
 - [ ] Inflate and pull up
 - [ ] strap in so it doesn't swing
 
-## Stretch For EOW
+## Stretch For EOW (Unlikely but would be great)
 - [ ] Mount davit solar array properly
 - [ ] Running lights both bow and stern need to be wired and replaced
 
@@ -267,7 +277,12 @@ _warm and sunny!_
 - [ ] Hang the jib 
 - [ ] Rig jib sheets
 
+**Nav**
+- [ ] Cut Starboard to fit nav desk panel w / passthrough grommets
+- [ ] Swap in USB SSD on openplotter & re-build
+
 # Before St. Michaels
+- [ ] Properly mount solar panels w/brackets
 - [ ] Mount Kennedy quote
 - [ ] Turn white cutting board into hook hangar board for galley
 - [ ] Wire in B&G screens/Radar
@@ -278,6 +293,7 @@ _warm and sunny!_
 - [ ] Sew staysail webbing
 - [ ] Go through sheet bag and find ropes to keep - specifically docklines
 - [ ] Improve how solar panels on bimini are attached
+- [ ] MPPT => Cerbos 
 - [ ] Finish Nav Desk:
     - build starboard divider 
     - 5v rail
@@ -298,6 +314,7 @@ _warm and sunny!_
 **running rigging**:  
 - [x] solid red/green for jib
 - [x] checked red/green for staysail
+- [ ] Replate staysail rigging
 - [ ] some solid color for main (needs replacing)
 
 **Icebox**:  
