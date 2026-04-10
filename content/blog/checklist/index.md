@@ -233,6 +233,10 @@ _warm and sunny!_
   - replace harken clamp if I have one
 - [X] See if king starboard reminants are large enough for nav desk divider
 
+## Thursday
+**Solar**
+- [X] :package: Extend solar wires and zip them all in place
+
 </details>
 
 ## Before Saturday 4/11
@@ -241,15 +245,12 @@ _warm and sunny!_
 - [ ] Stow and clean up everything in cabin
 - [ ] Double-check anchor
 - [ ] Bring motor to temp and check pigmat for leaks
-
-**Solar**
 - [ ] Lash solar properly (4 points)
-- [ ] :package: Extend solar wires and zip them all in place
 
 **Mainsail**
 
-1. [ ] Pull off new main
-2. [ ] Install mack pack topping bracket
+1. [X] Pull off new main
+2. [X] Install mack pack topping bracket
 3. [ ] Install lower brackets for mack pack
 4. [ ] Go up mast and mount cheek blocks
 5. [ ] Re-hang main 
@@ -268,20 +269,9 @@ _warm and sunny!_
 - [ ] Inflate and pull up
 - [ ] strap in so it doesn't swing
 
-## Stretch For EOW (Unlikely but would be great)
+# Before St. Michaels
 - [ ] Mount davit solar array properly
 - [ ] Running lights both bow and stern need to be wired and replaced
-
-**Jib**
-- [ ] Finish jib stitching
-- [ ] Hang the jib 
-- [ ] Rig jib sheets
-
-**Nav**
-- [ ] Cut Starboard to fit nav desk panel w / passthrough grommets
-- [ ] Swap in USB SSD on openplotter & re-build
-
-# Before St. Michaels
 - [ ] Properly mount solar panels w/brackets
 - [ ] Mount Kennedy quote
 - [ ] Turn white cutting board into hook hangar board for galley
@@ -300,6 +290,14 @@ _warm and sunny!_
     - zip down wires and pis 
     - Mount all Pis (NAS, manager vs Jfin) even if they are not set up
 
+**Jib**
+- [ ] Finish jib stitching
+- [ ] Hang the jib 
+- [ ] Rig jib sheets
+
+**Nav**
+- [ ] Cut Starboard to fit nav desk panel w / passthrough grommets
+- [ ] Swap in USB SSD on openplotter & re-build
 
 **Engine**
 - [ ] Replace air intake (go to chesapeke cove)
