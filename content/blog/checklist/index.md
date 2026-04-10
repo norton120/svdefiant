@@ -246,14 +246,15 @@ _warm and sunny!_
 - [ ] Double-check anchor
 - [ ] Bring motor to temp and check pigmat for leaks
 - [ ] Lash solar properly (4 points)
+- [ ] Terminate Earth grounds
 
 **Mainsail**
 
 1. [X] Pull off new main
 2. [X] Install mack pack topping bracket
-3. [ ] Install lower brackets for mack pack
+3. [X] Install lower brackets for mack pack
 4. [ ] Go up mast and mount cheek blocks
-5. [ ] Re-hang main 
+5. [X] Re-hang main 
 
 **Staysail**
 - [ ] Hank on Staysail and bag it up 
