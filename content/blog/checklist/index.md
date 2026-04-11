@@ -265,12 +265,12 @@ _warm and sunny!_
 
 ## Saturday 4/11
 
-1. [ ] Lash solar properly (4 points)
-2. [ ] Ziptie solar wires + secure wires in lazarette
+1. [X] Lash solar properly (4 points)
+2. [X] Ziptie solar wires + secure wires in lazarette
 3. [ ] Hoist and secure Dinghy so it doesn't swing
 4. [ ] Install old air intake on motor
-5. [ ] Terminate Earth grounds
-6. [ ] Bring motor to temp and check pigmat for leaks
+5. [X] Terminate Earth grounds
+6. [X] Bring motor to temp and check pigmat for leaks
 7. [ ] Move "stuff with no home" to quarerbirth
     - [ ] Pirate wheel
     - [ ] Cockpit Table
