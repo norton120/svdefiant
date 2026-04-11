@@ -278,11 +278,11 @@ _warm and sunny!_
 9. [ ] Clean eisenglass
 10. [ ] Wash out cockpit 
 11. [ ] Put cushions in cockpit
-12. [ ] Clear the deck
+12. [X] Clear the deck
 13. [ ] Wash down deck (metal shavings are still everywhere :skull_and_crossbones:)
 14. [ ] Double-check anchor
 15. [ ] Rig main reefs
-16. [ ] Rig staysail
+16. [X] Rig staysail
 
 **W/Truck**
 
