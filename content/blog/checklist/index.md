@@ -308,14 +308,14 @@ _warm and sunny!_
 </details>
 
 ## Sunday 4/12 Before 8am
-- [ ] Pull gear out and put in red Defiant bag
-- [ ] Stow nav desk stuff
-- [ ] Remove B&G covers
-- [ ] Pull spare anchor roller
-- [ ] Stow spare oil
-- [ ] Breakers - turn off freshwater, turn on autopilot
-- [ ] VNC tablet
-- [ ] Strap refrigerator
+- [X] Pull gear out and put in red Defiant bag
+- [X] Stow nav desk stuff
+- [X] Remove B&G covers
+- [X] Pull spare anchor roller
+- [X] Stow spare oil
+- [X] Breakers - turn off freshwater, turn on autopilot
+- [X] VNC tablet
+- [X] Strap refrigerator
 
 # Before St. Michaels
 - [ ] Mount davit solar array properly
