@@ -261,45 +261,43 @@ _warm and sunny!_
 - [X] Inflate and pull up
 - [ ] strap in so it doesn't swing
 
-</details>
-
 ## Saturday 4/11
 
 1. [X] Lash solar properly (4 points)
 2. [X] Ziptie solar wires + secure wires in lazarette
-3. [ ] Hoist and secure Dinghy so it doesn't swing
-4. [ ] Install old air intake on motor
+3. [X] Hoist and secure Dinghy so it doesn't swing
+4. [X] Install old air intake on motor
 5. [X] Terminate Earth grounds
 6. [X] Bring motor to temp and check pigmat for leaks
-7. [ ] Move "stuff with no home" to quarerbirth
-    - [ ] Pirate wheel
-    - [ ] Cockpit Table
-8. [ ] Put away all the tools and things in the cockpit
-9. [ ] Clean eisenglass
-10. [ ] Wash out cockpit 
-11. [ ] Put cushions in cockpit
+7. [X] Move "stuff with no home" to quarerbirth
+    - [X] Pirate wheel
+    - [X] Cockpit Table
+8. [X] Put away all the tools and things in the cockpit
+9. [X] Clean eisenglass
+10. [X] Wash out cockpit 
+11. [X] Put cushions in cockpit
 12. [X] Clear the deck
-13. [ ] Wash down deck (metal shavings are still everywhere :skull_and_crossbones:)
+13. [X] Wash down deck (metal shavings are still everywhere :skull_and_crossbones:)
 14. [ ] Double-check anchor
-15. [ ] Rig main reefs
+15. [X] Rig main reefs
 16. [X] Rig staysail
 
 **W/Truck**
 
-17. [ ] Fill water tanks
-18. [ ] Top off fuel tank (10 gal)
-19. [ ] Move drinking water from truck to quarterbirth
-20. [ ] Stow spare lines + webbing for who knows what
-21. [ ] Lock truck and give Tony keys
+17. [X] Fill water tanks
+18. [X] Top off fuel tank (10 gal)
+19. [X] Move drinking water from truck to quarterbirth
+20. [X] Stow spare lines + webbing for who knows what
+21. [X] Lock truck and give Tony keys
 
 **Inside**
 
-22. [ ] Return Tony's tap
-23. [ ] Wash dishes
+22. [X] Return Tony's tap
+23. [X] Wash dishes
 24. [ ] Clear off nav desk
 25. [ ] Pull out gear (gloves, hat, jacket etc)
-26. [ ] Stow engine parts in settee 
-27. [ ] Stow Kennedy print in back of quarterbirth (so it doesn't shatter)
+26. [X] Stow engine parts in settee 
+27. [X] Stow Kennedy print in back of quarterbirth (so it doesn't shatter)
 28. [ ] Ratchet strap refrigerator
 29. [ ] Stow work clothes in compression bags (foot of bed)
 30. [ ] Stow and put away clothes in V-Birth
@@ -307,6 +305,17 @@ _warm and sunny!_
 ### Stretch Goals
 - [ ] Go up mast and mount cheek blocks
 - [ ] Brussels sprouts and/or Asperigus would be nice
+</details>
+
+## Sunday 4/12 Before 8am
+- [ ] Pull gear out and put in red Defiant bag
+- [ ] Stow nav desk stuff
+- [ ] Remove B&G covers
+- [ ] Pull spare anchor roller
+- [ ] Stow spare oil
+- [ ] Breakers - turn off freshwater, turn on autopilot
+- [ ] VNC tablet
+- [ ] Strap refrigerator
 
 # Before St. Michaels
 - [ ] Mount davit solar array properly
