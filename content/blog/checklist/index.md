@@ -305,7 +305,6 @@ _warm and sunny!_
 ### Stretch Goals
 - [ ] Go up mast and mount cheek blocks
 - [ ] Brussels sprouts and/or Asperigus would be nice
-</details>
 
 ## Sunday 4/12 Before 8am
 - [X] Pull gear out and put in red Defiant bag
@@ -316,6 +315,7 @@ _warm and sunny!_
 - [X] Breakers - turn off freshwater, turn on autopilot
 - [X] VNC tablet
 - [X] Strap refrigerator
+</details>
 
 # Before St. Michaels
 - [ ] Mount davit solar array properly
