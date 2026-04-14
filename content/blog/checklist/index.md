@@ -318,25 +318,43 @@ _warm and sunny!_
 </details>
 
 # Before St. Michaels
-- [ ] Mount davit solar array properly
+
+- [ ] unclog cockpit scupper
+- [ ] Replace grab rail lines on dinghy
 - [ ] Running lights both bow and stern need to be wired and replaced
-- [ ] Properly mount solar panels w/brackets
 - [ ] Mount Kennedy quote
 - [ ] Turn white cutting board into hook hangar board for galley
 - [ ] Wire in B&G screens/Radar
 - [ ] Repair and re-install cockpit table
 - [ ] Replace davit cord with steel cable
 - [ ] [Coast Guard Vessel Check](https://cgaux.org/vsc/)
-- [ ] Migrate pis to usb ssd and split out boatflix into 3 boxes
 - [ ] Sew staysail webbing
 - [ ] Go through sheet bag and find ropes to keep - specifically docklines
-- [ ] Improve how solar panels on bimini are attached
-- [ ] MPPT => Cerbos 
+- [ ] Improve how solar panels on bimini are attached - better line
+- [ ] MPPT => Cerbos via quad
+- [ ] More pillows + better cushions for deck. Current cushions suck
+- [ ] Raymarine autopilot remote
+- [ ] Put airator in shower head
+- [ ] Anchor drop button at bow
 - [ ] Finish Nav Desk:
+    - fans
+    - set up Pis with ssds
+    - anchor alarm
     - build starboard divider 
     - 5v rail
     - zip down wires and pis 
-    - Mount all Pis (NAS, manager vs Jfin) even if they are not set up
+    - Mount all Pis (NAS, manager vs Jfin) 
+
+**Drinking Water**
+- [ ] 3-phase filter on drinking tap
+- [ ] UV filter on main
+- [ ] Clean up galley sink: 
+   - Replace sink
+   - Add p-trap
+   - Remove dead seawater pump 
+   - Dual faucets: washing w/mixer, drinking
+   - put airator in washing faucet
+
 
 **Jib**
 - [ ] Finish jib stitching
@@ -357,16 +375,10 @@ _warm and sunny!_
 - [ ] Replace zip tie on transmission
 - [ ] Clean out groco filter  
 
-**running rigging**:  
-- [x] solid red/green for jib
-- [x] checked red/green for staysail
-- [ ] Replate staysail rigging
-- [ ] some solid color for main (needs replacing)
-
 **Icebox**:  
 - [ ] Install compressor et al
-- [ ] Wiring
-- [ ] Thermostat
+    - Wiring
+    - Thermostat
 
 # Before Underway
 - [ ] Service pedistal cables
@@ -388,6 +400,12 @@ _warm and sunny!_
 - [ ] Move truck
 - [ ] Sell old solar panels + battery
 - [ ] Pull old water tank & store with spares 
+
+**running rigging**:  
+- [x] solid red/green for jib
+- [x] checked red/green for staysail
+- [ ] Replate staysail rigging
+- [ ] some solid color for main (needs replacing)
 
 # While Underway
 - [ ] Repair screws on dighy motor
