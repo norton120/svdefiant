@@ -317,53 +317,11 @@ _warm and sunny!_
 - [X] Strap refrigerator
 </details>
 
-# Before St. Michaels
-
-- [ ] unclog cockpit scupper
-- [ ] Replace grab rail lines on dinghy
+# Next Priority
 - [ ] Running lights both bow and stern need to be wired and replaced
-- [ ] Mount Kennedy quote
-- [ ] Turn white cutting board into hook hangar board for galley
-- [ ] Wire in B&G screens/Radar
+- [ ] clean up quarterbirth 
 - [ ] Repair and re-install cockpit table
-- [ ] Replace davit cord with steel cable
-- [ ] [Coast Guard Vessel Check](https://cgaux.org/vsc/)
-- [ ] Sew staysail webbing
-- [ ] Go through sheet bag and find ropes to keep - specifically docklines
-- [ ] Improve how solar panels on bimini are attached - better line
-- [ ] MPPT => Cerbos via quad
-- [ ] More pillows + better cushions for deck. Current cushions suck
-- [ ] Raymarine autopilot remote
-- [ ] Put airator in shower head
-- [ ] Anchor drop button at bow
-- [ ] Finish Nav Desk:
-    - fans
-    - set up Pis with ssds
-    - anchor alarm
-    - build starboard divider 
-    - 5v rail
-    - zip down wires and pis 
-    - Mount all Pis (NAS, manager vs Jfin) 
-
-**Drinking Water**
-- [ ] 3-phase filter on drinking tap
-- [ ] UV filter on main
-- [ ] Clean up galley sink: 
-   - Replace sink
-   - Add p-trap
-   - Remove dead seawater pump 
-   - Dual faucets: washing w/mixer, drinking
-   - put airator in washing faucet
-
-
-**Jib**
-- [ ] Finish jib stitching
-- [ ] Hang the jib 
-- [ ] Rig jib sheets
-
-**Nav**
-- [ ] Cut Starboard to fit nav desk panel w / passthrough grommets
-- [ ] Swap in USB SSD on openplotter & re-build
+- [ ] 500A Shunt swap
 
 **Engine**
 - [ ] Replace air intake (go to chesapeke cove)
@@ -380,7 +338,54 @@ _warm and sunny!_
     - Wiring
     - Thermostat
 
+# Before St. Michaels
+- [ ] unclog cockpit scupper
+- [ ] Replace grab rail lines on dinghy
+- [ ] Mount Kennedy quote
+- [ ] Turn white cutting board into hook hangar board for galley
+- [ ] Wire in B&G screens/Radar
+- [ ] Replace davit cord with steel cable
+- [ ] [Coast Guard Vessel Check](https://cgaux.org/vsc/)
+- [ ] Sew staysail webbing
+- [ ] Go through sheet bag and find ropes to keep - specifically docklines
+- [ ] Improve how solar panels on bimini are attached - better line
+- [ ] MPPT => Cerbos via quad
+- [x] More pillows + better cushions for deck. Current cushions suck
+- [ ] Raymarine autopilot remote
+- [ ] Put airator in shower head
+- [ ] Anchor drop button at bow
+- [x] Finish Nav Desk:
+    - [x] fans
+    - [x] set up Pis with ssds
+    - [x] anchor alarm
+    - [x] build starboard divider 
+    - [x] 5v rail
+    - [x] zip down wires and pis 
+    - [x] Mount all Pis (NAS, manager vs Jfin) 
+
+**Drinking Water**
+- [ ] 3-phase filter on drinking tap
+- [ ] UV filter on main
+- [ ] Clean up galley sink: 
+   - Replace sink
+   - Add p-trap
+   - Remove dead seawater pump 
+   - Dual faucets: washing w/mixer, drinking
+   - put airator in washing faucet
+
+**Jib**
+- [x] Finish jib stitching
+- [x] Hang the jib 
+- [x] Rig jib sheets
+
+**Nav**
+- [x] Cut Starboard to fit nav desk panel w / passthrough grommets
+- [x] Swap in USB SSD on openplotter & re-build
+
+
+
 # Before Underway
+- [ ] 2nd Roller and new anchor
 - [ ] Service pedistal cables
 - [ ] Machine shop:
 	- Machine key adapter for wheel + install wheel
@@ -390,7 +395,7 @@ _warm and sunny!_
 - [ ] build and connect fuel tank sensor module
 - [ ] Clutches and rollers to run back: main + reef lines 
 - [ ] Clean up mains wire in lasarette (new heat shrink tubing!)
-- [ ] Find a furler for staysail
+- [x] Find a furler for staysail
 - [ ] Sew cover on staysail
 - [ ] Install shore power disconnect
 - [ ] Sacrificial cover for staysail
@@ -398,16 +403,21 @@ _warm and sunny!_
 - [ ] Wire in B&G fuse block
 - [ ] Cancel storage unit
 - [ ] Move truck
+- [x] Sell G6
 - [ ] Sell old solar panels + battery
 - [ ] Pull old water tank & store with spares 
 
 **running rigging**:  
 - [x] solid red/green for jib
 - [x] checked red/green for staysail
-- [ ] Replate staysail rigging
+- [ ] Replace staysail rigging
 - [ ] some solid color for main (needs replacing)
+- [ ] replace downhaul line
+- [ ] replace jib furling line
 
 # While Underway
+- [ ] Sew lee cloths
+- [ ] Sew Bash patches on his gear
 - [ ] Repair screws on dighy motor
 - [ ] bug screen for ports and door
 - [ ] Empty out and clean the 2 drawers above the forward locker
