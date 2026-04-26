@@ -5,6 +5,12 @@ main:
 - name: Posts
   url: /blog/
   weight: 20
+- name: Wiki
+  url: https://github.com/norton120/svdefiant/wiki
+  weight: 30
+- name: Refit Plan
+  url: https://github.com/users/norton120/projects/4
+  weight: 40
 - name: About
   url: /about/
-  weight: 30
+  weight: 50
