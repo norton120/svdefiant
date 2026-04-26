@@ -1,0 +1,100 @@
+name: Task
+description: A unit of work on Defiant
+title: "[task] "
+labels: []
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What needs to happen, and any context that helps when picking it up later
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - "p0 — safety / seaworthiness blocker"
+        - "p1 — high"
+        - "p2 — normal"
+        - "p3 — nice to have"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: system
+    attributes:
+      label: System
+      options:
+        - electrical
+        - rigging
+        - sails
+        - plumbing
+        - engine
+        - nav
+        - hull
+        - interior
+        - ground-tackle
+        - safety
+
+  - type: checkboxes
+    id: location
+    attributes:
+      label: Location
+      description: Where on (or off) the boat
+      options:
+        - label: indoors
+        - label: on-deck
+        - label: aloft
+        - label: underwater
+        - label: dockside-only
+        - label: underway-ok
+
+  - type: dropdown
+    id: energy
+    attributes:
+      label: Energy required
+      options:
+        - couch
+        - light
+        - moderate
+        - heavy
+
+  - type: dropdown
+    id: weather
+    attributes:
+      label: Weather requirement
+      options:
+        - any
+        - dry
+        - calm
+        - warm
+
+  - type: dropdown
+    id: time
+    attributes:
+      label: Time to complete
+      options:
+        - "<1hr"
+        - half-day
+        - full-day
+        - multi-day
+
+  - type: input
+    id: parts
+    attributes:
+      label: Parts needed (link or list)
+      description: If parts are pending, also add the `blocked:parts` label after creation
+      placeholder: e.g. Harken cheek block, 3/8" lugs x4
+
+  - type: textarea
+    id: knowledge
+    attributes:
+      label: Knowledge captured
+      description: Measurements, part numbers, photos, gotchas. This feeds the wiki when the issue closes.
+      placeholder: |
+        Measurements:
+        Part numbers:
+        Wiki page:
