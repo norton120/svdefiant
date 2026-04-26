@@ -1,0 +1,47 @@
+name: Auto-classify refit issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  classify:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install anthropic SDK
+        run: pip install anthropic
+
+      - name: Classify
+        id: classify
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: python .github/scripts/classify-issue.py
+
+      - name: Apply labels
+        if: steps.classify.outputs.labels != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUM: ${{ github.event.issue.number }}
+          REPO: ${{ github.repository }}
+          LABELS: ${{ steps.classify.outputs.labels }}
+        run: |
+          ARGS=()
+          IFS=',' read -ra ARR <<< "$LABELS"
+          for L in "${ARR[@]}"; do ARGS+=(--add-label "$L"); done
+          gh issue edit "$ISSUE_NUM" --repo "$REPO" "${ARGS[@]}"
+
+      - name: Add to project
+        env:
+          GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: gh project item-add 4 --owner norton120 --url "$ISSUE_URL"
