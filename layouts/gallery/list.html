@@ -1,43 +1,92 @@
 {{ define "main" }}
-  <section class="mx-auto max-w-(--breakpoint-xl) px-4 py-8">
-    <header class="mb-8">
-      <h1 class="text-4xl font-extrabold text-slate-700 dark:text-slate-200">{{ .Title }}</h1>
-      {{ with .Content }}
-        <div class="prose mt-4 text-slate-600 dark:text-slate-400 dark:prose-invert">{{ . }}</div>
-      {{ end }}
+  <style>
+    .gallery-section { max-width: 1280px; margin: 0 auto; padding: 2rem 1rem; }
+    .gallery-section header { margin-bottom: 2rem; }
+    .gallery-section h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--g-h-color, #334155);
+    }
+    :is(.dark) .gallery-section h1 { color: #e2e8f0; }
+    .gallery-section header p { margin-top: 0.5rem; color: #475569; }
+    :is(.dark) .gallery-section header p { color: #94a3b8; }
+
+    .album-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+    .album-card { display: block; text-decoration: none; }
+    .album-card .cover-wrap {
+      aspect-ratio: 4 / 3;
+      width: 100%;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: #e5e7eb;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    :is(.dark) .album-card .cover-wrap { background: #404040; }
+    .album-card img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 200ms ease;
+    }
+    .album-card:hover img { transform: scale(1.03); }
+    .album-card h2 {
+      margin-top: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #334155;
+    }
+    :is(.dark) .album-card h2 { color: #e2e8f0; }
+    .album-card:hover h2 { color: #6366f1; }
+    .album-card .meta {
+      margin-top: 0.125rem;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    :is(.dark) .album-card .meta { color: #94a3b8; }
+    .album-card .summary {
+      margin-top: 0.25rem;
+      font-size: 0.95rem;
+      color: #475569;
+    }
+    :is(.dark) .album-card .summary { color: #cbd5e1; }
+    .empty-state { color: #64748b; }
+    :is(.dark) .empty-state { color: #94a3b8; }
+  </style>
+
+  <section class="gallery-section">
+    <header>
+      <h1>{{ .Title }}</h1>
+      {{ with .Content }}{{ . }}{{ end }}
     </header>
 
     {{ $albums := .Pages.ByDate.Reverse }}
     {{ if $albums }}
-      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div class="album-grid">
         {{ range $albums }}
           {{ $cover := .Resources.GetMatch (.Params.cover | default "*.{jpg,jpeg,png,webp}") }}
-          <a href="{{ .RelPermalink }}" class="group block">
-            {{ with $cover }}
-              {{ $thumb := .Process "resize 800x600 q85 webp" }}
-              <img src="{{ $thumb.RelPermalink }}"
-                   alt="{{ $.Title }}"
-                   width="{{ $thumb.Width }}"
-                   height="{{ $thumb.Height }}"
-                   class="aspect-[4/3] w-full rounded-md object-cover shadow-sm transition-transform duration-200 group-hover:scale-[1.02]"
-                   loading="lazy" />
-            {{ else }}
-              <div class="aspect-[4/3] w-full rounded-md bg-neutral-200 dark:bg-neutral-700"></div>
-            {{ end }}
-            <h2 class="mt-3 text-xl font-semibold text-slate-700 group-hover:text-indigo-500 dark:text-slate-200">
-              {{ .Title }}
-            </h2>
-            {{ with .Date }}
-              <p class="text-sm text-slate-500 dark:text-slate-400">{{ .Format "January 2006" }}</p>
-            {{ end }}
-            {{ with .Params.summary }}
-              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ . }}</p>
-            {{ end }}
+          <a href="{{ .RelPermalink }}" class="album-card">
+            <div class="cover-wrap">
+              {{ with $cover }}
+                {{ $thumb := .Fill "800x600 webp q85" }}
+                <img src="{{ $thumb.RelPermalink }}"
+                     alt="{{ $.Title }}"
+                     width="{{ $thumb.Width }}"
+                     height="{{ $thumb.Height }}"
+                     loading="lazy" />
+              {{ end }}
+            </div>
+            <h2>{{ .Title }}</h2>
+            {{ with .Date }}<p class="meta">{{ .Format "January 2006" }}</p>{{ end }}
+            {{ with .Params.summary }}<p class="summary">{{ . }}</p>{{ end }}
           </a>
         {{ end }}
       </div>
     {{ else }}
-      <p class="text-slate-500 dark:text-slate-400">
+      <p class="empty-state">
         No albums yet. Add one by creating <code>content/gallery/&lt;slug&gt;/index.md</code> with a <code>photos:</code> list in the front matter.
       </p>
     {{ end }}

@@ -1,39 +1,120 @@
 {{ define "main" }}
-  <section class="mx-auto max-w-(--breakpoint-xl) px-4 py-8">
-    <header class="mb-8">
-      <a href="{{ .Parent.RelPermalink }}" class="text-sm text-slate-500 hover:text-indigo-500 dark:text-slate-400">← Gallery</a>
-      <h1 class="mt-2 text-4xl font-extrabold text-slate-700 dark:text-slate-200">{{ .Title }}</h1>
-      {{ with .Date }}
-        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ .Format "January 2, 2006" }}</p>
-      {{ end }}
-      {{ with .Content }}
-        <div class="prose mt-4 max-w-none text-slate-600 dark:text-slate-400 dark:prose-invert">{{ . }}</div>
-      {{ end }}
+  <style>
+    .gallery-section { max-width: 1280px; margin: 0 auto; padding: 2rem 1rem; }
+    .gallery-section .back-link {
+      font-size: 0.875rem;
+      color: #64748b;
+      text-decoration: none;
+    }
+    .gallery-section .back-link:hover { color: #6366f1; }
+    :is(.dark) .gallery-section .back-link { color: #94a3b8; }
+    .gallery-section h1 {
+      margin-top: 0.5rem;
+      font-size: 2.25rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #334155;
+    }
+    :is(.dark) .gallery-section h1 { color: #e2e8f0; }
+    .gallery-section .album-meta {
+      margin-top: 0.25rem;
+      font-size: 0.875rem;
+      color: #64748b;
+    }
+    :is(.dark) .gallery-section .album-meta { color: #94a3b8; }
+    .gallery-section .album-intro {
+      margin-top: 1rem;
+      color: #475569;
+      max-width: 65ch;
+    }
+    :is(.dark) .gallery-section .album-intro { color: #cbd5e1; }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem 0.75rem;
+      margin-top: 2rem;
+    }
+    @media (min-width: 640px) {
+      .photo-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.25rem 1rem; }
+    }
+    @media (min-width: 1024px) {
+      .photo-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+    }
+
+    .photo-tile { display: block; text-decoration: none; }
+    .photo-tile .thumb-wrap {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      background: #e5e7eb;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+    :is(.dark) .photo-tile .thumb-wrap { background: #404040; }
+    .photo-tile img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 200ms ease;
+    }
+    .photo-tile:hover img { transform: scale(1.03); }
+    .photo-tile .caption {
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+      line-height: 1.35;
+      color: #475569;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    :is(.dark) .photo-tile .caption { color: #cbd5e1; }
+
+    .pswp__custom-caption {
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 10px 18px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    .pswp__custom-caption:empty { display: none; }
+  </style>
+
+  <section class="gallery-section">
+    <header>
+      <a href="{{ .Parent.RelPermalink }}" class="back-link">← Gallery</a>
+      <h1>{{ .Title }}</h1>
+      {{ with .Date }}<p class="album-meta">{{ .Format "January 2, 2006" }}</p>{{ end }}
+      {{ with .Content }}<div class="album-intro">{{ . }}</div>{{ end }}
     </header>
 
     {{ $page := . }}
-    <div id="gallery" class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
+    <div id="gallery" class="photo-grid">
       {{ range $i, $photo := .Params.photos }}
         {{ $file := index $photo "file" }}
         {{ $caption := index $photo "caption" | default "" }}
         {{ $img := $page.Resources.GetMatch $file }}
         {{ with $img }}
-          {{ $thumb := .Process "resize 700x q85 webp" }}
-          {{ $full := .Process "resize 2400x q90 webp" }}
+          {{ $thumb := .Fill "600x600 webp q85" }}
+          {{ $full := .Resize "2400x webp q90" }}
           <a href="{{ $full.RelPermalink }}"
              data-pswp-width="{{ $full.Width }}"
              data-pswp-height="{{ $full.Height }}"
              data-caption="{{ $caption }}"
-             class="group block">
-            <img src="{{ $thumb.RelPermalink }}"
-                 alt="{{ $caption }}"
-                 width="{{ $thumb.Width }}"
-                 height="{{ $thumb.Height }}"
-                 class="aspect-square w-full rounded-md object-cover shadow-sm transition-transform duration-200 group-hover:scale-[1.02]"
-                 loading="lazy" />
-            {{ with $caption }}
-              <p class="mt-2 line-clamp-2 text-xs text-slate-600 dark:text-slate-400 sm:text-sm">{{ . }}</p>
-            {{ end }}
+             class="photo-tile">
+            <div class="thumb-wrap">
+              <img src="{{ $thumb.RelPermalink }}"
+                   alt="{{ $caption }}"
+                   width="{{ $thumb.Width }}"
+                   height="{{ $thumb.Height }}"
+                   loading="lazy" />
+            </div>
+            {{ with $caption }}<p class="caption">{{ . }}</p>{{ end }}
           </a>
         {{ end }}
       {{ end }}
@@ -41,22 +122,6 @@
   </section>
 
   <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.css">
-  <style>
-    .pswp__custom-caption {
-      background: rgba(0, 0, 0, 0.7);
-      color: #fff;
-      padding: 8px 16px;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-size: 0.95rem;
-      line-height: 1.4;
-      max-width: 100%;
-    }
-    .pswp__custom-caption:empty { display: none; }
-  </style>
   <script type="module">
     import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js';
     const lightbox = new PhotoSwipeLightbox({

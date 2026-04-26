@@ -1,25 +1,25 @@
 #!/usr/bin/env bash
 #
-# Resize and re-encode photos for the web before adding them to a gallery
-# album. Defaults: max 2400 px on the long side, JPG quality 85, output as
-# .jpg regardless of source format. HEIC, PNG, and JPG inputs are handled.
+# Resize, re-encode, and EXIF-auto-orient photos for the web before adding
+# them to a gallery album. Defaults: max 2400 px on the long side, JPEG
+# quality ~85, output as .jpg regardless of source format. Uses ffmpeg,
+# which auto-rotates from EXIF orientation by default and strips metadata.
 #
 # Usage:
 #   bin/optimize-photos.sh <input-dir> [output-dir]
 #
 # If no output dir is given, output goes to "<input-dir>-optimized/" next to
 # the source. The original directory is never modified.
-#
-# Notes:
-#   - Uses macOS's built-in `sips`, no external deps.
-#   - Re-encoding via sips strips most EXIF, but GPS tags can persist on
-#     some files. Install `exiftool` and run `exiftool -all= <dir>` after
-#     this script if you need a clean strip.
 
 set -euo pipefail
 
 MAX_DIM=2400
-QUALITY=85
+QSCALE=4   # ffmpeg JPEG q:v; ~q85. Lower = better; range 1-31.
+
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  echo "ffmpeg is required but not found. Install with: brew install ffmpeg" >&2
+  exit 1
+fi
 
 if [[ $# -lt 1 || $# -gt 2 ]]; then
   echo "Usage: $0 <input-dir> [output-dir]" >&2
@@ -34,12 +34,14 @@ if [[ ! -d "$src" ]]; then
   exit 1
 fi
 
-if [[ "$(cd "$src" && pwd)" == "$(cd "$dst" 2>/dev/null && pwd || echo "")" ]]; then
+src_abs="$(cd "$src" && pwd)"
+mkdir -p "$dst"
+dst_abs="$(cd "$dst" && pwd)"
+
+if [[ "$src_abs" == "$dst_abs" ]]; then
   echo "Refusing to write output into the source directory." >&2
   exit 1
 fi
-
-mkdir -p "$dst"
 
 shopt -s nullglob nocaseglob
 
@@ -52,7 +54,7 @@ if [[ $total -eq 0 ]]; then
 fi
 
 echo "Optimizing $total image(s) from $src → $dst"
-echo "  max dimension: ${MAX_DIM}px, JPEG quality: ${QUALITY}"
+echo "  max dimension: ${MAX_DIM}px, JPEG quality: q:v=${QSCALE} (~q85)"
 
 count=0
 for f in "${inputs[@]}"; do
@@ -60,11 +62,11 @@ for f in "${inputs[@]}"; do
   stem="${base%.*}"
   out="$dst/${stem}.jpg"
 
-  sips \
-    -Z "$MAX_DIM" \
-    -s format jpeg \
-    -s formatOptions "$QUALITY" \
-    "$f" --out "$out" >/dev/null
+  ffmpeg -y -loglevel error -i "$f" \
+    -vf "scale='min(${MAX_DIM},iw)':'min(${MAX_DIM},ih)':force_original_aspect_ratio=decrease" \
+    -map_metadata -1 \
+    -q:v "$QSCALE" \
+    "$out"
 
   count=$((count + 1))
   printf '\r  [%d/%d] %s' "$count" "$total" "$base"
