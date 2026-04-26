@@ -5,6 +5,9 @@ main:
 - name: Posts
   url: /blog/
   weight: 20
+- name: Gallery
+  url: /gallery/
+  weight: 25
 - name: Wiki
   url: https://github.com/norton120/svdefiant/wiki
   weight: 30

@@ -1,0 +1,45 @@
+{{ define "main" }}
+  <section class="mx-auto max-w-(--breakpoint-xl) px-4 py-8">
+    <header class="mb-8">
+      <h1 class="text-4xl font-extrabold text-slate-700 dark:text-slate-200">{{ .Title }}</h1>
+      {{ with .Content }}
+        <div class="prose mt-4 text-slate-600 dark:text-slate-400 dark:prose-invert">{{ . }}</div>
+      {{ end }}
+    </header>
+
+    {{ $albums := .Pages.ByDate.Reverse }}
+    {{ if $albums }}
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {{ range $albums }}
+          {{ $cover := .Resources.GetMatch (.Params.cover | default "*.{jpg,jpeg,png,webp}") }}
+          <a href="{{ .RelPermalink }}" class="group block">
+            {{ with $cover }}
+              {{ $thumb := .Process "resize 800x600 q85 webp" }}
+              <img src="{{ $thumb.RelPermalink }}"
+                   alt="{{ $.Title }}"
+                   width="{{ $thumb.Width }}"
+                   height="{{ $thumb.Height }}"
+                   class="aspect-[4/3] w-full rounded-md object-cover shadow-sm transition-transform duration-200 group-hover:scale-[1.02]"
+                   loading="lazy" />
+            {{ else }}
+              <div class="aspect-[4/3] w-full rounded-md bg-neutral-200 dark:bg-neutral-700"></div>
+            {{ end }}
+            <h2 class="mt-3 text-xl font-semibold text-slate-700 group-hover:text-indigo-500 dark:text-slate-200">
+              {{ .Title }}
+            </h2>
+            {{ with .Date }}
+              <p class="text-sm text-slate-500 dark:text-slate-400">{{ .Format "January 2006" }}</p>
+            {{ end }}
+            {{ with .Params.summary }}
+              <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">{{ . }}</p>
+            {{ end }}
+          </a>
+        {{ end }}
+      </div>
+    {{ else }}
+      <p class="text-slate-500 dark:text-slate-400">
+        No albums yet. Add one by creating <code>content/gallery/&lt;slug&gt;/index.md</code> with a <code>photos:</code> list in the front matter.
+      </p>
+    {{ end }}
+  </section>
+{{ end }}

@@ -1,0 +1,84 @@
+{{ define "main" }}
+  <section class="mx-auto max-w-(--breakpoint-xl) px-4 py-8">
+    <header class="mb-8">
+      <a href="{{ .Parent.RelPermalink }}" class="text-sm text-slate-500 hover:text-indigo-500 dark:text-slate-400">← Gallery</a>
+      <h1 class="mt-2 text-4xl font-extrabold text-slate-700 dark:text-slate-200">{{ .Title }}</h1>
+      {{ with .Date }}
+        <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{{ .Format "January 2, 2006" }}</p>
+      {{ end }}
+      {{ with .Content }}
+        <div class="prose mt-4 max-w-none text-slate-600 dark:text-slate-400 dark:prose-invert">{{ . }}</div>
+      {{ end }}
+    </header>
+
+    {{ $page := . }}
+    <div id="gallery" class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
+      {{ range $i, $photo := .Params.photos }}
+        {{ $file := index $photo "file" }}
+        {{ $caption := index $photo "caption" | default "" }}
+        {{ $img := $page.Resources.GetMatch $file }}
+        {{ with $img }}
+          {{ $thumb := .Process "resize 700x q85 webp" }}
+          {{ $full := .Process "resize 2400x q90 webp" }}
+          <a href="{{ $full.RelPermalink }}"
+             data-pswp-width="{{ $full.Width }}"
+             data-pswp-height="{{ $full.Height }}"
+             data-caption="{{ $caption }}"
+             class="group block">
+            <img src="{{ $thumb.RelPermalink }}"
+                 alt="{{ $caption }}"
+                 width="{{ $thumb.Width }}"
+                 height="{{ $thumb.Height }}"
+                 class="aspect-square w-full rounded-md object-cover shadow-sm transition-transform duration-200 group-hover:scale-[1.02]"
+                 loading="lazy" />
+            {{ with $caption }}
+              <p class="mt-2 line-clamp-2 text-xs text-slate-600 dark:text-slate-400 sm:text-sm">{{ . }}</p>
+            {{ end }}
+          </a>
+        {{ end }}
+      {{ end }}
+    </div>
+  </section>
+
+  <link rel="stylesheet" href="https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.css">
+  <style>
+    .pswp__custom-caption {
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      padding: 8px 16px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      max-width: 100%;
+    }
+    .pswp__custom-caption:empty { display: none; }
+  </style>
+  <script type="module">
+    import PhotoSwipeLightbox from 'https://unpkg.com/photoswipe@5.4.4/dist/photoswipe-lightbox.esm.js';
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: '#gallery',
+      children: 'a',
+      pswpModule: () => import('https://unpkg.com/photoswipe@5.4.4/dist/photoswipe.esm.js'),
+    });
+    lightbox.on('uiRegister', () => {
+      lightbox.pswp.ui.registerElement({
+        name: 'custom-caption',
+        order: 9,
+        isButton: false,
+        appendTo: 'root',
+        html: '',
+        onInit: (el, pswp) => {
+          pswp.on('change', () => {
+            const slide = pswp.currSlide?.data?.element;
+            el.innerText = slide?.getAttribute('data-caption') || '';
+          });
+        },
+      });
+    });
+    lightbox.init();
+  </script>
+{{ end }}
