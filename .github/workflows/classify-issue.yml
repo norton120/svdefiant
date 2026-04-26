@@ -44,4 +44,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.PROJECT_TOKEN }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
-        run: gh project item-add 4 --owner norton120 --url "$ISSUE_URL"
+        run: gh project item-add 4 --owner "@me" --url "$ISSUE_URL"
