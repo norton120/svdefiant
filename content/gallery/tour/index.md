@@ -9,7 +9,7 @@ photos:
     caption: "The front deck is large enough for yoga, or for watching other people do yoga on their boats while not doing yoga"
   - file: IMG_7459.jpg
     caption: "The foredeck hammock is my newest addition to the deck furniture.. and there's no photos yet"
-  - file: IMG_7520.jpge
+  - file: IMG_7520.jpg
     caption: "The cockpit is the center of the upper deck. It is the dining room, the office, the lounge, and always the best view"
   - file: IMG_7442.jpg
     caption: "The companionway is the best way to stay under cover in the rain without going below"
@@ -17,7 +17,7 @@ photos:
     caption: "The port quarterbirth (guest room), in need of better photos"
   - file: IMG_6231.jpg
     caption: "The quarterbirth is a perpetual mess.. it's on the list"
-  - file: IMG_6529.jpg
+  - file: IMG_6259.jpg
     caption: "The starboard galley. Top-load refrigerator far aft, gimballed stove, and sink forward"
   - file: IMG_6306.jpg
     caption: "If you can make grilled cheese and tomato soup, your stove is big enough"
