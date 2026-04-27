@@ -31,5 +31,7 @@ photos:
     caption: "The new diesel heater is good enough to drag your dog bed in front of. ✅ doggo-approved"
   - file: IMG_6532.jpg
     caption: "The new sacrifical cover is oddly Bash-toned"
+  - file: IMG_7467.jpg
+    caption: "Doggo potty mat, complete with 'pee on me' safety cone"
 ---
 
