@@ -7,4 +7,9 @@
 #     url: "/blog/nameboards/"      # site-relative for blog/gallery, full URL for wiki
 #     summary: "Got Defiant's transom name back on, mostly square."
 #     source: "blog"                # blog | gallery | wiki — drives the badge
-entries: []
+entries: 
+  - date: "2026-04-27"
+    title: "Light Switches"
+    url: "https://github.com/norton120/svdefiant/wiki/Lighting#switches"
+    summary: "Finally, turning on the lights no longer requires twisting wires."
+    source: "wiki"
