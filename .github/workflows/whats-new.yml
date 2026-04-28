@@ -1,0 +1,154 @@
+name: What's New
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/**'
+  gollum:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  whatsnew:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install anthropic SDK
+        run: pip install anthropic
+
+      - name: Compute change context (push)
+        if: github.event_name == 'push'
+        id: ctx_push
+        run: |
+          set -euo pipefail
+          BEFORE="${{ github.event.before }}"
+          AFTER="${{ github.event.after }}"
+          if [[ "$BEFORE" =~ ^0+$ ]]; then
+            BEFORE=$(git rev-parse "$AFTER^") || BEFORE="$AFTER"
+          fi
+
+          CHANGED=$(git diff --name-only "$BEFORE" "$AFTER" -- 'content/' \
+                    | grep -v '^content/whatsnew/' || true)
+          if [[ -z "$CHANGED" ]]; then
+            echo "no_changes=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          declare -A SEEN
+          URLS=""
+          while IFS= read -r path; do
+            [[ -z "$path" ]] && continue
+            rel="${path#content/}"
+            dir="$(dirname "$rel")"
+            base="$(basename "$rel" .md)"
+            if [[ "$base" == "index" || "$base" == "_index" ]]; then
+              url="/${dir}/"
+            elif [[ "$dir" == "." ]]; then
+              url="/${base}/"
+            else
+              url="/${dir}/${base}/"
+            fi
+            url=$(echo "$url" | sed 's|//*|/|g')
+            if [[ -z "${SEEN[$url]:-}" ]]; then
+              SEEN[$url]=1
+              URLS+="$url"$'\n'
+            fi
+          done <<< "$CHANGED"
+
+          DIFF=$(git diff "$BEFORE" "$AFTER" -- 'content/' ':(exclude)content/whatsnew' | head -c 200000)
+          STAT=$(git diff --stat "$BEFORE" "$AFTER" -- 'content/' ':(exclude)content/whatsnew')
+
+          {
+            echo "no_changes=false"
+            echo "candidate_urls<<URLEOF"
+            printf '%s' "$URLS"
+            echo "URLEOF"
+            echo "diff_text<<DIFFEOF"
+            echo "Diffstat:"
+            echo "$STAT"
+            echo
+            echo "Unified diff (truncated to 200KB):"
+            echo "$DIFF"
+            echo "DIFFEOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Compute change context (wiki)
+        if: github.event_name == 'gollum'
+        id: ctx_wiki
+        env:
+          PAGES: ${{ toJSON(github.event.pages) }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git clone --depth=20 \
+            "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.wiki.git" wiki
+
+          urls_file=$(mktemp)
+          diff_file=$(mktemp)
+          python3 .github/scripts/wiki-diff.py "$diff_file" "$urls_file"
+
+          if [[ ! -s "$urls_file" ]]; then
+            echo "no_changes=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          {
+            echo "no_changes=false"
+            echo "candidate_urls<<URLEOF"
+            cat "$urls_file"
+            echo
+            echo "URLEOF"
+            echo "diff_text<<DIFFEOF"
+            cat "$diff_file"
+            echo "DIFFEOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Classify
+        id: classify
+        if: |
+          (github.event_name == 'push' && steps.ctx_push.outputs.no_changes != 'true')
+          || (github.event_name == 'gollum' && steps.ctx_wiki.outputs.no_changes != 'true')
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SOURCE: ${{ github.event_name == 'gollum' && 'wiki' || 'content' }}
+          CANDIDATE_URLS: ${{ github.event_name == 'gollum' && steps.ctx_wiki.outputs.candidate_urls || steps.ctx_push.outputs.candidate_urls }}
+          DIFF_TEXT: ${{ github.event_name == 'gollum' && steps.ctx_wiki.outputs.diff_text || steps.ctx_push.outputs.diff_text }}
+          ENTRY_FILE: ${{ runner.temp }}/entry.yaml
+        run: |
+          export CHANGE_DATE=$(date -u +%Y-%m-%d)
+          python .github/scripts/classify-update.py
+
+      - name: Append entry and commit
+        if: steps.classify.outputs.significant == 'true'
+        env:
+          ENTRY_FILE: ${{ runner.temp }}/entry.yaml
+        run: |
+          set -euo pipefail
+          if grep -qE '^entries:[[:space:]]*\[[[:space:]]*\][[:space:]]*$' data/whatsnew.yaml; then
+            sed -i -E 's|^entries:[[:space:]]*\[[[:space:]]*\][[:space:]]*$|entries:|' data/whatsnew.yaml
+          fi
+          cat "$ENTRY_FILE" >> data/whatsnew.yaml
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/whatsnew.yaml
+          git commit -m "whatsnew: add entry from ${{ github.event_name }}"
+          git push
+
+      - name: Trigger site deploy
+        if: steps.classify.outputs.significant == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run hugo.yaml --ref main

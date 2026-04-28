@@ -2,6 +2,9 @@ main:
 - name: Home
   url: /
   weight: 10
+- name: What's New
+  url: /whatsnew/
+  weight: 15
 - name: Posts
   url: /blog/
   weight: 20
