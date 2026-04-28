@@ -1,1 +1,10 @@
+# Entries are appended by .github/workflows/whats-new.yml after a significant
+# content or wiki change. Schema (one example, commented out):
+#
+# entries:
+#   - date: "2026-04-05"            # YYYY-MM-DD; used for sorting + month grouping
+#     title: "Nameboards"           # display title; usually the page's own title
+#     url: "/blog/nameboards/"      # site-relative for blog/gallery, full URL for wiki
+#     summary: "Got Defiant's transom name back on, mostly square."
+#     source: "blog"                # blog | gallery | wiki — drives the badge
 entries: []
