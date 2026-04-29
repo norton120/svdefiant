@@ -8,14 +8,13 @@ on:
   workflow_dispatch:
     inputs:
       force:
-        description: "Run Claude even if no recent inbound mail"
+        description: "Run even if no recent inbound mail"
         type: boolean
         default: false
 
 permissions:
   contents: read
   issues: write
-  id-token: write
 
 jobs:
   triage:
@@ -39,31 +38,27 @@ jobs:
           echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
           echo "Fresh inbound emails (last 24h): ${COUNT}"
           if [ "${COUNT}" = "0" ] && [ "${{ inputs.force }}" != "true" ]; then
-            echo "::notice::No new inbound mail — skipping Claude run."
+            echo "::notice::No new inbound mail — skipping triage."
           fi
 
       - if: steps.check.outputs.count != '0' || inputs.force == true
         uses: astral-sh/setup-uv@v5
 
       - if: steps.check.outputs.count != '0' || inputs.force == true
-        uses: anthropics/claude-code-action@v1
+        uses: actions/setup-python@v5
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: |
-            Run the `triage-deps` skill end-to-end.
+          python-version: "3.12"
 
-            The skill is at `.claude/skills/triage-deps/SKILL.md` — read it first,
-            then follow its steps exactly. Auto-apply label changes (the skill
-            specifies which add/remove decisions are safe).
+      - if: steps.check.outputs.count != '0' || inputs.force == true
+        name: Install anthropic SDK
+        run: pip install anthropic
 
-            When done, output the summary table to the workflow log so it's visible
-            in the run output.
-
-            The repo is `norton120/svdefiant`. The inbox script is `scripts/inbox.py`
-            (uses `uv` to run; AWS credentials are already in env).
-          claude_args: |
-            --allowedTools "Bash(scripts/inbox.py:*),Bash(uv:*),Bash(gh:*),Read,Glob,Grep"
+      - if: steps.check.outputs.count != '0' || inputs.force == true
+        name: Run triage
         env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: us-east-1
+        run: python .github/scripts/triage-deps.py >> "$GITHUB_STEP_SUMMARY"
