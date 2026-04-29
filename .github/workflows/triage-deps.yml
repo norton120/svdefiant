@@ -1,0 +1,43 @@
+name: triage-deps
+
+on:
+  schedule:
+    # 8am, 1pm, 6pm America/New_York (EDT). Cron is UTC.
+    # During EST (Nov–Mar) these run at 7am, 12pm, 5pm local — adjust then if needed.
+    - cron: "0 12,17,22 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  id-token: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Run the `triage-deps` skill end-to-end.
+
+            The skill is at `.claude/skills/triage-deps/SKILL.md` — read it first,
+            then follow its steps exactly. Auto-apply label changes (the skill
+            specifies which add/remove decisions are safe).
+
+            When done, output the summary table to the workflow log so it's visible
+            in the run output.
+
+            The repo is `norton120/svdefiant`. The inbox script is `scripts/inbox.py`
+            (uses `uv` to run; AWS credentials are already in env).
+          claude_args: |
+            --allowedTools "Bash(scripts/inbox.py:*),Bash(uv:*),Bash(gh:*),Read,Glob,Grep"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1

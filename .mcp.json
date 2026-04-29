@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "weather": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@dangahagan/weather-mcp@latest"
+      ],
+      "env": {
+        "ENABLED_TOOLS": "basic,+marine"
+      }
+    },
+    "noaa-tides": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@ryancardin/noaa-tides-currents-mcp-server"
+      ],
+      "env": {}
+    }
+  }
+}

@@ -9,3 +9,6 @@
 # Python
 __pycache__/
 
+# Claude Code local state
+.claude/scheduled_tasks.lock
+
