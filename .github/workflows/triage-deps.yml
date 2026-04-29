@@ -6,6 +6,11 @@ on:
     # During EST (Nov–Mar) these run at 7am, 12pm, 5pm local — adjust then if needed.
     - cron: "0 12,17,22 * * *"
   workflow_dispatch:
+    inputs:
+      force:
+        description: "Run Claude even if no recent inbound mail"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -18,9 +23,30 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: astral-sh/setup-uv@v5
+      - name: Check for fresh inbound mail
+        id: check
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+        run: |
+          SINCE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)
+          COUNT=$(aws s3api list-objects-v2 \
+            --bucket svdefiant-inbound-mail \
+            --prefix inbound/ \
+            --query "Contents[?LastModified > '${SINCE}' && Key != 'inbound/AMAZON_SES_SETUP_NOTIFICATION']" \
+            --output json | jq 'length')
+          echo "count=${COUNT}" >> "$GITHUB_OUTPUT"
+          echo "Fresh inbound emails (last 24h): ${COUNT}"
+          if [ "${COUNT}" = "0" ] && [ "${{ inputs.force }}" != "true" ]; then
+            echo "::notice::No new inbound mail — skipping Claude run."
+          fi
 
-      - uses: anthropics/claude-code-action@v1
+      - if: steps.check.outputs.count != '0' || inputs.force == true
+        uses: astral-sh/setup-uv@v5
+
+      - if: steps.check.outputs.count != '0' || inputs.force == true
+        uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
