@@ -18,3 +18,8 @@ entries:
     url: "https://github.com/norton120/svdefiant/wiki/Lighting"
     summary: "Added white/red cabinet lighting to breadbox and nav desk VMS."
     source: "wiki"
+  - date: "2026-04-30"
+    title: "Vessel Management System"
+    url: "https://github.com/norton120/svdefiant/wiki/Vessel-Management-System"
+    summary: "New wiki page documenting the vessel's management system setup and configuration."
+    source: "wiki"
