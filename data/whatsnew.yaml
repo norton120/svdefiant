@@ -13,3 +13,8 @@ entries:
     url: "https://github.com/norton120/svdefiant/wiki/Lighting#switches"
     summary: "Finally, turning on the lights no longer requires twisting wires."
     source: "wiki"
+  - date: "2026-04-30"
+    title: "Lighting"
+    url: "https://github.com/norton120/svdefiant/wiki/Lighting"
+    summary: "Expanded wiki page with comprehensive details on the boat's lighting systems and upgrades."
+    source: "wiki"
