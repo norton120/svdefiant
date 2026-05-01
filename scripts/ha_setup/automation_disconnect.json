@@ -1,0 +1,30 @@
+{
+  "alias": "Defiant: shore power lost (notice)",
+  "description": "When shore power disconnects while mode is 'docked', log a logbook entry prompting an explicit mode update. Does NOT change mode — disconnect is ambiguous (underway / hauled-out / still-docked-cord-pulled).",
+  "trigger": [
+    {
+      "platform": "state",
+      "entity_id": "sensor.gx_device_ac_active_input_source",
+      "from": ["shore_power", "grid"],
+      "to": "not_connected"
+    }
+  ],
+  "condition": [
+    {
+      "condition": "state",
+      "entity_id": "input_select.defiant_mode",
+      "state": "docked"
+    }
+  ],
+  "action": [
+    {
+      "service": "logbook.log",
+      "data": {
+        "name": "Defiant",
+        "message": "shore power disconnected while mode=docked — please update mode (anchored/moored/underway/hauled-out)",
+        "entity_id": "input_select.defiant_mode"
+      }
+    }
+  ],
+  "mode": "single"
+}

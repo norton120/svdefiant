@@ -1,0 +1,33 @@
+{
+  "alias": "Defiant: shore power → docked",
+  "description": "When the Victron Multi reports shore_power or grid on its active AC input, set defiant_mode to 'docked'. Does not auto-clear on disconnect — disconnect could mean leaving the slip (underway), pulling the cord (still docked), or hauling out. Disconnect just fires a notification so the user/agent updates mode explicitly.",
+  "trigger": [
+    {
+      "platform": "state",
+      "entity_id": "sensor.gx_device_ac_active_input_source",
+      "to": ["shore_power", "grid"]
+    }
+  ],
+  "condition": [
+    {
+      "condition": "template",
+      "value_template": "{{ states('input_select.defiant_mode') != 'docked' }}"
+    }
+  ],
+  "action": [
+    {
+      "service": "input_select.select_option",
+      "target": {"entity_id": "input_select.defiant_mode"},
+      "data": {"option": "docked"}
+    },
+    {
+      "service": "logbook.log",
+      "data": {
+        "name": "Defiant",
+        "message": "mode auto-set to 'docked' (shore power detected)",
+        "entity_id": "input_select.defiant_mode"
+      }
+    }
+  ],
+  "mode": "single"
+}

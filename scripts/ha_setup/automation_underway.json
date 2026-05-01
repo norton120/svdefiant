@@ -1,0 +1,34 @@
+{
+  "alias": "Defiant: SoG sustained → underway",
+  "description": "When Signal K speed-over-ground stays above 1.0 kt for 5 minutes, set defiant_mode to 'underway'. Skipped if already underway. SoG is unambiguous (boat is actually moving) so this is a safe auto-set.",
+  "trigger": [
+    {
+      "platform": "numeric_state",
+      "entity_id": "sensor.defiant_signal_k_defiant_speed_over_ground",
+      "above": 1.0,
+      "for": {"minutes": 5}
+    }
+  ],
+  "condition": [
+    {
+      "condition": "template",
+      "value_template": "{{ states('input_select.defiant_mode') != 'underway' }}"
+    }
+  ],
+  "action": [
+    {
+      "service": "input_select.select_option",
+      "target": {"entity_id": "input_select.defiant_mode"},
+      "data": {"option": "underway"}
+    },
+    {
+      "service": "logbook.log",
+      "data": {
+        "name": "Defiant",
+        "message": "mode auto-set to 'underway' (SoG > 1.0 kt for 5 min)",
+        "entity_id": "input_select.defiant_mode"
+      }
+    }
+  ],
+  "mode": "single"
+}

@@ -1,0 +1,41 @@
+{
+  "id": "defiant_signalk_position_sync",
+  "alias": "Defiant: sync Signal K position to helpers",
+  "description": "Mirrors the live SK position sensors into input_number.defiant_latitude/_longitude so the defiant CLI's REST reads keep working unchanged.",
+  "trigger": [
+    {
+      "platform": "state",
+      "entity_id": "sensor.defiant_signal_k_defiant_latitude",
+      "id": "lat"
+    },
+    {
+      "platform": "state",
+      "entity_id": "sensor.defiant_signal_k_defiant_longitude",
+      "id": "lon"
+    }
+  ],
+  "condition": [
+    {
+      "condition": "template",
+      "value_template": "{{ trigger.to_state.state not in ['unknown', 'unavailable', '', 'None'] }}"
+    }
+  ],
+  "action": [
+    {
+      "variables": {
+        "helper": "{{ 'input_number.defiant_latitude' if trigger.id == 'lat' else 'input_number.defiant_longitude' }}"
+      }
+    },
+    {
+      "service": "input_number.set_value",
+      "target": {
+        "entity_id": "{{ helper }}"
+      },
+      "data": {
+        "value": "{{ trigger.to_state.state | float }}"
+      }
+    }
+  ],
+  "mode": "queued",
+  "max": 10
+}

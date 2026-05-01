@@ -1,0 +1,30 @@
+{
+  "alias": "Defiant: SoG stopped while underway (notice)",
+  "description": "When SoG drops below 0.3 kt for 10 minutes while mode=underway, log a logbook prompt to set the new mode (anchored/moored/docked). Does NOT auto-change mode — arrival type is ambiguous from SoG alone (could be anchor, mooring, slip, drifting).",
+  "trigger": [
+    {
+      "platform": "numeric_state",
+      "entity_id": "sensor.defiant_signal_k_defiant_speed_over_ground",
+      "below": 0.3,
+      "for": {"minutes": 10}
+    }
+  ],
+  "condition": [
+    {
+      "condition": "state",
+      "entity_id": "input_select.defiant_mode",
+      "state": "underway"
+    }
+  ],
+  "action": [
+    {
+      "service": "logbook.log",
+      "data": {
+        "name": "Defiant",
+        "message": "stopped (SoG < 0.3 kt for 10 min) while mode=underway — please update mode (anchored/moored/docked)",
+        "entity_id": "input_select.defiant_mode"
+      }
+    }
+  ],
+  "mode": "single"
+}
