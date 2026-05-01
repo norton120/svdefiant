@@ -5,7 +5,7 @@
     "end_date": "2026-05-12",
     "duration": 7
   },
-  "generated_at": "2026-05-01T21:21:37Z",
+  "generated_at": "2026-05-01T21:23:33Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -62,8 +62,33 @@
         ],
         "temp_label": "63\u201375\u00b0"
       },
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 61,
+              "title": "Stowage boxes for quarterberth locker",
+              "url": "https://github.com/norton120/svdefiant/issues/61",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "day": "2026-05-06"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
     },
     {
       "date": "2026-05-07",
@@ -155,6 +180,32 @@
       },
       "lanes": [
         {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 63,
+              "title": "Set up ironclawd on Pi5 in nav desk",
+              "url": "https://github.com/norton120/svdefiant/issues/63",
+              "milestone": "Solomans",
+              "priority": "p2",
+              "systems": [
+                "electrical",
+                "nav"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "full-day",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": true,
+              "project_status": "Todo",
+              "day": "2026-05-09"
+            }
+          ]
+        },
+        {
           "system": "interior",
           "issues": [
             {
@@ -179,7 +230,7 @@
           ]
         }
       ],
-      "task_count": 1
+      "task_count": 2
     },
     {
       "date": "2026-05-10",
