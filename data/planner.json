@@ -1,11 +1,11 @@
 {
   "iteration": {
-    "title": "Iteration 1",
-    "start_date": "2026-04-28",
-    "end_date": "2026-05-05",
+    "title": "Iteration 2",
+    "start_date": "2026-05-05",
+    "end_date": "2026-05-12",
     "duration": 7
   },
-  "generated_at": "2026-05-01T21:19:03Z",
+  "generated_at": "2026-05-01T21:21:37Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -21,105 +21,82 @@
   ],
   "days": [
     {
-      "date": "2026-04-28",
-      "label": "Tue Apr 28",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-04-29",
-      "label": "Wed Apr 29",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-04-30",
-      "label": "Thu Apr 30",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-01",
-      "label": "Today",
+      "date": "2026-05-05",
+      "label": "Tue May 5",
       "events": [],
       "weather": {
-        "wind_kt_max": 16.5,
-        "wave_ft_max": 1.8,
+        "wind_kt_max": 18.1,
+        "wave_ft_max": 2.6,
+        "temp_f": [
+          61,
+          77
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f",
+          "\ud83d\udca8"
+        ],
+        "temp_label": "61\u201377\u00b0"
+      },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-06",
+      "label": "Wed May 6",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 16.6,
+        "wave_ft_max": 2.4,
+        "temp_f": [
+          63,
+          75
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "63\u201375\u00b0"
+      },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-07",
+      "label": "Thu May 7",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 22.5,
+        "wave_ft_max": 2.4,
+        "temp_f": [
+          52,
+          70
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "52\u201370\u00b0"
+      },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-08",
+      "label": "Fri May 8",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 15.2,
+        "wave_ft_max": 1.4,
         "temp_f": [
           48,
-          60
-        ],
-        "precip": false,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 1 at 2:59PM EDT until May 3 at 10:00AM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616565&lon=-76.29001"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\u26c5"
-        ],
-        "temp_label": "48\u201360\u00b0"
-      },
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-02",
-      "label": "Tomorrow",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 13.2,
-        "wave_ft_max": 1.4,
-        "temp_f": [
-          53,
-          58
-        ],
-        "precip": false,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 1 at 2:59PM EDT until May 3 at 10:00AM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616565&lon=-76.29001"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\u26c5"
-        ],
-        "temp_label": "53\u201358\u00b0"
-      },
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-03",
-      "label": "Sun May 3",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 15.1,
-        "wave_ft_max": 1.7,
-        "temp_f": [
-          47,
-          63
+          66
         ],
         "precip": false,
         "hazards": [],
@@ -127,21 +104,46 @@
         "icons": [
           "\u26c5"
         ],
-        "temp_label": "47\u201363\u00b0"
+        "temp_label": "48\u201366\u00b0"
       },
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 13,
+              "title": "Install icebox compressor (wiring + thermostat)",
+              "url": "https://github.com/norton120/svdefiant/issues/13",
+              "milestone": "Solomans",
+              "priority": "p1",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "heavy",
+              "weather": "any",
+              "time": "full-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "day": "2026-05-08"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
     },
     {
-      "date": "2026-05-04",
-      "label": "Mon May 4",
+      "date": "2026-05-09",
+      "label": "Sat May 9",
       "events": [],
       "weather": {
-        "wind_kt_max": 17.1,
-        "wave_ft_max": 1.4,
+        "wind_kt_max": 14.8,
+        "wave_ft_max": 0.6,
         "temp_f": [
           53,
-          76
+          66
         ],
         "precip": false,
         "hazards": [],
@@ -149,7 +151,76 @@
         "icons": [
           "\u26c5"
         ],
-        "temp_label": "53\u201376\u00b0"
+        "temp_label": "53\u201366\u00b0"
+      },
+      "lanes": [
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 3,
+              "title": "Repair & re-install cockpit table",
+              "url": "https://github.com/norton120/svdefiant/issues/3",
+              "milestone": "Solomans",
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "day": "2026-05-09"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
+    {
+      "date": "2026-05-10",
+      "label": "Sun May 10",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 21.0,
+        "wave_ft_max": null,
+        "temp_f": [
+          61,
+          85
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "61\u201385\u00b0"
+      },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-11",
+      "label": "Mon May 11",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 19.7,
+        "wave_ft_max": null,
+        "temp_f": [
+          62,
+          78
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "62\u201378\u00b0"
       },
       "lanes": [],
       "task_count": 0
@@ -157,25 +228,24 @@
   ],
   "unscheduled": [
     {
-      "number": 63,
-      "title": "Set up ironclawd on Pi5 in nav desk",
-      "url": "https://github.com/norton120/svdefiant/issues/63",
-      "milestone": "Solomans",
-      "priority": "p2",
+      "number": 62,
+      "title": "Re-run power in quarterberth so doors close",
+      "url": "https://github.com/norton120/svdefiant/issues/62",
+      "milestone": "Day Sails",
+      "priority": "p1",
       "systems": [
         "electrical",
-        "nav"
+        "interior"
       ],
       "energy": "moderate",
       "weather": "any",
-      "time": "full-day",
+      "time": "half-day",
       "locations": [
-        "indoors",
-        "dockside-only"
+        "indoors"
       ],
-      "blocked_parts": true,
+      "blocked_parts": false,
       "project_status": "Todo",
-      "day": "2026-05-15"
+      "day": "2026-05-03"
     }
   ]
 }
