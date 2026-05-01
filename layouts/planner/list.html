@@ -288,14 +288,14 @@
               <span class="sm-count">{{ .task_count }}</span>
             </summary>
             <div class="sm-body">
-              {{ if or .events .weather.wind_label }}
+              {{ with .events }}
                 <div class="sm-events">
-                  {{ range .events }}
+                  {{ range . }}
                     <span class="planner-event{{ if not .blocks }} soft{{ end }}">{{ .label }}</span>
                   {{ end }}
                 </div>
               {{ end }}
-              {{ with .weather.wind_label }}<div class="sm-wind">{{ . }}</div>{{ end }}
+              {{ with .weather }}{{ with .wind_label }}<div class="sm-wind">{{ . }}</div>{{ end }}{{ end }}
               {{ if not .lanes }}
                 <div class="sm-empty">Nothing scheduled.</div>
               {{ end }}
