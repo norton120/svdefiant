@@ -1,0 +1,246 @@
+{{ define "main" }}
+  {{ $p := .Site.Data.planner }}
+  <style>
+    .planner-section { max-width: 100%; padding: 1.5rem 1rem 3rem; }
+    .planner-section header { max-width: 1100px; margin: 0 auto 1rem; }
+    .planner-section h1 {
+      font-size: 1.9rem; font-weight: 800; line-height: 1.1;
+      color: var(--g-h-color, #334155); margin: 0;
+    }
+    :is(.dark) .planner-section h1 { color: #e2e8f0; }
+    .planner-meta {
+      margin-top: 0.35rem; font-size: 0.85rem; color: #64748b;
+    }
+    :is(.dark) .planner-meta { color: #94a3b8; }
+    .planner-meta .stale { color: #b45309; }
+    :is(.dark) .planner-meta .stale { color: #fbbf24; }
+
+    .planner-scroll { overflow-x: auto; padding-bottom: 0.75rem; }
+    .planner-grid {
+      display: grid;
+      grid-template-columns: 7.5rem repeat({{ len $p.days }}, minmax(11rem, 1fr));
+      gap: 1px;
+      background: #e2e8f0;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.4rem;
+      overflow: hidden;
+      min-width: 70rem;
+    }
+    :is(.dark) .planner-grid { background: #1f2937; border-color: #1f2937; }
+
+    .planner-cell { background: #fff; padding: 0.5rem 0.55rem; min-height: 3rem; }
+    :is(.dark) .planner-cell { background: #0f172a; }
+    .planner-cell.today { background: #fefce8; }
+    :is(.dark) .planner-cell.today { background: #1f2010; }
+    .planner-cell.blocked { background: repeating-linear-gradient(
+      135deg, #f8fafc, #f8fafc 6px, #eef2f6 6px, #eef2f6 12px); }
+    :is(.dark) .planner-cell.blocked { background: repeating-linear-gradient(
+      135deg, #0f172a, #0f172a 6px, #14213a 6px, #14213a 12px); }
+
+    .planner-day-head {
+      font-weight: 700; font-size: 0.85rem; color: #1e293b;
+      background: #cbd5e1;
+      border-bottom: 1px solid #94a3b8;
+    }
+    :is(.dark) .planner-day-head { color: #e2e8f0; background: #1e293b; border-color: #334155; }
+    .planner-day-head .date { font-weight: 500; color: #475569; font-size: 0.75rem; display:block; }
+    :is(.dark) .planner-day-head .date { color: #94a3b8; }
+    .planner-day-head.today { background: #fef9c3; }
+    :is(.dark) .planner-day-head.today { background: #2a2810; }
+    .planner-wx { display: flex; align-items: center; gap: 0.3rem; margin-top: 0.25rem; font-size: 0.75rem; font-weight: 500; color: #475569; }
+    :is(.dark) .planner-wx { color: #cbd5e1; }
+    .planner-wx .icons {
+      font-size: 0.95rem; line-height: 1; letter-spacing: 0.05em;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28"><text y="22" font-size="22">%E2%9B%B5</text></svg>') 14 14, pointer;
+    }
+    .planner-wx a.icons { text-decoration: none; }
+    .planner-wx a.icons:hover { filter: brightness(0.85); }
+    .planner-wx .temp { font-variant-numeric: tabular-nums; }
+
+    .planner-event {
+      display: block; font-size: 0.72rem; margin-top: 0.2rem;
+      padding: 0.1rem 0.35rem; border-radius: 0.25rem;
+      background: #fde68a; color: #78350f;
+    }
+    :is(.dark) .planner-event { background: #422006; color: #fde68a; }
+    .planner-event.soft { background: #e0e7ff; color: #3730a3; }
+    :is(.dark) .planner-event.soft { background: #1e1b4b; color: #c7d2fe; }
+
+    .planner-corner, .planner-lane-name {
+      font-size: 0.78rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      display: flex; align-items: center;
+    }
+    .planner-lane-name { background: #f8fafc; color: #475569; }
+    :is(.dark) .planner-lane-name { background: #0b1220; color: #94a3b8; }
+    .planner-corner {
+      background: #cbd5e1; color: #1e293b;
+      border-right: 1px solid #94a3b8; border-bottom: 1px solid #94a3b8;
+    }
+    :is(.dark) .planner-corner {
+      background: #1e293b; color: #e2e8f0; border-color: #334155;
+    }
+
+    .planner-card {
+      display: block;
+      padding: 0.4rem 0.55rem;
+      border-radius: 0.3rem;
+      background: #f1f5f9;
+      margin-bottom: 0.35rem;
+      text-decoration: none;
+      color: inherit;
+      border-left: 3px solid #94a3b8;
+    }
+    :is(.dark) .planner-card { background: #111827; border-left-color: #475569; }
+    .planner-card:hover { background: #e2e8f0; }
+    :is(.dark) .planner-card:hover { background: #1f2937; }
+    .planner-card.p-p0 { border-left-color: #b91c1c; }
+    .planner-card.p-p1 { border-left-color: #ea580c; }
+    .planner-card.p-p2 { border-left-color: #ca8a04; }
+    .planner-card.p-p3 { border-left-color: #16a34a; }
+
+    .planner-card .num { font-size: 0.7rem; color: #64748b; font-weight: 600; }
+    :is(.dark) .planner-card .num { color: #94a3b8; }
+    .planner-card .title {
+      font-size: 0.88rem; font-weight: 600; line-height: 1.2;
+      color: #1e293b; margin: 0.1rem 0 0.3rem;
+    }
+    :is(.dark) .planner-card .title { color: #e2e8f0; }
+    .planner-chips { display: flex; flex-wrap: wrap; gap: 0.2rem; }
+    .planner-chip {
+      font-size: 0.65rem; padding: 0.05rem 0.35rem; border-radius: 0.2rem;
+      background: #cbd5e1; color: #334155; line-height: 1.4;
+    }
+    :is(.dark) .planner-chip { background: #334155; color: #cbd5e1; }
+    .planner-chip.warn { background: #fed7aa; color: #7c2d12; }
+    :is(.dark) .planner-chip.warn { background: #431407; color: #fed7aa; }
+
+    .planner-unscheduled { max-width: 1100px; margin: 1.75rem auto 0; }
+    .planner-unscheduled h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: #334155; }
+    :is(.dark) .planner-unscheduled h2 { color: #e2e8f0; }
+    .planner-unscheduled .grid {
+      display: grid; gap: 0.4rem;
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    }
+
+    .planner-empty { padding: 2rem 0; color: #64748b; text-align: center; }
+    :is(.dark) .planner-empty { color: #94a3b8; }
+
+    @media (max-width: 720px) {
+      .planner-grid { min-width: 56rem; }
+    }
+  </style>
+
+  <section class="planner-section">
+    <header>
+      <h1>This Week</h1>
+      {{ if $p }}
+        <div class="planner-meta">
+          {{ $p.iteration.title }} · {{ $p.iteration.start_date }} → {{ $p.iteration.end_date }}
+          · refreshed {{ dateFormat "Jan 2 15:04 MST" $p.generated_at }}
+        </div>
+      {{ end }}
+    </header>
+
+    {{ if not $p }}
+      <p class="planner-empty">No plan published yet. Run <code>defiant planner publish --push</code>.</p>
+    {{ else }}
+      <div class="planner-scroll">
+        <div class="planner-grid">
+          <div class="planner-cell planner-corner">System</div>
+          {{ range $p.days }}
+            {{ $isToday := eq .label "Today" }}
+            {{ $blocked := false }}
+            {{ range .events }}{{ if .blocks }}{{ $blocked = true }}{{ end }}{{ end }}
+            <div class="planner-cell planner-day-head{{ if $isToday }} today{{ end }}{{ if $blocked }} blocked{{ end }}">
+              {{ .label }}
+              <span class="date">{{ dateFormat "Jan 2" .date }}</span>
+              {{ with .weather }}
+                {{ $alert := index .alerts 0 }}
+                <div class="planner-wx">
+                  {{ if $alert }}
+                    <a class="icons" href="{{ $alert.url }}" target="_blank" rel="noopener"
+                       title="⛵">{{ delimit .icons "" }}</a>
+                  {{ else }}
+                    <span class="icons" title="⛵">{{ delimit .icons "" }}</span>
+                  {{ end }}
+                  <span class="temp">{{ .temp_label }}</span>
+                </div>
+              {{ end }}
+              {{ range .events }}
+                <span class="planner-event{{ if not .blocks }} soft{{ end }}">{{ .label }}</span>
+              {{ end }}
+            </div>
+          {{ end }}
+
+          {{ $lanesUsed := slice }}
+          {{ range $p.lane_order }}
+            {{ $lane := . }}
+            {{ $hasAny := false }}
+            {{ range $p.days }}
+              {{ range .lanes }}{{ if eq .system $lane }}{{ $hasAny = true }}{{ end }}{{ end }}
+            {{ end }}
+            {{ if $hasAny }}
+              {{ $lanesUsed = $lanesUsed | append $lane }}
+            {{ end }}
+          {{ end }}
+
+          {{ range $lanesUsed }}
+            {{ $lane := . }}
+            <div class="planner-cell planner-lane-name">{{ $lane }}</div>
+            {{ range $p.days }}
+              {{ $isToday := eq .label "Today" }}
+              {{ $blocked := false }}
+              {{ range .events }}{{ if .blocks }}{{ $blocked = true }}{{ end }}{{ end }}
+              {{ $cellIssues := slice }}
+              {{ range .lanes }}
+                {{ if eq .system $lane }}
+                  {{ $cellIssues = .issues }}
+                {{ end }}
+              {{ end }}
+              <div class="planner-cell{{ if $isToday }} today{{ end }}{{ if $blocked }} blocked{{ end }}">
+                {{ range $cellIssues }}
+                  <a class="planner-card p-{{ default "none" .priority }}" href="{{ .url }}" target="_blank" rel="noopener">
+                    <span class="num">#{{ .number }}{{ with .priority }} · {{ . }}{{ end }}</span>
+                    <div class="title">{{ .title }}</div>
+                    <div class="planner-chips">
+                      {{ with .time }}<span class="planner-chip">{{ . }}</span>{{ end }}
+                      {{ with .energy }}<span class="planner-chip">{{ . }}</span>{{ end }}
+                      {{ with .weather }}{{ if ne . "any" }}<span class="planner-chip">{{ . }}</span>{{ end }}{{ end }}
+                      {{ if .blocked_parts }}<span class="planner-chip warn">blocked: parts</span>{{ end }}
+                    </div>
+                  </a>
+                {{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+
+          {{ if not $lanesUsed }}
+            <div class="planner-cell" style="grid-column: 2 / -1; text-align:center; color:#64748b;">
+              Nothing scheduled to specific days yet.
+            </div>
+          {{ end }}
+        </div>
+      </div>
+
+      {{ with $p.unscheduled }}
+        <div class="planner-unscheduled">
+          <h2>In iteration, no day yet ({{ len . }})</h2>
+          <div class="grid">
+            {{ range . }}
+              <a class="planner-card p-{{ default "none" .priority }}" href="{{ .url }}" target="_blank" rel="noopener">
+                <span class="num">#{{ .number }}{{ with .priority }} · {{ . }}{{ end }}{{ with .day }} · day {{ . }} (out of window){{ end }}</span>
+                <div class="title">{{ .title }}</div>
+                <div class="planner-chips">
+                  {{ range .systems }}<span class="planner-chip">{{ . }}</span>{{ end }}
+                  {{ with .time }}<span class="planner-chip">{{ . }}</span>{{ end }}
+                  {{ if .blocked_parts }}<span class="planner-chip warn">blocked: parts</span>{{ end }}
+                </div>
+              </a>
+            {{ end }}
+          </div>
+        </div>
+      {{ end }}
+    {{ end }}
+  </section>
+{{ end }}

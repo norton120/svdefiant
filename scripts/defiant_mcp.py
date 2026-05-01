@@ -165,18 +165,20 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="task_list",
-        description="List open issues (norton120/svdefiant), pre-summarized as JSON. With schedulable=true, applies the boat-mode filter: drops blocked:parts always, drops loc:dockside-only unless docked, and (when underway) keeps only loc:underway-ok issues.",
+        description="List open issues (norton120/svdefiant), pre-summarized as JSON. With schedulable=true, applies the boat-mode filter: drops blocked:parts always, drops loc:dockside-only unless docked, and (when underway) keeps only loc:underway-ok issues. With iteration set, restricts to that project iteration and adds iteration/day/project_status to each item.",
         inputSchema={
             "type": "object",
             "properties": {
                 "milestone": {"type": "string", "description": "filter by milestone title"},
                 "labels": {"type": "array", "items": {"type": "string"},
-                           "description": "additional label filters (any-of)"},
+                           "description": "additional label filters (all-of when iteration is set, any-of otherwise)"},
                 "limit": {"type": "integer", "default": 300},
                 "with_body": {"type": "boolean", "default": False,
                               "description": "include the issue body in each item (large; only when matching/triage requires it)"},
                 "schedulable": {"type": "boolean", "default": False,
                                 "description": "apply boat-mode filter"},
+                "iteration": {"type": "string",
+                              "description": "'current', 'next', or a literal iteration id; restricts to that iteration and surfaces day/iteration/project_status"},
             },
             "additionalProperties": False,
         },
@@ -247,6 +249,77 @@ TOOLS: list[Tool] = [
                               "description": "'current', 'next', or a literal iteration id"},
             },
             "required": ["num", "iteration"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="task_day",
+        description="Set or clear the per-issue 'Target date' (the day the agent intends to do this work) on Project #4. Pass date='YYYY-MM-DD' to set, or clear=true to remove. Adds the issue to the project if it isn't already there.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "num": {"type": "integer"},
+                "date": {"type": "string",
+                         "description": "YYYY-MM-DD; mutually exclusive with clear"},
+                "clear": {"type": "boolean", "default": False,
+                          "description": "true → remove the day from this issue"},
+            },
+            "required": ["num"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="calendar_add",
+        description="Record a day-level event the agent should respect when scheduling (e.g. 'sailing', 'NYC for work'). One event per date — re-adding overwrites. Defaults to a blocking event (no work expected); pass soft=true for an FYI banner that doesn't block scheduling.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "date": {"type": "string", "description": "YYYY-MM-DD"},
+                "label": {"type": "string", "description": "short event description"},
+                "soft": {"type": "boolean", "default": False,
+                         "description": "true → event shows on planner but does not block scheduling"},
+            },
+            "required": ["date", "label"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="calendar_remove",
+        description="Remove the calendar event on a given date (no-op if none).",
+        inputSchema={
+            "type": "object",
+            "properties": {"date": {"type": "string", "description": "YYYY-MM-DD"}},
+            "required": ["date"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="calendar_list",
+        description="List calendar events in a date window. Defaults to today + 7 days.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "from_date": {"type": "string", "description": "YYYY-MM-DD (default: today)"},
+                "to_date": {"type": "string", "description": "YYYY-MM-DD (default: today + 7d)"},
+            },
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="planner_publish",
+        description="Render data/planner.json from the project iteration + calendar (drives the public planner page on svdefiant.com). Optionally commits and pushes; CI rebuilds the site on merge to main. Use commit=true after a re-plan; otherwise omit and just verify the JSON before pushing.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "iteration": {"type": "string", "default": "current",
+                              "description": "'current' (default), 'next', or a literal iteration id"},
+                "commit": {"type": "boolean", "default": False,
+                           "description": "git add + commit data/planner.json after writing"},
+                "push": {"type": "boolean", "default": False,
+                         "description": "implies commit; also git push (triggers a site rebuild)"},
+                "no_weather": {"type": "boolean", "default": False,
+                               "description": "skip per-day weather fetch (e.g. offline)"},
+            },
             "additionalProperties": False,
         },
     ),
@@ -364,6 +437,8 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
             argv.append("--with-body")
         if args.get("schedulable"):
             argv.append("--schedulable")
+        if v := args.get("iteration"):
+            argv += ["--iteration", v]
         return argv, tmp
     if name == "task_show":
         return ["task", "show", str(args["num"])], tmp
@@ -400,6 +475,41 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
             argv.append("--next")
         else:
             argv += ["--id", spec]
+        return argv, tmp
+    if name == "task_day":
+        argv = ["task", "day", str(args["num"])]
+        if args.get("clear"):
+            argv.append("--clear")
+        elif v := args.get("date"):
+            argv.append(v)
+        else:
+            raise ValueError("task_day requires either date or clear=true")
+        return argv, tmp
+
+    if name == "calendar_add":
+        argv = ["calendar", "add", args["date"], args["label"]]
+        if args.get("soft"):
+            argv.append("--soft")
+        return argv, tmp
+    if name == "calendar_remove":
+        return ["calendar", "remove", args["date"]], tmp
+    if name == "calendar_list":
+        argv = ["calendar", "list"]
+        if v := args.get("from_date"):
+            argv += ["--from", v]
+        if v := args.get("to_date"):
+            argv += ["--to", v]
+        return argv, tmp
+
+    if name == "planner_publish":
+        argv = ["planner", "publish",
+                "--iteration", args.get("iteration", "current")]
+        if args.get("push"):
+            argv.append("--push")
+        elif args.get("commit"):
+            argv.append("--commit")
+        if args.get("no_weather"):
+            argv.append("--no-weather")
         return argv, tmp
 
     if name == "wiki_search":

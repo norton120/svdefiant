@@ -2,6 +2,9 @@ main:
 - name: Home
   url: /
   weight: 10
+- name: This Week
+  url: /planner/
+  weight: 12
 - name: What's New
   url: /whatsnew/
   weight: 15

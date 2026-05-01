@@ -11,8 +11,9 @@ Subcommands:
   task     GitHub issues + Project v2
   wiki     local wiki search + edit (auto-clones on first use)
   weather  marine weather + tides (auto when underway)
+  calendar day-level events the agent should respect when scheduling
 
-Cache, ack, and wiki files live under DEFIANT_HOME (default: ~/.defiant).
+Cache, ack, calendar, and wiki files live under DEFIANT_HOME (default: ~/.defiant).
 HA endpoint: HA_URL env (default http://homeassistant.local:8123),
 HA token: HOME_ASSISTANT_ACCESS_TOKEN env (or .env in repo root).
 """
@@ -37,6 +38,7 @@ import tomli_w
 DEFIANT_HOME = Path(os.environ.get("DEFIANT_HOME", Path.home() / ".defiant"))
 STATE_CACHE = DEFIANT_HOME / "state-cache.toml"
 INBOX_STATE_FILE = DEFIANT_HOME / "inbox-state.json"
+CALENDAR_FILE = DEFIANT_HOME / "calendar.json"
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INBOX_SCRIPT = REPO_ROOT / "scripts" / "inbox.py"
@@ -81,6 +83,8 @@ GH_PROJECT_NUMBER = 4
 GH_PROJECT_OWNER = "@me"
 GH_PROJECT_ID = "PVT_kwHOAGJGHM4BVufn"
 GH_ITERATION_FIELD_ID = "PVTIF_lAHOAGJGHM4BVufnzhRaGt0"
+# Project field "Target date" — used as the per-issue scheduled day.
+GH_DAY_FIELD_ID = "PVTF_lAHOAGJGHM4BVufnzhRak3E"
 
 # Task label dimensions. Single-value dims replace any prior label in the same
 # dim on update; `loc` is multi-value and replaces the full set when given.
@@ -554,30 +558,33 @@ def filter_schedulable(issues: list[dict], mode_status: str | None) -> list[dict
 
 
 def cmd_task_list(args, state):
-    fields = "number,title,url,labels,milestone,state"
-    if args.with_body:
-        fields += ",body"
-    cmd = ["issue", "list", "--repo", GH_REPO, "--state", "open",
-           "--limit", str(args.limit), "--json", fields]
-    if args.milestone:
-        cmd += ["--milestone", args.milestone]
-    for lbl in args.labels or []:
-        cmd += ["--label", lbl]
-    raw = gh(*cmd, parse_json=True)
-
-    issues = []
-    for r in raw:
-        item = {
-            "number": r["number"],
-            "title": r["title"],
-            "url": r["url"],
-            "state": r["state"],
-            "labels": flatten_labels(r["labels"]),
-            "milestone": (r["milestone"] or {}).get("title"),
-        }
+    if args.iteration:
+        issues = _list_by_iteration(args)
+    else:
+        fields = "number,title,url,labels,milestone,state"
         if args.with_body:
-            item["body"] = r.get("body") or ""
-        issues.append(item)
+            fields += ",body"
+        cmd = ["issue", "list", "--repo", GH_REPO, "--state", "open",
+               "--limit", str(args.limit), "--json", fields]
+        if args.milestone:
+            cmd += ["--milestone", args.milestone]
+        for lbl in args.labels or []:
+            cmd += ["--label", lbl]
+        raw = gh(*cmd, parse_json=True)
+
+        issues = []
+        for r in raw:
+            item = {
+                "number": r["number"],
+                "title": r["title"],
+                "url": r["url"],
+                "state": r["state"],
+                "labels": flatten_labels(r["labels"]),
+                "milestone": (r["milestone"] or {}).get("title"),
+            }
+            if args.with_body:
+                item["body"] = r.get("body") or ""
+            issues.append(item)
 
     if args.schedulable:
         mode_status = state.get("mode", {}).get("status")
@@ -585,6 +592,101 @@ def cmd_task_list(args, state):
 
     json.dump(issues, sys.stdout, indent=2, default=str)
     sys.stdout.write("\n")
+
+
+_PROJECT_ITEMS_QUERY = """
+query($projectId: ID!, $cursor: String) {
+  node(id: $projectId) {
+    ... on ProjectV2 {
+      items(first: 100, after: $cursor) {
+        pageInfo { hasNextPage endCursor }
+        nodes {
+          id
+          fieldValues(first: 30) {
+            nodes {
+              __typename
+              ... on ProjectV2ItemFieldIterationValue {
+                title iterationId
+                field { ... on ProjectV2IterationField { id name } }
+              }
+              ... on ProjectV2ItemFieldSingleSelectValue {
+                name
+                field { ... on ProjectV2SingleSelectField { id name } }
+              }
+              ... on ProjectV2ItemFieldDateValue {
+                date
+                field { ... on ProjectV2Field { id name } }
+              }
+            }
+          }
+          content {
+            __typename
+            ... on Issue {
+              number title url state body
+              milestone { title }
+              labels(first: 50) { nodes { name } }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+"""
+
+
+def _list_by_iteration(args) -> list[dict]:
+    """List open issues whose project Iteration matches args.iteration."""
+    iteration = _resolve_iteration(args.iteration)
+    target_id = iteration["id"]
+    label_set = set(args.labels or [])
+    out: list[dict] = []
+    cursor: str | None = None
+    while True:
+        kwargs: dict[str, object] = {"projectId": GH_PROJECT_ID}
+        if cursor:
+            kwargs["cursor"] = cursor
+        data = gh_graphql(_PROJECT_ITEMS_QUERY, **kwargs)
+        items = ((data.get("node") or {}).get("items") or {})
+        for it in items.get("nodes", []):
+            content = it.get("content") or {}
+            if content.get("__typename") != "Issue":
+                continue
+            if content.get("state") != "OPEN":
+                continue
+            iter_val = None
+            for fv in (it.get("fieldValues") or {}).get("nodes", []):
+                f = fv.get("field") or {}
+                if f.get("name") == "Iteration":
+                    iter_val = fv.get("iterationId")
+                    break
+            if iter_val != target_id:
+                continue
+            labels = [l["name"] for l in content["labels"]["nodes"]]
+            if label_set and not label_set.issubset(labels):
+                continue
+            milestone = (content.get("milestone") or {}).get("title")
+            if args.milestone and milestone != args.milestone:
+                continue
+            entry = {
+                "number": content["number"],
+                "title": content["title"],
+                "url": content["url"],
+                "state": content["state"],
+                "labels": labels,
+                "milestone": milestone,
+                "iteration": _field_value(it, "Iteration"),
+                "day": _field_value(it, "Target date"),
+                "project_status": _field_value(it, "Status"),
+            }
+            if args.with_body:
+                entry["body"] = content.get("body") or ""
+            out.append(entry)
+        page = items.get("pageInfo") or {}
+        if not page.get("hasNextPage"):
+            break
+        cursor = page.get("endCursor")
+    return out
 
 
 _SHOW_QUERY = """
@@ -609,6 +711,10 @@ query($number: Int!) {
                 name
                 field { ... on ProjectV2SingleSelectField { id name } }
               }
+              ... on ProjectV2ItemFieldDateValue {
+                date
+                field { ... on ProjectV2Field { id name } }
+              }
             }
           }
         }
@@ -632,7 +738,7 @@ def _field_value(item: dict, field_name: str) -> str | None:
         f = fv.get("field") or {}
         if f.get("name") != field_name:
             continue
-        return fv.get("title") or fv.get("name")
+        return fv.get("title") or fv.get("name") or fv.get("date")
     return None
 
 
@@ -655,6 +761,7 @@ def cmd_task_show(args):
         "in_project": item is not None,
         "project_status": _field_value(item, "Status") if item else None,
         "iteration": _field_value(item, "Iteration") if item else None,
+        "day": _field_value(item, "Target date") if item else None,
     }
     json.dump(out, sys.stdout, indent=2, default=str)
     sys.stdout.write("\n")
@@ -836,6 +943,354 @@ def cmd_task_iteration(args):
     print(f"assigned #{args.num} to {iteration['title']} (start {iteration['startDate']})")
 
 
+def cmd_task_day(args):
+    if bool(args.date) == bool(args.clear):
+        die("specify either YYYY-MM-DD or --clear (not both, not neither)")
+    item_id = _ensure_project_item(args.num)
+
+    if args.clear:
+        mut = """
+        mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!) {
+          clearProjectV2ItemFieldValue(input: {
+            projectId: $projectId
+            itemId: $itemId
+            fieldId: $fieldId
+          }) { projectV2Item { id } }
+        }
+        """
+        gh_graphql(mut, projectId=GH_PROJECT_ID, itemId=item_id,
+                   fieldId=GH_DAY_FIELD_ID)
+        print(f"cleared day on #{args.num}")
+        return
+
+    try:
+        datetime.strptime(args.date, "%Y-%m-%d")
+    except ValueError:
+        die(f"date must be YYYY-MM-DD, got {args.date!r}")
+
+    mut = """
+    mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $date: Date!) {
+      updateProjectV2ItemFieldValue(input: {
+        projectId: $projectId
+        itemId: $itemId
+        fieldId: $fieldId
+        value: { date: $date }
+      }) { projectV2Item { id } }
+    }
+    """
+    gh_graphql(mut,
+               projectId=GH_PROJECT_ID, itemId=item_id,
+               fieldId=GH_DAY_FIELD_ID, date=args.date)
+    print(f"set day on #{args.num} to {args.date}")
+
+
+# --- calendar --------------------------------------------------------------
+# Day-level events (sailing, traveling, etc.) that the agent should know about
+# when scheduling. Stored locally because they're not work — they don't belong
+# in the issue tracker.
+
+def _parse_date(s: str) -> str:
+    try:
+        return datetime.strptime(s, "%Y-%m-%d").strftime("%Y-%m-%d")
+    except ValueError:
+        die(f"date must be YYYY-MM-DD, got {s!r}")
+
+
+def _load_calendar() -> list[dict]:
+    if not CALENDAR_FILE.exists():
+        return []
+    try:
+        with CALENDAR_FILE.open() as f:
+            entries = json.load(f)
+    except Exception as e:
+        die(f"calendar file unreadable ({CALENDAR_FILE}): {e}")
+    if not isinstance(entries, list):
+        die(f"calendar file must be a JSON list, got {type(entries).__name__}")
+    return sorted(entries, key=lambda e: e.get("date", ""))
+
+
+def _save_calendar(entries: list[dict]) -> None:
+    entries = sorted(entries, key=lambda e: e.get("date", ""))
+    atomic_write_bytes(CALENDAR_FILE, (json.dumps(entries, indent=2) + "\n").encode())
+
+
+def cmd_calendar_add(args):
+    date = _parse_date(args.date)
+    entries = [e for e in _load_calendar() if e.get("date") != date]
+    entries.append({"date": date, "label": args.label, "blocks": not args.soft})
+    _save_calendar(entries)
+    kind = "soft" if args.soft else "blocking"
+    print(f"calendar: {date} = {args.label!r} ({kind})")
+
+
+def cmd_calendar_remove(args):
+    date = _parse_date(args.date)
+    entries = _load_calendar()
+    keep = [e for e in entries if e.get("date") != date]
+    if len(keep) == len(entries):
+        print(f"calendar: no event on {date}")
+        return
+    _save_calendar(keep)
+    print(f"calendar: removed {date}")
+
+
+def cmd_calendar_list(args):
+    today = datetime.now(timezone.utc).date()
+    start = datetime.strptime(args.from_, "%Y-%m-%d").date() if args.from_ else today
+    end = datetime.strptime(args.to, "%Y-%m-%d").date() if args.to else (today + timedelta(days=7))
+    out = [e for e in _load_calendar()
+           if start <= datetime.strptime(e["date"], "%Y-%m-%d").date() <= end]
+    json.dump(out, sys.stdout, indent=2, default=str)
+    sys.stdout.write("\n")
+
+
+# --- planner ---------------------------------------------------------------
+# Builds data/planner.json from current-iteration issues + calendar events,
+# in the shape the Hugo template at layouts/planner/single.html consumes.
+
+PLANNER_DATA_FILE = REPO_ROOT / "data" / "planner.json"
+
+# Display order for sys: lanes. Anything labelled sys:other ends up in "other".
+PLANNER_LANE_ORDER = list(LABEL_SYSTEMS) + ["other"]
+
+
+def _label_dim(labels: list[str], prefix: str) -> str | None:
+    for l in labels:
+        if l.startswith(prefix):
+            return l[len(prefix):]
+    return None
+
+
+def _systems_for(labels: list[str]) -> list[str]:
+    out = [l[len("sys:"):] for l in labels if l.startswith("sys:")]
+    return out or ["other"]
+
+
+def _primary_system(systems: list[str]) -> str:
+    # First system in PLANNER_LANE_ORDER wins; falls back to first listed
+    # so unknown sys: labels still land somewhere deterministic.
+    for s in PLANNER_LANE_ORDER:
+        if s in systems:
+            return s
+    return systems[0] if systems else "other"
+
+
+def _priority_for(labels: list[str]) -> str | None:
+    for p in LABEL_PRIORITIES:
+        if p in labels:
+            return p
+    return None
+
+
+def _day_label(d: datetime, today: datetime) -> str:
+    delta = (d.date() - today.date()).days
+    if delta == 0:
+        return "Today"
+    if delta == 1:
+        return "Tomorrow"
+    return d.strftime("%a %b %-d")
+
+
+def _planner_issue(item: dict) -> dict:
+    labels = item["labels"]
+    return {
+        "number": item["number"],
+        "title": item["title"],
+        "url": item["url"],
+        "milestone": item.get("milestone"),
+        "priority": _priority_for(labels),
+        "systems": _systems_for(labels),
+        "energy": _label_dim(labels, "energy:"),
+        "weather": _label_dim(labels, "weather:"),
+        "time": _label_dim(labels, "time:"),
+        "locations": [l[len("loc:"):] for l in labels if l.startswith("loc:")],
+        "blocked_parts": "blocked:parts" in labels,
+        "project_status": item.get("project_status"),
+        "day": item.get("day"),
+    }
+
+
+HAZARD_ICONS = {
+    "small_craft_advisory":     "☠️",
+    "special_marine_warning":   "⚠️",
+    "marine_weather_statement": "⚠️",
+    "gale_warning":             "🌬️",
+    "storm_warning":            "⛈️",
+    "hurricane_warning":        "🌀",
+    "tropical_storm_warning":   "🌀",
+}
+HAZARD_TOOLTIPS = {
+    "small_craft_advisory": "⛵",
+}
+
+
+def _planner_weather_icons(day: dict) -> list[str]:
+    """Pick 1-3 icons summarising a day's weather for the planner header."""
+    icons: list[str] = []
+    for token in day.get("hazards") or []:
+        ic = HAZARD_ICONS.get(token, "⚠️")
+        if ic not in icons:
+            icons.append(ic)
+    if day.get("precip"):
+        icons.append("🌧️")
+    else:
+        tmin, tmax = day.get("temp_f") or [None, None]
+        if tmax is not None and tmax > 70 and (tmin is None or tmin >= 55):
+            icons.append("☀️")
+        else:
+            icons.append("⛅")
+    if (day.get("wind_kt_max") or 0) >= 18 and "🌧️" not in icons:
+        icons.append("💨")
+    return icons
+
+
+def _planner_weather_for_window(state: dict, dates: list[str]) -> dict[str, dict]:
+    """Best-effort: returns {YYYY-MM-DD: {icons, temp_label, wind_kt_max}}.
+    Silently returns {} if location unset or any fetch fails."""
+    loc = state.get("location") or {}
+    lat, lon = loc.get("lat"), loc.get("lon")
+    if lat is None or lon is None:
+        return {}
+    # NWS public forecast page for the point — renders active alerts up top + marine
+    forecast_url = f"https://forecast.weather.gov/MapClick.php?lat={lat}&lon={lon}"
+    today = datetime.now(timezone.utc).date()
+    horizon = max((datetime.strptime(d, "%Y-%m-%d").date() - today).days
+                  for d in dates) + 1
+    if horizon <= 0:
+        return {}
+    horizon = min(horizon, 16)
+    try:
+        fc = fetch_forecast(lat, lon, horizon)
+        marine = fetch_marine(lat, lon, horizon)
+        alerts = fetch_alerts(lat, lon)
+    except SystemExit:
+        return {}
+    daily = fc["daily"]
+    waves = (marine or {}).get("daily", {}).get("wave_height_max") or [None] * len(daily["time"])
+    out: dict[str, dict] = {}
+    for i, date_ in enumerate(daily["time"]):
+        if date_ not in dates:
+            continue
+        wind = daily["wind_speed_10m_max"][i] or 0
+        tmax = daily["temperature_2m_max"][i]
+        tmin = daily["temperature_2m_min"][i]
+        precip = (daily["precipitation_sum"][i] or 0) >= 0.01
+        wave_m = waves[i] if i < len(waves) else None
+        wave_ft = round(wave_m * 3.28084, 1) if wave_m is not None else None
+        day_alerts = alerts_for_day(alerts, date_)
+        for a in day_alerts:
+            a["url"] = forecast_url
+        day = {
+            "wind_kt_max": round(wind, 1),
+            "wave_ft_max": wave_ft,
+            "temp_f": [round(tmin), round(tmax)],
+            "precip": precip,
+            "hazards": sorted({a["token"] for a in day_alerts}),
+            "alerts": day_alerts,
+        }
+        day["icons"] = _planner_weather_icons(day)
+        day["temp_label"] = f"{day['temp_f'][0]}–{day['temp_f'][1]}°"
+        out[date_] = day
+    return out
+
+
+def cmd_planner_publish(args, state):
+    iteration = _resolve_iteration(args.iteration)
+    start = datetime.fromisoformat(iteration["startDate"])
+    duration = iteration.get("duration") or 7
+
+    list_args = argparse.Namespace(
+        iteration=args.iteration,
+        labels=None, milestone=None, with_body=False,
+        schedulable=False, limit=300,
+    )
+    items = _list_by_iteration(list_args)
+
+    today = datetime.now(timezone.utc)
+    cal_by_date: dict[str, list[dict]] = {}
+    for ev in _load_calendar():
+        cal_by_date.setdefault(ev["date"], []).append(
+            {"label": ev["label"], "blocks": ev.get("blocks", True)}
+        )
+
+    window_dates = {
+        (start + timedelta(days=i)).strftime("%Y-%m-%d")
+        for i in range(duration)
+    }
+    if args.no_weather:
+        weather_by_date: dict[str, dict] = {}
+    else:
+        weather_by_date = _planner_weather_for_window(state, sorted(window_dates))
+    by_day: dict[str, list[dict]] = {}
+    unscheduled: list[dict] = []
+    for it in items:
+        pi = _planner_issue(it)
+        d = pi["day"]
+        if d and d in window_dates:
+            by_day.setdefault(d, []).append(pi)
+        else:
+            unscheduled.append(pi)
+
+    days = []
+    for i in range(duration):
+        d = start + timedelta(days=i)
+        date_str = d.strftime("%Y-%m-%d")
+        day_issues = by_day.get(date_str, [])
+        lanes: dict[str, list[dict]] = {s: [] for s in PLANNER_LANE_ORDER}
+        for issue in day_issues:
+            primary = _primary_system(issue["systems"])
+            lanes.setdefault(primary, []).append(issue)
+        # drop empty lanes for compactness
+        lanes_compact = [
+            {"system": s, "issues": lanes[s]}
+            for s in PLANNER_LANE_ORDER
+            if lanes.get(s)
+        ]
+        days.append({
+            "date": date_str,
+            "label": _day_label(d, today),
+            "events": cal_by_date.get(date_str, []),
+            "weather": weather_by_date.get(date_str),
+            "lanes": lanes_compact,
+            "task_count": len(day_issues),
+        })
+
+    payload = {
+        "iteration": {
+            "title": iteration["title"],
+            "start_date": start.strftime("%Y-%m-%d"),
+            "end_date": (start + timedelta(days=duration)).strftime("%Y-%m-%d"),
+            "duration": duration,
+        },
+        "generated_at": now_iso(),
+        "lane_order": PLANNER_LANE_ORDER,
+        "days": days,
+        "unscheduled": unscheduled,
+    }
+
+    PLANNER_DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
+    atomic_write_bytes(PLANNER_DATA_FILE, (json.dumps(payload, indent=2) + "\n").encode())
+    print(f"wrote {PLANNER_DATA_FILE} "
+          f"({len(items)} issues, {len(unscheduled)} unscheduled, "
+          f"iteration {iteration['title']})")
+
+    if args.commit or args.push:
+        rel = PLANNER_DATA_FILE.relative_to(REPO_ROOT)
+        cwd = str(REPO_ROOT)
+        st = subprocess.run(["git", "status", "--porcelain", str(rel)],
+                            capture_output=True, text=True, cwd=cwd)
+        if not st.stdout.strip():
+            print("planner: no changes to commit")
+            return
+        subprocess.run(["git", "add", str(rel)], check=True, cwd=cwd)
+        msg = f"planner: refresh data/planner.json ({iteration['title']})"
+        subprocess.run(["git", "commit", "-m", msg], check=True, cwd=cwd)
+        print(f"committed: {msg}")
+        if args.push:
+            subprocess.run(["git", "push"], check=True, cwd=cwd)
+            print("pushed")
+
+
 # --- weather ---------------------------------------------------------------
 
 TIDE_STATIONS_CACHE = DEFIANT_HOME / "tide-stations.json"
@@ -1000,12 +1455,20 @@ def derive_satisfies(wind_kt: float, wave_ft: float | None,
 
 
 def hazards_for_day(alerts: list[dict], date_str: str) -> list[str]:
-    out: set[str] = set()
+    return sorted({a["token"] for a in alerts_for_day(alerts, date_str)})
+
+
+def alerts_for_day(alerts: list[dict], date_str: str) -> list[dict]:
+    """Return [{token, event, headline, url}] for alerts active on date_str (UTC).
+    Filters to events present in HAZARDS — same closed vocabulary as hazards_for_day."""
+    out: list[dict] = []
+    seen: set[str] = set()
     day_start = datetime.fromisoformat(date_str).replace(tzinfo=timezone.utc)
     day_end = day_start + timedelta(days=1)
     for a in alerts:
         prop = a.get("properties", {})
-        token = HAZARDS.get(prop.get("event") or "")
+        event = prop.get("event") or ""
+        token = HAZARDS.get(event)
         if not token:
             continue
         try:
@@ -1015,8 +1478,17 @@ def hazards_for_day(alerts: list[dict], date_str: str) -> list[str]:
             continue
         if exp < day_start or eff > day_end:
             continue
-        out.add(token)
-    return sorted(out)
+        if token in seen:
+            continue
+        seen.add(token)
+        out.append({
+            "token": token,
+            "event": event,
+            "headline": prop.get("headline") or event,
+            "tooltip": HAZARD_TOOLTIPS.get(token, prop.get("headline") or event),
+            "url": prop.get("@id") or a.get("id") or prop.get("id"),
+        })
+    return out
 
 
 def cmd_weather(args, state):
@@ -1296,6 +1768,10 @@ def build_parser() -> argparse.ArgumentParser:
                          help="apply boat-mode filter (excludes blocked:parts; "
                               "underway → loc:underway-ok only; not-docked → drops "
                               "loc:dockside-only)")
+    tv_list.add_argument("--iteration",
+                         help="restrict to a project iteration: 'current', "
+                              "'next', or a literal iteration ID. Adds "
+                              "iteration/day/project_status to each item.")
     tv_list.set_defaults(func=cmd_task_list, needs_state=True)
 
     tv_show = tv.add_parser("show", help="full issue + project status + iteration")
@@ -1345,6 +1821,49 @@ def build_parser() -> argparse.ArgumentParser:
                    help="the iteration after the current one")
     g.add_argument("--id", help="literal iteration ID (e.g. c1d92a83)")
     tv_iter.set_defaults(func=cmd_task_iteration)
+
+    tv_day = tv.add_parser("day", help="set the project Target date (per-issue day)")
+    tv_day.add_argument("num", type=int)
+    tv_day.add_argument("date", nargs="?", help="YYYY-MM-DD")
+    tv_day.add_argument("--clear", action="store_true",
+                        help="clear the day field on this issue")
+    tv_day.set_defaults(func=cmd_task_day)
+
+    # --- calendar ---
+    cal = nouns.add_parser("calendar", help="day-level events that block/colour scheduling")
+    cv = cal.add_subparsers(dest="verb")
+
+    cv_add = cv.add_parser("add", help="add or overwrite an event on a date")
+    cv_add.add_argument("date", help="YYYY-MM-DD")
+    cv_add.add_argument("label")
+    cv_add.add_argument("--soft", action="store_true",
+                        help="appears on the planner but doesn't block scheduling "
+                             "(default: blocks)")
+    cv_add.set_defaults(func=cmd_calendar_add)
+
+    cv_rm = cv.add_parser("remove", help="remove the event on a date (if any)")
+    cv_rm.add_argument("date", help="YYYY-MM-DD")
+    cv_rm.set_defaults(func=cmd_calendar_remove)
+
+    cv_list = cv.add_parser("list", help="list events in a date window (default today + 7d)")
+    cv_list.add_argument("--from", dest="from_", help="YYYY-MM-DD (default: today)")
+    cv_list.add_argument("--to", help="YYYY-MM-DD (default: today + 7d)")
+    cv_list.set_defaults(func=cmd_calendar_list)
+
+    # --- planner ---
+    planner = nouns.add_parser("planner", help="build data/planner.json from current iteration")
+    pv = planner.add_subparsers(dest="verb")
+
+    pv_pub = pv.add_parser("publish", help="render data/planner.json (optionally commit/push)")
+    pv_pub.add_argument("--iteration", default="current",
+                        help="iteration spec: 'current' (default), 'next', or literal ID")
+    pv_pub.add_argument("--commit", action="store_true",
+                        help="git add + commit data/planner.json after writing")
+    pv_pub.add_argument("--push", action="store_true",
+                        help="implies --commit; also git push")
+    pv_pub.add_argument("--no-weather", action="store_true",
+                        help="skip weather fetch (offline / no location set)")
+    pv_pub.set_defaults(func=cmd_planner_publish, needs_state=True)
 
     # --- weather ---
     weather = nouns.add_parser("weather", help="marine weather + tides (auto when underway)")
