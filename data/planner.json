@@ -5,7 +5,7 @@
     "end_date": "2026-05-05",
     "duration": 7
   },
-  "generated_at": "2026-05-01T21:14:16Z",
+  "generated_at": "2026-05-01T21:19:03Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -65,7 +65,7 @@
             "event": "Small Craft Advisory",
             "headline": "Small Craft Advisory issued May 1 at 2:59PM EDT until May 3 at 10:00AM EDT by NWS Wakefield VA",
             "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616526&lon=-76.290014"
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616565&lon=-76.29001"
           }
         ],
         "icons": [
@@ -98,7 +98,7 @@
             "event": "Small Craft Advisory",
             "headline": "Small Craft Advisory issued May 1 at 2:59PM EDT until May 3 at 10:00AM EDT by NWS Wakefield VA",
             "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616526&lon=-76.290014"
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616565&lon=-76.29001"
           }
         ],
         "icons": [
