@@ -12,3 +12,8 @@ __pycache__/
 # Claude Code local state
 .claude/scheduled_tasks.lock
 
+
+# Secrets — never commit
+secrets/
+.env
+.env.*

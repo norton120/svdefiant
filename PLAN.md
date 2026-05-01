@@ -17,10 +17,10 @@ Build a single CLI (`bin/defiant`) that the ironclaw agent on the Pi (older Qwen
 
 | Noun | Verbs | Status |
 |---|---|---|
-| `state` | show / get / set / stale | ✅ done (TOML backend) |
+| `state` | show / get / set / stale | ✅ done (HA REST backend, TOML cache fallback) |
 | `inbox` | list / get / ack / unack | ✅ done (shells out to `scripts/inbox.py`) |
 | `task` | list / show / create / update / close / iteration | ✅ done (wraps `gh` + Project v2 GraphQL) |
-| `wiki` | search / show / edit | ⏳ stubbed |
+| `wiki` | search / show / edit | ✅ done (auto-clones; pure-Python search) |
 | `weather` | (default) | ✅ done (OpenMeteo forecast + marine, NWS alerts, NOAA tides) |
 
 State + ack files live under `DEFIANT_HOME` (default `~/.defiant`).
@@ -28,70 +28,137 @@ State + ack files live under `DEFIANT_HOME` (default `~/.defiant`).
 ## Done
 
 - **`bin/defiant`** — single uv-script entrypoint, subcommand dispatcher, atomic writes, schema validation. Smoke-tested locally.
-- **`defiant state`** — TOML backed by `~/.defiant/state.toml`. Schema validates `mode.status` enum (`underway|anchored|moored|docked|hauled-out`), `location.lat/lon` as floats, `underway.eta` as ISO datetime. Auto-bumps `<section>.updated` on every `set`. `stale --max NNd|h|m` exits nonzero with per-section detail.
+- **`defiant state`** — HA REST backend reading the `defiant_*` helpers (see `boat_state_architecture.md` memory for entity layout). Read path: `GET /api/states/<eid>` → normalized dict shaped like the legacy TOML. Write path: per-entity `POST /api/services/<domain>/<service>` (single-key writes, no whole-dict replace). Cache: every successful read writes through to `~/.defiant/state-cache.toml`; on HA error, returns cache and prepends a `# WARNING: HA unreachable...` line on stderr. Write failures exit nonzero (no cache-only writes — would desync). Freshness: `<section>.updated` is the oldest `last_updated` of any entity in that section. `set location.lat/lon` warns about SK sync overwrite. Token: `HOME_ASSISTANT_ACCESS_TOKEN` env or repo `.env`.
 - **`defiant inbox`** — `list` defaults to `--unprocessed --since 14d`, filtered against `~/.defiant/inbox-state.json`. Matches messages by Message-ID *or* s3 key (whichever form the agent passes). `ack --note "<why>"` writes acked-at + note. `unack` reverses.
 - **`defiant task`** — full verb set. `list` returns pre-summarized JSON (number/title/url/labels/milestone/state); `--schedulable` reads `mode.status` and drops `blocked:parts` always, drops `loc:dockside-only` unless docked, and when underway keeps only `loc:underway-ok`. `show <num>` adds body + project_status + iteration via one GraphQL round-trip. `create/update/close` port refit-task's idempotent dim-replace logic into Python (priority/sys/energy/weather/time replace any existing label in the same dim; loc replaces the whole `loc:*` set; `--blocked-parts`/`--no-blocked-parts` toggle). `iteration <num> --current|--next|--id` resolves the iteration via the cached field config and adds the issue to the project if missing. Smoke-tested locally end-to-end (create→update→show→iteration→close).
 - **`defiant weather`** — direct API, no MCPs. Reads `state.location.lat/lon`. Pulls OpenMeteo daily forecast (wind kt, gusts, temp F, precip), OpenMeteo marine (waves m → ft), NWS active alerts (mapped to closed-vocab hazard tokens — anything unmapped is dropped). When `state.mode == underway` and `--no-tides` not set, finds nearest NOAA tide station via cached metadata (`~/.defiant/tide-stations.json`, 30d TTL, haversine, 100 km cap) and includes per-day high/low times. `satisfies` array derived per `plan-iteration` SKILL vocabulary (any / dry ≤20 kt / warm >65 °F / calm ≤10 kt + <2 ft + ≥40 °F). Smoke-tested against Annapolis (lat/lon → station 8575512).
+- **`defiant wiki`** — auto-clones `https://github.com/norton120/svdefiant.wiki.git` to `$DEFIANT_WIKI` or `~/.defiant/wiki` on first use. `search <query> [--limit 5]` is pure-Python `re` over `*.md` (smart-case: lowercase query → case-insensitive); returns ranked JSON `[{page, line, snippet}]`, snippets capped at 200 chars. `show <page>` prints contents (resolves `<page>` or `<page>.md`). `edit <page> --body-file <path>` refuses to run on a dirty tree, `git pull --ff-only`s, replaces the file, commits as `agent: <create|edit> <page>`, pushes. Search/show smoke-tested against the live wiki from this laptop; edit deliberately untested locally to avoid pushing to the real wiki — Pi will exercise it.
 - **Memories saved** (auto-memory): boat state architecture (HA canonical) + CLI philosophy. Indexed in `MEMORY.md`.
 
 ## Next steps (in order)
 
-### 1. Deploy-blocker: new fine-grained PAT for the Pi
+### 1. Pi credentials — env-vars only, minimum scopes
 
-Local `gh` already has `project` scope so dev/test work fine. Before `defiant task` can run on ironclaw, the Pi needs a user-owned fine-grained PAT covering:
-- `norton120/svdefiant`: Contents (RW for wiki repo), Issues (RW), Pull requests (RW), Metadata (R)
-- Account: **Projects (RW)** — classic PATs cannot do this
+Goal: no `gh auth login`, no `~/.aws/credentials`, no `gh auth setup-git`. All creds live in the agent's environment (e.g. `EnvironmentFile=` on the systemd unit, or the existing `.env` pattern), and `~/.defiant/` never holds anything sensitive.
 
-After PAT is in place, retire the old one on the Pi.
+**`GH_TOKEN`** — fine-grained PAT scoped to:
+- Resource owner: your user (norton120)
+- Repository access: only `norton120/svdefiant`
+- Repository permissions:
+  - **Contents: Read and write** (covers `git push` to the wiki, since the wiki shares the repo's Contents permission)
+  - **Issues: Read and write** (`defiant task list/show/create/update/close`)
+  - **Metadata: Read** (mandatory)
+- Account permissions:
+  - **Projects: Read and write** (`defiant task iteration` and project item-add)
 
-### 2. `defiant wiki` — ripgrep, no embeddings
+No PR scope, no other repos, no Actions/Pages/etc. Both `gh` (via `GH_TOKEN`) and `defiant wiki edit` (via a one-shot `https://x-access-token:$GH_TOKEN@…` URL — token in subprocess argv only, never written to disk) pick this up automatically.
 
-Wiki repo is already cloned on the Pi (per user). Path is TBD — figure out where on first run and add to `defiant` config or hardcode after confirmation.
+**AWS** — dedicated IAM user `defiant-ironclaw` with this inline policy (read-only on the inbound prefix, nothing else):
 
-- `wiki search <query> [--limit 5]` — ripgrep over the local clone, return ranked file list with snippets (file:line:context).
-- `wiki show <page>` — print page content.
-- `wiki edit <page> --body-file <path>` — replace, commit with mandated message format (`agent: <verb> <page>`), push. Enforce no-uncommitted-state on the Pi.
+```json
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "ListInboundPrefix",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::svdefiant-inbound-mail",
+      "Condition": { "StringLike": { "s3:prefix": ["inbound/*", "inbound"] } }
+    },
+    {
+      "Sid": "GetInboundObjects",
+      "Effect": "Allow",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::svdefiant-inbound-mail/inbound/*"
+    }
+  ]
+}
+```
 
-Don't build embeddings/FTS yet — ripgrep is sub-100ms for any reasonable wiki size.
+Export `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_DEFAULT_REGION=us-east-1`. boto3 reads these natively; `~/.aws/` stays empty.
 
-### 3. Backend swap: `defiant state` TOML → HA REST
+**Env vars the Pi agent needs** (full list):
+```
+HOME_ASSISTANT_ACCESS_TOKEN=...   # already in repo .env
+HA_URL=http://homeassistant.local:8123   # optional; default works
+GH_TOKEN=...                       # the new fine-grained PAT
+AWS_ACCESS_KEY_ID=...
+AWS_SECRET_ACCESS_KEY=...
+AWS_DEFAULT_REGION=us-east-1
+DEFIANT_WIKI=...                   # optional; defaults to ~/.defiant/wiki
+```
 
-The user is doing HA setup in a parallel session: entities (`device_tracker.defiant`, `input_select.defiant_mode`, `input_text.defiant_destination`, `input_datetime.defiant_eta`, `binary_sensor.shore_power`), long-lived access token, automations.
+If the Pi already has a wiki clone elsewhere, set `DEFIANT_WIKI=<that path>` to skip the auto-clone.
 
-Once the entities exist:
+### 2. Backend swap: `defiant state` TOML → HA REST — ✅ done
 
-- Add HA config to `defiant`: `HA_URL`, `HA_TOKEN` env vars (or `~/.defiant/config.toml`).
-- Replace `load_state()` / `save_state()` with REST calls (`GET /api/states/<entity>`, `POST /api/services/input_*/...`).
-- Add cache: on read success, write through to `~/.defiant/state-cache.toml` with timestamp. On read failure, return cache and prepend `# WARNING: serving cached state from <ts>; HA unreachable` to stdout.
-- On write failure: exit nonzero (do NOT silently write cache only — would desync).
-- `defiant state stale` continues to work; freshness is now the `last_updated` field returned by HA per entity.
+`bin/defiant` reads/writes HA helpers via REST. The vessel-side details (entity layout, automations, data flow) live on the [Vessel-Management-System wiki page](https://github.com/norton120/svdefiant/wiki/Vessel-Management-System).
 
-Callers (skills, scripts) shouldn't need to change — same CLI surface.
+CLI implementation notes:
+- `STATE_ENTITIES` in `bin/defiant` maps dotted state keys → HA entity IDs.
+- `_load_state_from_ha` writes through to `~/.defiant/state-cache.toml` on every successful read; `load_state` falls back to the cache (with `# WARNING: HA unreachable…` on stderr) when HA is unreachable, returns `{}` if both are unavailable.
+- `cmd_state_set` writes a single entity per call (per-domain service / payload-key). Write failure exits non-zero; the cache is never written without a successful HA write (would desync).
+- `cmd_state_stale` uses each entity's `last_updated` (oldest within a section).
+- Token: `HOME_ASSISTANT_ACCESS_TOKEN` env or repo `.env`. Endpoint: `HA_URL` env (default `http://homeassistant.local:8123`).
+- `set location.lat/lon` prints an SK-overwrite warning (auto-feed cadence ~60 s).
 
-### 4. Migrate the existing skills
+Open code follow-ups (not blockers):
+- Expose SoG/CoG read-only via `defiant state` (e.g. a `nav` section computed from `sensor.defiant_signal_k_*`). Useful for `defiant weather --underway` decisions.
+- Decide whether to gate manual lat/lon writes behind `--manual` (pauses the SK-sync automation). Right now the CLI just warns.
 
-Strip raw `gh`/GraphQL out of:
+### 3. Migrate the existing skills — ✅ done
 
-- `.claude/skills/triage-deps/SKILL.md` — replace `scripts/inbox.py list` with `defiant inbox list`, replace `gh issue edit ...` with `defiant task update ...`. After triage, the agent should `defiant inbox ack <id>` for every email it processed.
-- `.claude/skills/plan-iteration/SKILL.md` — replace the Project v2 GraphQL block (lines ~76–132) with `defiant task iteration <num> --current`. Replace the weather MCP usage with `defiant weather`. Replace location-asking with `defiant state get location` + `defiant state stale --max 3d`.
+Both skills and the Action script now route through `defiant`:
 
-Also update `.github/scripts/triage-deps.py` (the workflow version) to call `defiant inbox` and ack what it processes — same dedup wins apply to the GitHub Action.
+- `.claude/skills/triage-deps/SKILL.md` — calls `defiant inbox list` (defaults to unprocessed via `~/.defiant/inbox-state.json`), `defiant task list --limit 300 --with-body`, `defiant task update <num> --blocked-parts | --no-blocked-parts`, and acks every processed email with `defiant inbox ack <id> --note "..."`.
+- `.claude/skills/plan-iteration/SKILL.md` — pulls location/mode from `defiant state` (with `state stale --max 3d` to decide whether to confirm-or-ask the user), uses `defiant weather --days <N>` (returns `satisfies` and `hazards` per day directly — no client-side weather classification), `defiant task list --schedulable --milestone "<name>" --with-body`, and `defiant task iteration <num> --current` for project assignment.
+- `.github/scripts/triage-deps.py` — uses `bin/defiant inbox list --since 14d --all` (CI runner is ephemeral so no persistent ack state; passes `--all` to match prior behavior) and `bin/defiant task update <num> --blocked-parts | --no-blocked-parts`. The workflow already installs `uv` so the script's shebang resolves cleanly.
 
-### 5. Deploy to the Pi
+`bin/defiant task list` gained `--with-body` to support these (off by default since body bloats the typical schedulable list output).
 
-- Decide whether `defiant` lives in the repo (current: `bin/defiant`, gets deployed on `git pull`) or installs to `/usr/local/bin` via a small `install.sh`.
-- AWS creds for SES bucket — confirm they're in `~/.aws/credentials` or env on ironclaw.
-- Verify `uv` is installed on the Pi (script needs it for the inline shebang).
-- Add `~/.defiant/` to a backup or sync if the ack history matters across reboots (probably yes).
+Open follow-up: persisting `~/.defiant/inbox-state.json` between Action runs (via `actions/cache`) would let the workflow drop `--all` and ack each processed email — saves Anthropic tokens. Not yet worth the complexity at current run cost.
+
+### 4. Cleanup — ✅ done
+
+- `bin/refit-task` deleted (fully superseded by `defiant task`).
+- `.mcp.json` deleted (only registered `weather` + `noaa-tides`, both superseded by `defiant weather`). Restore the file if a future MCP is needed.
+
+### 5. Wire `defiant` into ironclaw via stdio MCP
+
+The ironclaw agent itself is sandboxed from secrets — its built-in shell tool scrubs `*_TOKEN` / `*_KEY` / `*_SECRET` / `*_PASSWORD` before exec, and WASM tools auth via the host's network proxy (no Bearer-type fit for AWS sigv4). The path that matches is **stdio MCP**: ironclaw spawns the MCP server process with env vars passed via `--env`, those vars come from ironclaw's encrypted secrets store, and the agent only sees the MCP tool surface.
+
+`scripts/defiant_mcp.py` is that server — a stdio MCP wrapper around `bin/defiant`. 18 tools (`state_show`/`get`/`set`/`stale`, `inbox_list`/`get`/`ack`/`unack`, `task_list`/`show`/`create`/`update`/`close`/`iteration`, `wiki_search`/`show`/`edit`, `weather`), each with strict JSON schemas. Handlers shell out to the CLI; `body` strings for `task_create`/`task_update`/`wiki_edit` are written to ephemeral tempfiles internally so the agent never deals with file plumbing. Stderr warnings (HA cache fallback, SK overwrite) are surfaced as `[warnings]` blocks in the tool result so the agent can react. Smoke-tested locally end-to-end via the MCP protocol.
+
+Register on ironclaw:
+
+```sh
+ironclaw mcp add defiant --transport stdio \
+  --command uv --arg run --arg --script \
+  --arg /home/ironclaw/app/svdefiant/scripts/defiant_mcp.py \
+  --env GH_TOKEN=… \
+  --env AWS_ACCESS_KEY_ID=… \
+  --env AWS_SECRET_ACCESS_KEY=… \
+  --env AWS_DEFAULT_REGION=us-east-1 \
+  --env HOME_ASSISTANT_ACCESS_TOKEN=…
+```
+
+The values go into ironclaw's secrets store; rotate with `ironclaw mcp remove defiant && ironclaw mcp add defiant …`.
+
+After verification, remove the now-redundant built-in `github` WASM tool: `ironclaw tool uninstall github`. `defiant`'s task verbs cover everything the agent used it for, and consolidating reduces the live tool surface (fewer "which tool do I pick" failures from a weak agent).
+
+Other deploy items:
+- Verify `uv` is installed on the Pi (`scripts/defiant_mcp.py` and `bin/defiant` both use `uv run --script` shebangs).
+- `~/.defiant/inbox-state.json` survives reboots (homedirs aren't tmpfs); no backup wiring needed unless you reprovision the Pi from scratch.
+- `bin/defiant` ships via the existing `git pull` of the svdefiant repo on ironclaw — no separate install step.
 
 ## File map
 
 - `bin/defiant` — the CLI
-- `bin/refit-task` — legacy bash; will be absorbed by `defiant task`, don't delete yet
+- `scripts/defiant_mcp.py` — stdio MCP wrapper for ironclaw (18 tools)
 - `scripts/inbox.py` — SES reader; `defiant inbox` shells out to it. Keep importable shape.
-- `.github/scripts/triage-deps.py` — runs the same logic as the workflow; consumes `scripts/inbox.py` directly. Update later.
-- `.claude/skills/{triage-deps,plan-iteration}/SKILL.md` — rewrite to use `defiant` verbs.
-- `.mcp.json` — currently registers `weather` and `noaa-tides` MCPs. After `defiant weather` lands, these should be removable (one less moving part on the Pi).
+- `.github/scripts/triage-deps.py` — runs the same logic as the workflow; calls `defiant` verbs.
+- `.claude/skills/{triage-deps,plan-iteration}/SKILL.md` — `defiant`-only.
 
 ## Constraints / gotchas
 
@@ -103,22 +170,25 @@ Also update `.github/scripts/triage-deps.py` (the workflow version) to call `def
 
 ## Open questions
 
-- **Wiki repo path** — proposal: `defiant wiki` auto-clones `https://github.com/norton120/svdefiant.wiki.git` to `~/.defiant/wiki` on first use, with `DEFIANT_WIKI` env var to override. User agreed in last session; not yet implemented.
-- Should `defiant wiki edit` open a PR for the agent's commits, or commit directly? (Direct seems fine for now — wiki has no protected branches and the agent's changes are low-risk.)
 - Is `bin/defiant` shipped to the Pi via `git pull`, or via a separate `install.sh` that copies to `/usr/local/bin`? Affects how venvs/deps are managed if we ever leave the uv-script model.
+- `defiant wiki edit` commits directly to `master` (no PR). Wiki has no protected branches and agent commits are low-risk; revisit if the agent ever starts making wide-radius changes.
 
 ## Handoff for next session
 
-What landed this session:
-- `defiant state` (TOML), `defiant inbox` (SES), `defiant task` (gh + Project v2), `defiant weather` (OpenMeteo + NWS + NOAA tides) — all in `bin/defiant`, all smoke-tested locally.
-- Auto-memory: `boat_state_architecture.md`, `ironclaw_cli_philosophy.md` (already indexed in `MEMORY.md`).
+Local side is done. CLI feature-complete, both skills + the Action route through `defiant`, the stdio MCP shim is built and protocol-tested, classic PAT scopes are documented, the dedicated `defiant-ironclaw` IAM user is created with its keys at `secrets/ironclaw.env`.
 
-Pick-up order for next session (lowest-cost first):
-1. **`defiant wiki`** — pure-local code, no auth needed for dev. Use ripgrep + `git`. See `### 2.` above.
-2. **Migrate skills** — `triage-deps` and `plan-iteration` SKILL.md files. Mechanical edits to call `defiant` verbs.
-3. **HA backend swap for `state`** — only when the user's HA entities are live. See `### 3.` above.
-4. **Pi deploy** — needs the new fine-grained PAT (`### 1.`).
+## Overnight deploy (in progress)
 
-`bin/refit-task` is now fully superseded by `defiant task` but kept around — safe to delete after the skills are migrated and a real run confirms parity.
+User asked me to wrap up the Pi-side wiring while they sleep. Plan:
 
-The two MCPs in `.mcp.json` (`weather`, `noaa-tides`) are now also superseded by `defiant weather` — safe to remove once the `plan-iteration` skill is migrated.
+1. Commit + push the local migration work to origin (defiant CLI completion + MCP shim + skill migrations + cleanup).
+2. SSH to `ironclaw@ironclaw.local`, clone the repo fresh to the host (it's only inside ironclaw's sandbox today, not on the host).
+3. Verify/install `uv` on the Pi.
+4. Standalone-test `bin/defiant` and `scripts/defiant_mcp.py` via the JSON-RPC protocol BEFORE handing to ironclaw — bad MCP servers shouldn't get registered.
+5. `scp secrets/ironclaw.env` to the Pi for the AWS keys; pull `GH_TOKEN` from the user's existing bashrc; pull `HOME_ASSISTANT_ACCESS_TOKEN` from `~/.ironclaw/.env`.
+6. `ironclaw mcp add defiant --transport stdio …` with all four `--env` flags.
+7. `ironclaw mcp test defiant` + a couple of tool calls (`state_show`, `weather`, `task_list --limit 3`) to confirm cred injection + end-to-end works.
+
+**Hard rules for tonight**: do not `ironclaw tool uninstall github` (parity check is a morning task), do not touch `~/.ironclaw/config.toml`, postgres, tailscale, or systemd unit. If anything looks off, back off and report in the morning rather than improvising. The github WASM tool stays installed alongside defiant for now; the agent can route either way until you've confirmed parity.
+
+Status will be updated below as steps complete.

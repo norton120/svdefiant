@@ -5,30 +5,27 @@ description: Reviews recent inbound mail (orders, shipping, deliveries) from the
 
 # Triage parts dependencies
 
-Reads the SES inbound bucket via `scripts/inbox.py`, cross-references with open issues on `norton120/svdefiant`, and updates the `blocked:parts` label. Auto-applies; reports what changed.
-
-## Pre-flight
-
-- Repo: `norton120/svdefiant`
-- Label: `blocked:parts` (already exists — do not create)
-- Email source: `scripts/inbox.py` (CLI in this repo, returns JSON)
+Reads SES inbound mail, cross-references with open issues on `norton120/svdefiant`, and updates the `blocked:parts` label. Auto-applies; reports what changed; acks every email it processed so the next run skips them.
 
 ## Steps
 
-1. **Fetch recent emails** (default last 14 days; widen if user mentions an older order):
+1. **Fetch unprocessed emails** (default: unprocessed in last 14 days). The CLI already filters out anything previously acked:
    ```
-   scripts/inbox.py list --since 14d
+   defiant inbox list --since 14d
    ```
-   Filter the result for delivery-relevant senders/subjects. Reasonable patterns: `amazon|ups|fedex|usps|defender|west.?marine|jamestown|hamilton|sailrite|harken|raymarine|shipped|delivered|tracking|order.confirmation|out.for.delivery`.
+   Then narrow by subject/sender to delivery-relevant items. Reasonable patterns:
+   `amazon|ups|fedex|usps|defender|west.?marine|jamestown|hamilton|sailrite|harken|raymarine|shipped|delivered|tracking|order.confirmation|out.for.delivery`.
+
+   If an email obviously isn't delivery-related (e.g. a newsletter), still ack it with a note (step 6) so it doesn't keep showing up.
 
 2. **Pull open issues with bodies + labels**:
    ```
-   gh issue list --repo norton120/svdefiant --state open --limit 300 --json number,title,body,labels
+   defiant task list --limit 300 --with-body
    ```
 
-3. **For each email of interest**, fetch the full body when needed:
+3. **For each delivery-relevant email**, fetch the full body when needed:
    ```
-   scripts/inbox.py get <s3_key>
+   defiant inbox get <message_id_or_s3_key>
    ```
    Look for: vendor, order ID, parts/SKUs, status (ordered / shipped / out for delivery / delivered), tracking number, ETA.
 
@@ -43,14 +40,21 @@ Reads the SES inbound bucket via `scripts/inbox.py`, cross-references with open 
 
 6. **Apply** (auto-apply, no confirmation):
    ```
-   gh issue edit <number> --repo norton120/svdefiant --add-label "blocked:parts"
-   gh issue edit <number> --repo norton120/svdefiant --remove-label "blocked:parts"
+   defiant task update <number> --blocked-parts        # add the label
+   defiant task update <number> --no-blocked-parts     # remove it
    ```
+   `defiant task update` is idempotent — re-running with the same flag is a no-op.
 
-7. **Report** a final summary table:
+7. **Ack each processed email** so it doesn't get reconsidered next run:
+   ```
+   defiant inbox ack <id> --note "<one-line reason>"
+   ```
+   Always ack, including emails you decided weren't actionable — the note explains why for future-you.
+
+8. **Report** a final summary table:
    | Issue | Title | Action | Why (1 line) |
 
-   Plus a "stragglers" section: relevant emails with no matching issue (so the user can decide whether to open one).
+   Plus a "stragglers" section: relevant emails with no matching issue (so the user can decide whether to open one). Stragglers should still be acked unless you genuinely want them to re-surface next run.
 
 ## Conservatism
 
@@ -61,5 +65,5 @@ Reads the SES inbound bucket via `scripts/inbox.py`, cross-references with open 
 
 ## Notes
 
-- The inbox bucket is `svdefiant-inbound-mail` (us-east-1); `inbox.py` handles the AWS calls.
+- The dedup is durable across runs (state lives in `~/.defiant/inbox-state.json`). If you accidentally ack the wrong email, `defiant inbox unack <id>` reverses it.
 - Issues need to mention vendor / order info in their body for matching to work. If an issue has no body context, you cannot match it — leave alone.

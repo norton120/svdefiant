@@ -1,54 +1,66 @@
 ---
 name: plan-iteration
-description: Interactively plan the upcoming iteration (sprint) for the S/V Defiant refit. Asks the user where the boat is, available days, energy level, and target milestone; pulls marine weather; filters open GitHub issues by their weather/time/energy/location labels; proposes a day-by-day plan; iterates with the user until approved; assigns chosen issues to the current iteration on GitHub Project #4. Use when the user asks to "plan the week", "plan the iteration", "what should we do this week", or similar.
+description: Interactively plan the upcoming iteration (sprint) for the S/V Defiant refit. Pulls boat location and mode from Home Assistant via `defiant state`, marine weather from `defiant weather`, and schedulable open issues via `defiant task list --schedulable --with-body`; proposes a day-by-day plan; iterates with the user until approved; assigns chosen issues to the current iteration on GitHub Project #4 via `defiant task iteration`. Use when the user asks to "plan the week", "plan the iteration", "what should we do this week", or similar.
 ---
 
 # Plan iteration
 
 Interactive sprint planner. Synthesizes weather forecast + filtered issues + user-stated capacity into a day-by-day plan.
 
-## Always ask the user first
+## Always confirm location and ask about capacity
 
-The boat moves. Don't assume location. Ask for:
+The boat moves and HA may be stale. Run:
 
-1. **Location** — lat/lon, marina, or city. (Required for weather.)
-2. **Days available this iteration** — which dates / how many.
-3. **Energy level** — `couch`, `light`, `moderate`, or `heavy` (matches the `energy:*` labels).
-4. **Target milestone** — one of: `Day Sails`, `Solomans`, `St. Michaels`, `NY`, `Annapolis`, `ICW Norfolk`, `Blue Water`. (If they don't know, suggest the milestone with the soonest open due date.)
+```
+defiant state get location
+defiant state stale --max 3d
+```
+
+- If `state stale` exits 0 (fresh): confirm with the user — "HA says we're at <name>. Still right?"
+- If it exits nonzero (stale): ask the user where the boat actually is, then update HA so other tools stay in sync:
+  ```
+  defiant state set location.name "<name>"
+  defiant state set location.lat <lat>
+  defiant state set location.lon <lon>
+  ```
+  (Lat/lon are auto-fed by SignalK every ~60s, so manual lat/lon writes only stick if SK is offline. The CLI will warn.)
+
+Then ask the user:
+
+1. **Days available this iteration** — which dates / how many.
+2. **Energy level** — `couch`, `light`, `moderate`, or `heavy` (matches the `energy:*` labels).
+3. **Target milestone** — one of: `Day Sails`, `Solomans`, `St. Michaels`, `NY`, `Annapolis`, `ICW Norfolk`, `Blue Water`. (If they don't know, suggest the milestone with the soonest open due date.)
 
 ## Steps
 
 ### 1. Marine weather forecast
 
-Use the `weather` MCP for the location across the user's available days:
-- `marine_conditions` for waves/swell/wind on the water
-- `forecast` for precipitation, temperature, daily wind
-
-For each day, derive a "weather profile" matching the repo's labels:
-- **`weather:calm`** — light wind (≤10 kt), seas <2 ft, dry, mild
-- **`weather:dry`** — no precipitation, wind ≤20 kt
-- **`weather:warm`** — temp >65°F, dry
-- **`weather:any`** — anything
-
-A day "satisfies" a label if its profile is at-least that good. (e.g. `weather:calm` day satisfies `weather:any`, `weather:dry`, `weather:warm`, and `weather:calm`.)
-
-### 2. Pull issues for the milestone
-
 ```
-gh issue list --repo norton120/svdefiant --state open --milestone "<name>" --limit 300 --json number,title,labels,body
+defiant weather --days <N>
 ```
 
-Exclude any with `blocked:parts`.
+Reads location and mode from `defiant state` automatically. For each day, `defiant weather` already returns:
 
-### 3. Filter by labels
+- `wind_kt_max`, `gust_kt_max`, `wave_ft_max`, `temp_f`, `precip`, `hazards`
+- `satisfies` array of weather labels the day meets — drawn from `{any, dry, warm, calm}`. A day with `satisfies: ["any","dry","warm","calm"]` is good for any weather-tagged issue; one with just `["any"]` is rough.
+
+If `mode.status == underway`, tide entries are included automatically. Hazards (e.g. `gale_warning`, `small_craft_advisory`) come from NWS; treat any non-empty `hazards` list as a flag for `loc:aloft`/`loc:underwater`/`loc:on-deck` work that day.
+
+### 2. Pull schedulable issues for the milestone
+
+```
+defiant task list --schedulable --milestone "<name>" --with-body
+```
+
+`--schedulable` already filters: drops `blocked:parts`, drops `loc:dockside-only` unless docked, and (when underway) keeps only `loc:underway-ok`. So you don't need to re-implement those rules.
+
+### 3. Filter remaining dimensions per-day
 
 For each issue, parse labels:
-- `weather:*` — required weather (must be satisfied by the day)
-- `time:lt-1hr` / `time:half-day` / `time:full-day` / `time:multi-day` — duration
-- `energy:couch` / `energy:light` / `energy:moderate` / `energy:heavy` — required energy ≤ user's energy
-- `loc:dockside-only` — only schedule when at a dock
-- `loc:underway-ok` — schedulable on passage days
-- `loc:aloft` / `loc:underwater` — extra weather caution; treat as `weather:calm` minimum even if not labeled as such
+- `weather:*` — must be in the day's `satisfies` array
+- `time:lt-1hr` / `half-day` / `full-day` / `multi-day` — duration
+- `energy:couch` / `light` / `moderate` / `heavy` — required energy ≤ user's energy
+- `loc:aloft` / `loc:underwater` — extra weather caution; require `weather:calm` in `satisfies` even if not labeled that strict
 - `sys:*` — system grouping for context only
 
 ### 4. Build a day-by-day proposal
@@ -61,8 +73,8 @@ Match issues to days. Group multi-day issues across consecutive compatible days.
 
 Present as a table:
 
-| Day | Date | Weather | Issues |
-|-----|------|---------|--------|
+| Day | Date | Weather (`satisfies`) | Hazards | Issues |
+|-----|------|----------------------|---------|--------|
 
 Then ask: "Sound right? What would you change?"
 
@@ -72,64 +84,19 @@ Adjust based on user feedback (swap issues, push to next iteration, add unlabele
 
 ### 6. Commit to the project
 
-Once the user approves, assign chosen issues to the **current iteration** on Project #4.
+Once the user approves, assign each chosen issue to the current iteration:
 
-**Project IDs (cached):**
-- Project: `PVT_kwHOAGJGHM4BVufn`
-- Iteration field: `PVTIF_lAHOAGJGHM4BVufnzhRaGt0`
-
-**Pre-flight check** — fetch the iteration field configuration:
 ```
-gh api graphql -f query='{
-  node(id: "PVTIF_lAHOAGJGHM4BVufnzhRaGt0") {
-    ... on ProjectV2IterationField {
-      configuration {
-        duration
-        iterations { id title startDate duration }
-      }
-    }
-  }
-}'
+defiant task iteration <number> --current
 ```
 
-If `duration: 0` or `iterations: []`, the field hasn't been configured yet. Tell the user: "The Iteration field has no cadence set. Open https://github.com/users/norton120/projects/4/settings, set duration to 1 week starting your preferred Monday, then re-run me."
+`defiant task iteration` resolves the iteration via the cached project field config and adds the issue to the project if it isn't already there. If the iteration field has no cadence configured, the CLI will tell the user to open https://github.com/users/norton120/projects/4/settings.
 
-Otherwise, find the iteration whose `startDate ≤ today < startDate + duration`. That's the current iteration.
+To pre-stage an issue for the next iteration instead:
 
-**For each chosen issue:**
-
-1. Get the issue's project item ID (or add it to the project if not already there):
-   ```
-   gh api graphql -f query='{
-     repository(owner:"norton120", name:"svdefiant") {
-       issue(number: <N>) {
-         projectItems(first: 5) {
-           nodes { id project { id } }
-         }
-       }
-     }
-   }'
-   ```
-   Filter to the item whose `project.id == "PVT_kwHOAGJGHM4BVufn"`. If absent, add it:
-   ```
-   gh api graphql -f query='mutation {
-     addProjectV2ItemById(input: {projectId: "PVT_kwHOAGJGHM4BVufn", contentId: "<issue node id>"}) {
-       item { id }
-     }
-   }'
-   ```
-
-2. Set the iteration field value:
-   ```
-   gh api graphql -f query='mutation {
-     updateProjectV2ItemFieldValue(input: {
-       projectId: "PVT_kwHOAGJGHM4BVufn"
-       itemId: "<item id>"
-       fieldId: "PVTIF_lAHOAGJGHM4BVufnzhRaGt0"
-       value: { iterationId: "<current iteration id>" }
-     }) { projectV2Item { id } }
-   }'
-   ```
+```
+defiant task iteration <number> --next
+```
 
 ### 7. Final report
 
@@ -137,11 +104,11 @@ Confirm what was assigned, list issues that were considered but pushed out (with
 
 ## Conservatism / safety
 
-- If marine weather shows hazardous conditions on a `loc:underwater` or `loc:aloft` day, *flag it* and don't schedule those issues for that day even if all other constraints match.
+- If `hazards` is non-empty for a day, *flag it* and don't schedule `loc:aloft` / `loc:underwater` / heavy on-deck issues for that day even if other constraints match.
 - If the user provides energy `light` and an issue is labeled `energy:heavy`, do not schedule it; explain why.
 - Be honest about uncertainty in forecast — Day 1-2 confident, day 5+ caveat.
 
 ## Notes
 
-- Marine weather data has limited coastal accuracy (per the `weather` MCP's own warning). Use as planning input, not as a navigation/safety call.
-- The `noaa-tides` MCP is also available if tide windows matter (e.g. ICW shoaling, bridge clearances).
+- `defiant weather` already includes tides when underway and skips them when not — the agent never has to reason about whether to fetch them.
+- Marine wave data isn't available for inland points; the CLI sets a `marine_note` field when it falls back. Treat that as "wave height unknown" rather than "calm".

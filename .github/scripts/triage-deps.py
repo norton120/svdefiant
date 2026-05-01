@@ -2,9 +2,15 @@
 """Match recent inbound mail (orders, shipping, deliveries) against open issues
 and update the `blocked:parts` label.
 
-Reads inbox via scripts/inbox.py, lists open issues via gh, calls Anthropic
-with a forced tool-use schema to get label change decisions, applies via gh.
+Reads inbox + open issues via the `defiant` CLI, calls Anthropic with a forced
+tool-use schema to get label change decisions, applies via `defiant task`.
 Prints a markdown summary suitable for $GITHUB_STEP_SUMMARY.
+
+Note: the GH Actions runner is ephemeral so `~/.defiant/inbox-state.json`
+doesn't persist across runs; we pass `--all` to inbox list and skip acking.
+If we ever cache `~/.defiant/` across runs (actions/cache), switch to the
+default unprocessed filter and ack every email after processing for Anthropic
+token savings.
 """
 from __future__ import annotations
 
@@ -13,11 +19,12 @@ import os
 import re
 import subprocess
 import sys
+from pathlib import Path
 
 import anthropic
 
 REPO = "norton120/svdefiant"
-INBOX_SCRIPT = "scripts/inbox.py"
+DEFIANT = str(Path(__file__).resolve().parents[2] / "bin" / "defiant")
 SINCE = os.environ.get("TRIAGE_SINCE", "14d")
 MODEL = "claude-sonnet-4-6"
 
@@ -81,7 +88,7 @@ def run(cmd: list[str]) -> str:
 
 
 def fetch_inbox() -> list[dict]:
-    msgs = json.loads(run([INBOX_SCRIPT, "list", "--since", SINCE]))
+    msgs = json.loads(run([DEFIANT, "inbox", "list", "--since", SINCE, "--all"]))
     return [
         m for m in msgs
         if DELIVERY_PATTERN.search(f"{m.get('from','')} {m.get('subject','')} {m.get('snippet','')}")
@@ -90,8 +97,7 @@ def fetch_inbox() -> list[dict]:
 
 def fetch_issues() -> list[dict]:
     return json.loads(run([
-        "gh", "issue", "list", "--repo", REPO, "--state", "open",
-        "--limit", "300", "--json", "number,title,body,labels",
+        DEFIANT, "task", "list", "--limit", "300", "--with-body",
     ]))
 
 
@@ -101,7 +107,7 @@ def decide(emails: list[dict], issues: list[dict]) -> dict:
             "number": i["number"],
             "title": i["title"],
             "body": (i.get("body") or "")[:1500],
-            "labels": [l["name"] for l in i.get("labels", [])],
+            "labels": i.get("labels") or [],
         }
         for i in issues
     ]
@@ -139,11 +145,10 @@ def decide(emails: list[dict], issues: list[dict]) -> dict:
 def apply_changes(changes: list[dict]) -> list[dict]:
     out = []
     for c in changes:
-        flag = "--add-label" if c["action"] == "add" else "--remove-label"
+        flag = "--blocked-parts" if c["action"] == "add" else "--no-blocked-parts"
         try:
             subprocess.run(
-                ["gh", "issue", "edit", str(c["issue_number"]),
-                 "--repo", REPO, flag, "blocked:parts"],
+                [DEFIANT, "task", "update", str(c["issue_number"]), flag],
                 check=True, capture_output=True, text=True,
             )
             out.append({**c, "ok": True})

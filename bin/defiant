@@ -6,13 +6,15 @@
 """defiant — operational CLI for the S/V Defiant agent stack.
 
 Subcommands:
-  state    boat state (location, mode) — TOML for now, HomeAssistant later
+  state    boat state (location, mode) — Home Assistant canonical, ~/.defiant/state-cache.toml fallback
   inbox    SES inbound mail (read + ack so the same email isn't reprocessed)
-  task     GitHub issues + Project v2  (not yet implemented)
-  wiki     local wiki search/edit      (not yet implemented)
-  weather  marine weather + tides      (not yet implemented)
+  task     GitHub issues + Project v2
+  wiki     local wiki search + edit (auto-clones on first use)
+  weather  marine weather + tides (auto when underway)
 
-State and ack files live under DEFIANT_HOME (default: ~/.defiant).
+Cache, ack, and wiki files live under DEFIANT_HOME (default: ~/.defiant).
+HA endpoint: HA_URL env (default http://homeassistant.local:8123),
+HA token: HOME_ASSISTANT_ACCESS_TOKEN env (or .env in repo root).
 """
 from __future__ import annotations
 
@@ -33,13 +35,44 @@ from urllib.parse import urlencode
 import tomli_w
 
 DEFIANT_HOME = Path(os.environ.get("DEFIANT_HOME", Path.home() / ".defiant"))
-STATE_FILE = DEFIANT_HOME / "state.toml"
+STATE_CACHE = DEFIANT_HOME / "state-cache.toml"
 INBOX_STATE_FILE = DEFIANT_HOME / "inbox-state.json"
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INBOX_SCRIPT = REPO_ROOT / "scripts" / "inbox.py"
 
+HA_URL = os.environ.get("HA_URL", "http://homeassistant.local:8123").rstrip("/")
+HA_TOKEN_ENV = "HOME_ASSISTANT_ACCESS_TOKEN"
+HA_TIMEOUT = float(os.environ.get("HA_TIMEOUT", "5"))
+
 MODE_VALUES = ("underway", "anchored", "moored", "docked", "hauled-out")
+
+# Dotted state keys → HA entity. Sections (location, mode, underway) stay
+# the same shape the CLI used to expose; the TOML is just no longer the
+# source of truth.
+STATE_ENTITIES: dict[str, str] = {
+    "location.name": "input_text.defiant_location_name",
+    "location.lat":  "input_number.defiant_latitude",
+    "location.lon":  "input_number.defiant_longitude",
+    "mode.status":   "input_select.defiant_mode",
+    "underway.destination": "input_text.defiant_destination",
+    "underway.dest_lat":    "input_number.defiant_destination_latitude",
+    "underway.dest_lon":    "input_number.defiant_destination_longitude",
+    "underway.eta":         "input_datetime.defiant_eta",
+}
+
+# (service, payload-key) per HA helper domain.
+_ENTITY_WRITE: dict[str, tuple[str, str]] = {
+    "input_text":     ("set_value",     "value"),
+    "input_number":   ("set_value",     "value"),
+    "input_select":   ("select_option", "option"),
+    "input_datetime": ("set_datetime",  "datetime"),
+}
+
+# Lat/lon are auto-fed by Signal K (~60s cadence) via
+# automation.defiant_sync_signal_k_position_to_helpers; manual writes get
+# overwritten unless SK is offline. Warn but allow.
+_SK_OVERWRITTEN_KEYS = {"location.lat", "location.lon"}
 
 # GitHub: cached so the agent never has to know about node IDs.
 GH_REPO = "norton120/svdefiant"
@@ -105,15 +138,134 @@ def atomic_write_bytes(path: Path, data: bytes) -> None:
 
 # --- state -----------------------------------------------------------------
 
+def _ha_token() -> str | None:
+    t = os.environ.get(HA_TOKEN_ENV)
+    if t:
+        return t
+    env = REPO_ROOT / ".env"
+    if env.exists():
+        for line in env.read_text().splitlines():
+            if line.startswith(f"{HA_TOKEN_ENV}="):
+                return line.split("=", 1)[1].strip().strip('"').strip("'")
+    return None
+
+
+def _ha_request(method: str, path: str, body: dict | None = None) -> dict | list | None:
+    token = _ha_token()
+    if not token:
+        raise RuntimeError(f"{HA_TOKEN_ENV} not set (env or repo .env)")
+    req = urllib.request.Request(
+        f"{HA_URL}{path}",
+        data=json.dumps(body).encode() if body is not None else None,
+        method=method,
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+    )
+    with urllib.request.urlopen(req, timeout=HA_TIMEOUT) as resp:
+        raw = resp.read().decode() or "null"
+        return json.loads(raw)
+
+
+def _ha_get_state(entity_id: str) -> dict | None:
+    try:
+        return _ha_request("GET", f"/api/states/{entity_id}")  # type: ignore[return-value]
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return None
+        raise
+
+
+def _ha_call_service(domain: str, service: str, body: dict) -> None:
+    _ha_request("POST", f"/api/services/{domain}/{service}", body)
+
+
+def _normalize_value(eid: str, ha: dict) -> object | None:
+    """HA state → python value, or None for sentinel/unset values.
+
+    `unavailable` is always treated as unset. `unknown` is unset for
+    input_text and input_datetime (HA's default for never-set values), but
+    NOT for input_select where `unknown` is an explicit option in the
+    defiant_mode enum.
+    """
+    raw = ha.get("state")
+    if raw in (None, "unavailable", ""):
+        return None
+    domain = eid.split(".", 1)[0]
+    if domain in ("input_text", "input_datetime") and raw == "unknown":
+        return None
+    if domain == "input_number":
+        try:
+            return float(raw)
+        except ValueError:
+            return None
+    if domain == "input_datetime":
+        # HA returns "YYYY-MM-DD HH:MM:SS" (local-naive). Surface as ISO-Z so
+        # downstream consumers can fromisoformat it.
+        try:
+            dt = datetime.strptime(raw, "%Y-%m-%d %H:%M:%S")
+            return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+        except ValueError:
+            return raw
+    return raw
+
+
+def _save_state_cache(state: dict) -> None:
+    try:
+        payload = {**state, "_cached_at": now_iso()}
+        atomic_write_bytes(STATE_CACHE, tomli_w.dumps(payload).encode())
+    except Exception as e:
+        # Cache write failures shouldn't block reads — just stderr-warn.
+        print(f"warning: state cache write failed: {e}", file=sys.stderr)
+
+
+def _load_state_cache() -> dict | None:
+    if not STATE_CACHE.exists():
+        return None
+    try:
+        with STATE_CACHE.open("rb") as f:
+            return tomllib.load(f)
+    except Exception:
+        return None
+
+
+def _load_state_from_ha() -> dict:
+    out: dict = {}
+    last_per_section: dict[str, str] = {}
+    for dotted, eid in STATE_ENTITIES.items():
+        section, _, field = dotted.partition(".")
+        ha = _ha_get_state(eid)
+        if ha is None:
+            continue
+        val = _normalize_value(eid, ha)
+        if val is None:
+            continue
+        out.setdefault(section, {})[field] = val
+        last = ha.get("last_updated")
+        if last and (section not in last_per_section or last < last_per_section[section]):
+            last_per_section[section] = last
+    for sec, lu in last_per_section.items():
+        out[sec]["updated"] = lu
+    return out
+
+
 def load_state() -> dict:
-    if not STATE_FILE.exists():
+    """Return state dict, preferring HA. Falls back to cache (with stderr
+    warning) on HA error. Returns {} if both are unavailable — write commands
+    still run, read commands just see no data."""
+    try:
+        state = _load_state_from_ha()
+        _save_state_cache(state)
+        return state
+    except Exception as e:
+        cache = _load_state_cache()
+        if cache:
+            cached_at = cache.pop("_cached_at", "?")
+            print(
+                f"# WARNING: HA unreachable ({e}); serving cached state from {cached_at}",
+                file=sys.stderr,
+            )
+            return cache
+        print(f"warning: HA unreachable ({e}) and no cache available", file=sys.stderr)
         return {}
-    with STATE_FILE.open("rb") as f:
-        return tomllib.load(f)
-
-
-def save_state(state: dict) -> None:
-    atomic_write_bytes(STATE_FILE, tomli_w.dumps(state).encode())
 
 
 def coerce_for_set(dotted: str, raw: str) -> object:
@@ -163,10 +315,35 @@ def cmd_state_get(args, state):
 
 def cmd_state_set(args, state):
     coerced = coerce_for_set(args.key, args.value)
-    section, _, field = args.key.partition(".")
-    state.setdefault(section, {})[field] = coerced
-    state[section]["updated"] = now_iso()
-    save_state(state)
+    eid = STATE_ENTITIES.get(args.key)
+    if not eid:
+        die(f"key {args.key!r} has no HA entity mapping")
+
+    if args.key in _SK_OVERWRITTEN_KEYS:
+        print(
+            f"warning: {args.key} is auto-fed by Signal K (~60s cadence). "
+            f"Manual value will stick only if SK is offline or the sync "
+            f"automation is disabled.",
+            file=sys.stderr,
+        )
+
+    domain = eid.split(".", 1)[0]
+    service, payload_key = _ENTITY_WRITE[domain]
+    payload_value: object = coerced
+    if domain == "input_datetime":
+        # set_datetime accepts "YYYY-MM-DD HH:MM:SS"; coerce_for_set already
+        # validated ISO format.
+        try:
+            dt = datetime.fromisoformat(str(coerced).replace("Z", "+00:00"))
+            payload_value = dt.strftime("%Y-%m-%d %H:%M:%S")
+        except ValueError:
+            die(f"{args.key}: could not parse datetime {coerced!r}")
+
+    body = {"entity_id": eid, payload_key: payload_value}
+    try:
+        _ha_call_service(domain, service, body)
+    except Exception as e:
+        die(f"HA write failed for {eid}: {e}")
     print(f"set {args.key} = {args.value}")
 
 
@@ -377,23 +554,30 @@ def filter_schedulable(issues: list[dict], mode_status: str | None) -> list[dict
 
 
 def cmd_task_list(args, state):
+    fields = "number,title,url,labels,milestone,state"
+    if args.with_body:
+        fields += ",body"
     cmd = ["issue", "list", "--repo", GH_REPO, "--state", "open",
-           "--limit", str(args.limit),
-           "--json", "number,title,url,labels,milestone,state"]
+           "--limit", str(args.limit), "--json", fields]
     if args.milestone:
         cmd += ["--milestone", args.milestone]
     for lbl in args.labels or []:
         cmd += ["--label", lbl]
     raw = gh(*cmd, parse_json=True)
 
-    issues = [{
-        "number": r["number"],
-        "title": r["title"],
-        "url": r["url"],
-        "state": r["state"],
-        "labels": flatten_labels(r["labels"]),
-        "milestone": (r["milestone"] or {}).get("title"),
-    } for r in raw]
+    issues = []
+    for r in raw:
+        item = {
+            "number": r["number"],
+            "title": r["title"],
+            "url": r["url"],
+            "state": r["state"],
+            "labels": flatten_labels(r["labels"]),
+            "milestone": (r["milestone"] or {}).get("title"),
+        }
+        if args.with_body:
+            item["body"] = r.get("body") or ""
+        issues.append(item)
 
     if args.schedulable:
         mode_status = state.get("mode", {}).get("status")
@@ -892,10 +1076,146 @@ def cmd_weather(args, state):
     sys.stdout.write("\n")
 
 
-# --- stubs -----------------------------------------------------------------
+# --- wiki ------------------------------------------------------------------
 
-def stub(args):
-    die(f"`defiant {args.noun}` is not yet implemented")
+WIKI_REMOTE = "https://github.com/norton120/svdefiant.wiki.git"
+DEFAULT_WIKI_DIR = DEFIANT_HOME / "wiki"
+
+
+def wiki_dir() -> Path:
+    return Path(os.environ.get("DEFIANT_WIKI", DEFAULT_WIKI_DIR))
+
+
+def ensure_wiki() -> Path:
+    d = wiki_dir()
+    if (d / ".git").is_dir():
+        return d
+    if d.exists() and any(d.iterdir()):
+        die(f"{d} exists but is not a git checkout; remove it or set DEFIANT_WIKI")
+    d.parent.mkdir(parents=True, exist_ok=True)
+    print(f"cloning {WIKI_REMOTE} → {d}", file=sys.stderr)
+    try:
+        r = subprocess.run(["git", "clone", "--quiet", WIKI_REMOTE, str(d)],
+                           capture_output=True, text=True)
+    except FileNotFoundError:
+        die("git not installed")
+    if r.returncode != 0:
+        die(f"git clone failed:\n{r.stderr.strip() or r.stdout.strip()}")
+    return d
+
+
+def git_in(d: Path, *args: str) -> subprocess.CompletedProcess:
+    r = subprocess.run(["git", "-C", str(d), *args], capture_output=True, text=True)
+    if r.returncode != 0:
+        die(f"git {' '.join(args[:2])}… failed:\n"
+            f"{r.stderr.strip() or r.stdout.strip()}")
+    return r
+
+
+def page_path(d: Path, page: str) -> Path:
+    name = page if page.endswith(".md") else f"{page}.md"
+    return d / name
+
+
+def cmd_wiki_search(args):
+    d = ensure_wiki()
+    flags = 0 if any(c.isupper() for c in args.query) else re.IGNORECASE
+    try:
+        pattern = re.compile(args.query, flags)
+    except re.error as e:
+        die(f"invalid regex {args.query!r}: {e}")
+
+    matches: list[dict] = []
+    for path in sorted(d.rglob("*.md")):
+        if ".git" in path.parts:
+            continue
+        try:
+            text = path.read_text(errors="replace")
+        except OSError:
+            continue
+        for lineno, line in enumerate(text.splitlines(), 1):
+            if not pattern.search(line):
+                continue
+            snippet = line.strip()
+            if len(snippet) > 200:
+                snippet = snippet[:200] + "…"
+            matches.append({
+                "page": str(path.relative_to(d)).removesuffix(".md"),
+                "line": lineno,
+                "snippet": snippet,
+            })
+            if len(matches) >= args.limit:
+                break
+        if len(matches) >= args.limit:
+            break
+    json.dump(matches, sys.stdout, indent=2, default=str)
+    sys.stdout.write("\n")
+
+
+def cmd_wiki_show(args):
+    d = ensure_wiki()
+    p = page_path(d, args.page)
+    if not p.exists():
+        die(f"page not found: {p.relative_to(d)}")
+    text = p.read_text()
+    sys.stdout.write(text)
+    if not text.endswith("\n"):
+        sys.stdout.write("\n")
+
+
+def _wiki_push(d: Path, token: str) -> None:
+    """Push HEAD:master via a token-in-URL one-shot remote. Token never
+    touches disk — it's only in subprocess argv (visible to the local user
+    via /proc, never serialized). Errors are redacted before display."""
+    url = WIKI_REMOTE.replace("https://", f"https://x-access-token:{token}@")
+    r = subprocess.run(
+        ["git", "-C", str(d), "push", "--quiet", url, "HEAD:master"],
+        capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        err = (r.stderr or r.stdout).replace(token, "***").strip()
+        die(f"git push failed:\n{err}")
+
+
+def cmd_wiki_edit(args):
+    d = ensure_wiki()
+
+    # Fail fast if we won't be able to push, so we don't leave a local commit
+    # ahead of remote.
+    token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    if not token:
+        die("GH_TOKEN (or GITHUB_TOKEN) env var required to push wiki edits — "
+            "scope it to Contents:RW on norton120/svdefiant")
+
+    porcelain = git_in(d, "status", "--porcelain").stdout
+    if porcelain.strip():
+        die(f"wiki has uncommitted changes:\n{porcelain}resolve before editing")
+
+    git_in(d, "pull", "--ff-only", "--quiet")
+
+    body_src = Path(args.body_file)
+    if not body_src.exists():
+        die(f"--body-file not found: {body_src}")
+    body = body_src.read_text()
+    if not body.endswith("\n"):
+        body += "\n"
+
+    p = page_path(d, args.page)
+    new = not p.exists()
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(body)
+
+    rel = str(p.relative_to(d))
+    git_in(d, "add", rel)
+    diff = git_in(d, "diff", "--cached", "--name-only").stdout.strip()
+    if not diff:
+        print(f"no changes to {rel}")
+        return
+
+    verb = "create" if new else "edit"
+    git_in(d, "commit", "-m", f"agent: {verb} {p.stem}")
+    _wiki_push(d, token)
+    print(f"{verb}d {rel}")
 
 
 # --- main ------------------------------------------------------------------
@@ -969,6 +1289,8 @@ def build_parser() -> argparse.ArgumentParser:
     tv_list.add_argument("--label", dest="labels", action="append",
                          help="filter by label (repeatable)")
     tv_list.add_argument("--limit", type=int, default=300)
+    tv_list.add_argument("--with-body", action="store_true",
+                         help="include issue body in each item (for triage/matching)")
     tv_list.add_argument("--schedulable", action="store_true",
                          help="apply boat-mode filter (excludes blocked:parts; "
                               "underway → loc:underway-ok only; not-docked → drops "
@@ -1031,13 +1353,24 @@ def build_parser() -> argparse.ArgumentParser:
                          help="omit tides even when underway")
     weather.set_defaults(func=cmd_weather, needs_state=True)
 
-    # --- stubs ---
-    for noun, hint in [
-        ("wiki", "local wiki search/edit"),
-    ]:
-        s = nouns.add_parser(noun, help=f"{hint} (not yet implemented)")
-        s.set_defaults(func=stub)
-        s.add_argument("rest", nargs=argparse.REMAINDER, help=argparse.SUPPRESS)
+    # --- wiki ---
+    wiki = nouns.add_parser("wiki", help="local wiki search/edit (auto-clones on first use)")
+    wv = wiki.add_subparsers(dest="verb")
+
+    wv_search = wv.add_parser("search", help="regex search across wiki pages")
+    wv_search.add_argument("query", help="regex (smart-case: lowercase = case-insensitive)")
+    wv_search.add_argument("--limit", type=int, default=5)
+    wv_search.set_defaults(func=cmd_wiki_search)
+
+    wv_show = wv.add_parser("show", help="print a page's content")
+    wv_show.add_argument("page", help="page name (with or without .md)")
+    wv_show.set_defaults(func=cmd_wiki_show)
+
+    wv_edit = wv.add_parser("edit", help="replace page contents, commit, push")
+    wv_edit.add_argument("page")
+    wv_edit.add_argument("--body-file", required=True,
+                         help="path to a file containing the new page body")
+    wv_edit.set_defaults(func=cmd_wiki_edit)
 
     return p
 
