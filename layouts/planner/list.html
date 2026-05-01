@@ -130,8 +130,54 @@
     .planner-empty { padding: 2rem 0; color: #64748b; text-align: center; }
     :is(.dark) .planner-empty { color: #94a3b8; }
 
+    /* mobile */
+    .planner-mobile { display: none; }
+    .planner-mobile .day {
+      border: 1px solid #e2e8f0; border-radius: 0.4rem;
+      margin-bottom: 0.5rem; background: #fff; overflow: hidden;
+    }
+    :is(.dark) .planner-mobile .day { background: #0f172a; border-color: #1f2937; }
+    .planner-mobile .day.today > summary { background: #fef9c3; }
+    :is(.dark) .planner-mobile .day.today > summary { background: #2a2810; }
+    .planner-mobile .day.blocked > summary { background: repeating-linear-gradient(
+      135deg, #f8fafc, #f8fafc 6px, #eef2f6 6px, #eef2f6 12px); }
+    :is(.dark) .planner-mobile .day.blocked > summary { background: repeating-linear-gradient(
+      135deg, #0f172a, #0f172a 6px, #14213a 6px, #14213a 12px); }
+    .planner-mobile summary {
+      list-style: none; cursor: pointer; padding: 0.7rem 0.85rem;
+      display: flex; align-items: center; gap: 0.6rem;
+      font-weight: 700; color: #1e293b;
+    }
+    :is(.dark) .planner-mobile summary { color: #e2e8f0; }
+    .planner-mobile summary::-webkit-details-marker { display: none; }
+    .planner-mobile summary::after {
+      content: "▸"; margin-left: auto; transition: transform 0.15s;
+      color: #94a3b8; font-weight: 400;
+    }
+    .planner-mobile .day[open] > summary::after { transform: rotate(90deg); }
+    .planner-mobile .sm-meta { font-size: 0.8rem; font-weight: 500; color: #64748b; }
+    :is(.dark) .planner-mobile .sm-meta { color: #94a3b8; }
+    .planner-mobile .sm-count {
+      font-size: 0.7rem; padding: 0.1rem 0.4rem; border-radius: 0.7rem;
+      background: #cbd5e1; color: #334155; font-weight: 600;
+    }
+    :is(.dark) .planner-mobile .sm-count { background: #334155; color: #cbd5e1; }
+    .planner-mobile .sm-body { padding: 0.5rem 0.85rem 0.85rem; border-top: 1px solid #e2e8f0; }
+    :is(.dark) .planner-mobile .sm-body { border-color: #1f2937; }
+    .planner-mobile .sm-events { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 0.5rem; }
+    .planner-mobile .sm-wind { font-size: 0.75rem; color: #64748b; margin-bottom: 0.5rem; font-variant-numeric: tabular-nums; }
+    :is(.dark) .planner-mobile .sm-wind { color: #94a3b8; }
+    .planner-mobile .sm-lane {
+      font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; color: #475569; margin: 0.6rem 0 0.3rem;
+    }
+    :is(.dark) .planner-mobile .sm-lane { color: #94a3b8; }
+    .planner-mobile .sm-empty { padding: 0.4rem 0; color: #94a3b8; font-size: 0.85rem; font-style: italic; }
+
     @media (max-width: 720px) {
-      .planner-grid { min-width: 56rem; }
+      .planner-scroll { display: none; }
+      .planner-mobile { display: block; max-width: 100%; }
+      .planner-section header, .planner-unscheduled { padding: 0 0.25rem; }
     }
   </style>
 
@@ -226,6 +272,51 @@
             </div>
           {{ end }}
         </div>
+      </div>
+
+      <div class="planner-mobile">
+        {{ range $p.days }}
+          {{ $isToday := eq .label "Today" }}
+          {{ $blocked := false }}
+          {{ range .events }}{{ if .blocks }}{{ $blocked = true }}{{ end }}{{ end }}
+          <details class="day{{ if $isToday }} today{{ end }}{{ if $blocked }} blocked{{ end }}"{{ if $isToday }} open{{ end }}>
+            <summary>
+              <span>{{ .label }} <span class="sm-meta">· {{ dateFormat "Jan 2" .date }}</span></span>
+              {{ with .weather }}
+                <span class="sm-meta">{{ delimit .icons "" }} {{ .temp_label }}</span>
+              {{ end }}
+              <span class="sm-count">{{ .task_count }}</span>
+            </summary>
+            <div class="sm-body">
+              {{ if or .events .weather.wind_label }}
+                <div class="sm-events">
+                  {{ range .events }}
+                    <span class="planner-event{{ if not .blocks }} soft{{ end }}">{{ .label }}</span>
+                  {{ end }}
+                </div>
+              {{ end }}
+              {{ with .weather.wind_label }}<div class="sm-wind">{{ . }}</div>{{ end }}
+              {{ if not .lanes }}
+                <div class="sm-empty">Nothing scheduled.</div>
+              {{ end }}
+              {{ range .lanes }}
+                <div class="sm-lane">{{ .system }}</div>
+                {{ range .issues }}
+                  <a class="planner-card p-{{ default "none" .priority }}" href="{{ .url }}" target="_blank" rel="noopener">
+                    <span class="num">#{{ .number }}{{ with .priority }} · {{ . }}{{ end }}</span>
+                    <div class="title">{{ .title }}</div>
+                    <div class="planner-chips">
+                      {{ with .time }}<span class="planner-chip">{{ . }}</span>{{ end }}
+                      {{ with .energy }}<span class="planner-chip">{{ . }}</span>{{ end }}
+                      {{ with .weather }}{{ if ne . "any" }}<span class="planner-chip">{{ . }}</span>{{ end }}{{ end }}
+                      {{ if .blocked_parts }}<span class="planner-chip warn">blocked: parts</span>{{ end }}
+                    </div>
+                  </a>
+                {{ end }}
+              {{ end }}
+            </div>
+          </details>
+        {{ end }}
       </div>
 
       {{ with $p.unscheduled }}
