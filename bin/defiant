@@ -677,17 +677,19 @@ def cmd_task_create(args):
         cmd += ["--label", lbl]
     url = gh(*cmd).strip().splitlines()[-1]
     print(f"created: {url}")
-    gh("project", "item-add", str(GH_PROJECT_NUMBER),
-       "--owner", GH_PROJECT_OWNER, "--url", url)
+    # Use raw GraphQL (works with just the `project` scope) instead of
+    # `gh project item-add`, which gh CLI tries to dispatch via its org-aware
+    # codepath and demands `read:org` for.
+    issue_num = int(url.rstrip("/").rsplit("/", 1)[-1])
+    _ensure_project_item(issue_num)
     print(f"added to project #{GH_PROJECT_NUMBER}")
 
 
 def cmd_task_update(args):
     view = gh("issue", "view", str(args.num), "--repo", GH_REPO,
-              "--json", "labels,projectItems,url", parse_json=True)
+              "--json", "labels,projectItems", parse_json=True)
     current = flatten_labels(view["labels"])
     in_project = any(p["title"] for p in view.get("projectItems", []))
-    issue_url = view["url"]
 
     to_add, to_remove = diff_labels(current, args)
 
@@ -711,8 +713,7 @@ def cmd_task_update(args):
             print(f"  - {' '.join(to_remove)}")
 
     if not in_project:
-        gh("project", "item-add", str(GH_PROJECT_NUMBER),
-           "--owner", GH_PROJECT_OWNER, "--url", issue_url)
+        _ensure_project_item(args.num)
         print(f"  added to project #{GH_PROJECT_NUMBER}")
 
 
