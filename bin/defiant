@@ -1172,6 +1172,7 @@ def _planner_weather_for_window(state: dict, dates: list[str]) -> dict[str, dict
         if date_ not in dates:
             continue
         wind = daily["wind_speed_10m_max"][i] or 0
+        gust = daily["wind_gusts_10m_max"][i] or 0
         tmax = daily["temperature_2m_max"][i]
         tmin = daily["temperature_2m_min"][i]
         precip = (daily["precipitation_sum"][i] or 0) >= 0.01
@@ -1180,8 +1181,16 @@ def _planner_weather_for_window(state: dict, dates: list[str]) -> dict[str, dict
         day_alerts = alerts_for_day(alerts, date_)
         for a in day_alerts:
             a["url"] = forecast_url
+        wind_r = round(wind)
+        gust_r = round(gust)
+        # "12g18kt" if gust meaningfully > wind, else "12kt"
+        wind_label = (f"{wind_r}g{gust_r}kt"
+                      if gust_r >= wind_r + 3 else f"{wind_r}kt")
+        if wave_ft is not None and wave_ft >= 0.1:
+            wind_label = f"{wind_label} · {wave_ft}ft"
         day = {
             "wind_kt_max": round(wind, 1),
+            "gust_kt_max": round(gust, 1),
             "wave_ft_max": wave_ft,
             "temp_f": [round(tmin), round(tmax)],
             "precip": precip,
@@ -1190,6 +1199,7 @@ def _planner_weather_for_window(state: dict, dates: list[str]) -> dict[str, dict
         }
         day["icons"] = _planner_weather_icons(day)
         day["temp_label"] = f"{day['temp_f'][0]}–{day['temp_f'][1]}°"
+        day["wind_label"] = wind_label
         out[date_] = day
     return out
 

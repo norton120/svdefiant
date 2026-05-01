@@ -49,7 +49,7 @@
     :is(.dark) .planner-day-head .date { color: #94a3b8; }
     .planner-day-head.today { background: #fef9c3; }
     :is(.dark) .planner-day-head.today { background: #2a2810; }
-    .planner-wx { display: flex; align-items: center; gap: 0.3rem; margin-top: 0.25rem; font-size: 0.75rem; font-weight: 500; color: #475569; }
+    .planner-wx { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem; margin-top: 0.25rem; font-size: 0.75rem; font-weight: 500; color: #475569; }
     :is(.dark) .planner-wx { color: #cbd5e1; }
     .planner-wx .icons {
       font-size: 0.95rem; line-height: 1; letter-spacing: 0.05em;
@@ -58,6 +58,8 @@
     .planner-wx a.icons { text-decoration: none; }
     .planner-wx a.icons:hover { filter: brightness(0.85); }
     .planner-wx .temp { font-variant-numeric: tabular-nums; }
+    .planner-wx .wind { width: 100%; font-size: 0.7rem; font-weight: 500; color: #64748b; font-variant-numeric: tabular-nums; }
+    :is(.dark) .planner-wx .wind { color: #94a3b8; }
 
     .planner-event {
       display: block; font-size: 0.72rem; margin-top: 0.2rem;
@@ -167,6 +169,7 @@
                     <span class="icons" title="⛵">{{ delimit .icons "" }}</span>
                   {{ end }}
                   <span class="temp">{{ .temp_label }}</span>
+                  {{ with .wind_label }}<span class="wind">{{ . }}</span>{{ end }}
                 </div>
               {{ end }}
               {{ range .events }}
