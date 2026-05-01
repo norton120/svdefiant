@@ -177,18 +177,62 @@ Other deploy items:
 
 Local side is done. CLI feature-complete, both skills + the Action route through `defiant`, the stdio MCP shim is built and protocol-tested, classic PAT scopes are documented, the dedicated `defiant-ironclaw` IAM user is created with its keys at `secrets/ironclaw.env`.
 
-## Overnight deploy (in progress)
+## Overnight deploy — ✅ done
 
-User asked me to wrap up the Pi-side wiring while they sleep. Plan:
+Everything below is verified on the Pi. Two unattended verifications skipped (need agent + model billing): a real LLM-driven tool call, and exercising write paths like `task_create` / `wiki_edit` (we don't write test issues / wiki edits unsupervised).
 
-1. Commit + push the local migration work to origin (defiant CLI completion + MCP shim + skill migrations + cleanup).
-2. SSH to `ironclaw@ironclaw.local`, clone the repo fresh to the host (it's only inside ironclaw's sandbox today, not on the host).
-3. Verify/install `uv` on the Pi.
-4. Standalone-test `bin/defiant` and `scripts/defiant_mcp.py` via the JSON-RPC protocol BEFORE handing to ironclaw — bad MCP servers shouldn't get registered.
-5. `scp secrets/ironclaw.env` to the Pi for the AWS keys; pull `GH_TOKEN` from the user's existing bashrc; pull `HOME_ASSISTANT_ACCESS_TOKEN` from `~/.ironclaw/.env`.
-6. `ironclaw mcp add defiant --transport stdio …` with all four `--env` flags.
-7. `ironclaw mcp test defiant` + a couple of tool calls (`state_show`, `weather`, `task_list --limit 3`) to confirm cred injection + end-to-end works.
+### What landed on the Pi
 
-**Hard rules for tonight**: do not `ironclaw tool uninstall github` (parity check is a morning task), do not touch `~/.ironclaw/config.toml`, postgres, tailscale, or systemd unit. If anything looks off, back off and report in the morning rather than improvising. The github WASM tool stays installed alongside defiant for now; the agent can route either way until you've confirmed parity.
+- Repo cloned at `/home/ironclaw/Repos/svdefiant` from origin.
+- `uv` 0.11.8 installed at `/home/ironclaw/.local/bin/uv` (user-scoped, no sudo).
+- `gh` CLI 2.92.0 installed at `/home/ironclaw/.local/bin/gh` (downloaded the static binary from the official release; no apt repo touched, no sudo).
+- `~/.defiant/state-cache.toml` and `~/.defiant/wiki/` (auto-created on first run).
+- No system services touched. No `~/.aws/`, no `gh auth login`, no `gh auth setup-git`. No changes to `~/.ironclaw/`, postgres, tailscale, systemd units, or anywhere else outside `/home/ironclaw/{Repos,.local,.defiant}`.
 
-Status will be updated below as steps complete.
+### MCP server registered with ironclaw
+
+```
+ironclaw mcp add defiant --transport stdio \
+  --command /home/ironclaw/.local/bin/uv \
+  --arg run --arg=--script \
+  --arg /home/ironclaw/Repos/svdefiant/scripts/defiant_mcp.py \
+  --env GH_TOKEN=… \
+  --env AWS_ACCESS_KEY_ID=… \
+  --env AWS_SECRET_ACCESS_KEY=… \
+  --env AWS_DEFAULT_REGION=us-east-1 \
+  --env HOME_ASSISTANT_ACCESS_TOKEN=… \
+  --description "S/V Defiant operational CLI: HA state, SES inbox, GitHub issues+project, weather, wiki"
+```
+
+(Note `--arg=--script` — clap rejects `--arg --script` because `--script` looks like a flag. The `=` form binds it as a value.)
+
+`ironclaw mcp list --verbose` shows: defiant registered, all 5 env keys stored (GH_TOKEN, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_DEFAULT_REGION, HOME_ASSISTANT_ACCESS_TOKEN). `ironclaw mcp test defiant` returns `Connection successful! Available tools (18)`.
+
+### Smoke-tested through the MCP server (Pi-side, with the same env values ironclaw will inject):
+
+| Tool | Result |
+|---|---|
+| `state_show` | OK — returned live HA state (Windmill Point Marina) |
+| `state_stale` | OK |
+| `task_list` (limit 3) | OK — returned 3 issues |
+| `task_show 1` | OK — body, labels, project_status, iteration |
+| `inbox_list` | OK — 1 SES message back |
+| `weather` (1 day) | OK — full forecast + satisfies + hazards |
+| `wiki_search` | OK — wiki auto-cloned on first call |
+
+### Code patches that landed during deploy (already committed + pushed)
+
+- `scripts/defiant_mcp.py` — defensively prepend `~/.local/bin` (and `/usr/local/bin`) to `PATH` for the `bin/defiant` subprocess. systemd `--user` services and ironclaw's spawn env don't include those by default; without this fix the inner `env uv` shebang lookup fails.
+- `bin/defiant` — replace `gh project item-add` calls in `cmd_task_create` and `cmd_task_update` with the existing GraphQL `_ensure_project_item` helper. The `gh project` subcommand requires `read:org` on the PAT (gh dispatches via an org-aware codepath even for user-owned projects); raw GraphQL `addProjectV2ItemById` only needs the `project` scope. Lets the PAT stay at the documented `public_repo + project` minimum.
+
+### Morning verifications (need a human)
+
+1. **Real agent invocation** — ask the agent (via gateway/telegram) something like *"What's the boat state and what should I work on today?"* — that exercises HA + GitHub + weather through ironclaw's actual secret injection. If it works, the loop is closed.
+2. **Write paths** — try `task_create` / `task_update` via the agent on a test issue, or with a dry comment. The read tests passed, and the write code uses the same gh + GraphQL underneath, but a human-witnessed write is the real proof.
+3. **Optional**: `ironclaw tool uninstall github` once you're satisfied with `task_*` parity. The github WASM tool is intentionally left installed tonight so the agent has a fallback if the MCP path hits a snag.
+
+### Things to know if something's off
+
+- MCP server logs go to ironclaw's logs (subprocess stdout/stderr is captured by ironclaw). To poke at it manually, `bash -c 'export GH_TOKEN=…; export …; /home/ironclaw/.local/bin/uv run --script /home/ironclaw/Repos/svdefiant/scripts/defiant_mcp.py'` and feed it JSON-RPC over stdin.
+- To rotate any secret: `ironclaw mcp remove defiant && ironclaw mcp add defiant …` with the new value.
+- `~/.bashrc` early-returns for non-interactive shells, so the user-set `GH_TOKEN` / `AWS_*` exports there don't reach systemd-spawned processes. Doesn't matter — ironclaw's secret store handles that for the MCP subprocess. But if you ever need those vars in another systemd unit, use `~/.config/environment.d/` instead.
