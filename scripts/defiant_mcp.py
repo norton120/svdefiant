@@ -24,6 +24,7 @@ Register on ironclaw with:
 from __future__ import annotations
 
 import asyncio
+import os
 import subprocess
 import tempfile
 from pathlib import Path
@@ -419,11 +420,25 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
     raise ValueError(f"unknown tool: {name}")
 
 
+def _child_env() -> dict[str, str]:
+    """Build env for the bin/defiant subprocess. The CLI's shebang is
+    `#!/usr/bin/env -S uv run --script`, so `uv` must be on PATH. systemd
+    --user spawns ironclaw with a minimal PATH that often omits ~/.local/bin
+    (the default uv install location); inject it defensively so the inner
+    subprocess can resolve uv regardless of how this MCP server was launched.
+    """
+    env = os.environ.copy()
+    extra = [str(Path.home() / ".local" / "bin"), "/usr/local/bin"]
+    parts = env.get("PATH", "").split(":") if env.get("PATH") else []
+    env["PATH"] = ":".join([p for p in extra if p not in parts] + parts)
+    return env
+
+
 def _run_defiant(argv: list[str]) -> tuple[str, str, int]:
     try:
         r = subprocess.run([str(DEFIANT), *argv],
                            capture_output=True, text=True,
-                           timeout=SUBPROCESS_TIMEOUT)
+                           timeout=SUBPROCESS_TIMEOUT, env=_child_env())
     except subprocess.TimeoutExpired as e:
         return "", f"defiant timed out after {SUBPROCESS_TIMEOUT}s: {e}", 124
     return r.stdout, r.stderr, r.returncode
