@@ -42,3 +42,6 @@
 .dark .alert.alert-important { --alert-color: #a371f7; --alert-bg: rgb(163 113 247 / 0.1);  --alert-border: rgb(163 113 247 / 0.4); }
 .dark .alert.alert-warning   { --alert-color: #d29922; --alert-bg: rgb(187 128 9 / 0.1);    --alert-border: rgb(187 128 9 / 0.4); }
 .dark .alert.alert-caution   { --alert-color: #f85149; --alert-bg: rgb(248 81 73 / 0.1);    --alert-border: rgb(248 81 73 / 0.4); }
+
+.stubb-sig { display: inline-block; vertical-align: middle; line-height: 0; }
+.stubb-sig svg { height: 2.5em; width: auto; display: inline-block; vertical-align: middle; }

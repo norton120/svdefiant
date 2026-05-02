@@ -1,0 +1,10 @@
+{{- $name := .Get "src" -}}
+{{- $class := .Get "class" | default "" -}}
+{{- with .Page.Resources.GetMatch $name -}}
+  {{- $svg := .Content | safeHTML -}}
+  {{- if $class -}}
+    <span class="{{ $class }}">{{ $svg }}</span>
+  {{- else -}}
+    {{ $svg }}
+  {{- end -}}
+{{- end -}}
