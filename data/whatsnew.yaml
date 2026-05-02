@@ -23,3 +23,8 @@ entries:
     url: "https://github.com/norton120/svdefiant/wiki/Vessel-Management-System"
     summary: "New wiki page documenting the vessel's management system setup and configuration."
     source: "wiki"
+  - date: "2026-05-02"
+    title: "Meet Stubb — IronClaw First Mate"
+    url: "/posts/meet-stubb/"
+    summary: "New post introducing Stubb, the AI agent running Defiant's project management and documentation systems."
+    source: "content"
