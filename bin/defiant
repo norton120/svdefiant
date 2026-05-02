@@ -12,6 +12,7 @@ Subcommands:
   wiki     local wiki search + edit (auto-clones on first use)
   weather  marine weather + tides (auto when underway)
   calendar day-level events the agent should respect when scheduling
+  cart     virtual Amazon cart (ASINs on disk; emit add-to-cart URL on demand)
 
 Cache, ack, calendar, and wiki files live under DEFIANT_HOME (default: ~/.defiant).
 HA endpoint: HA_URL env (default http://homeassistant.local:8123),
@@ -24,6 +25,7 @@ import json
 import math
 import os
 import re
+import sqlite3
 import subprocess
 import sys
 import tomllib
@@ -1044,6 +1046,292 @@ def cmd_calendar_list(args):
     sys.stdout.write("\n")
 
 
+# --- cart ------------------------------------------------------------------
+# Virtual Amazon cart: agent adds/removes ASINs over multiple turns; the
+# `url` verb emits an add-to-cart URL the human clicks (while logged in to
+# Amazon) to populate their real cart for review/checkout. We never touch
+# Amazon directly — no creds, no session, no Playwright. The 40-item cap
+# keeps the assembled URL well inside Amazon's tested limits.
+
+CART_DB = DEFIANT_HOME / "carts.db"
+CART_MAX_ITEMS = 40
+CART_DEFAULT_NAME = "stubb"
+AMAZON_CART_BASE = "https://www.amazon.com/gp/aws/cart/add.html"
+AMAZON_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 13_0) "
+             "AppleWebKit/605.1.15 (KHTML, like Gecko) "
+             "Version/16.0 Safari/605.1.15")
+
+ASIN_RE = re.compile(r"(?:/dp/|/gp/product/|/gp/aw/d/|[?&]asin=)([A-Z0-9]{10})", re.I)
+TITLE_RE = re.compile(r'<span\s+id="productTitle"[^>]*>\s*(.*?)\s*</span>', re.DOTALL | re.I)
+PRICE_RE = re.compile(r'<span class="a-offscreen">([^<]+)</span>')
+PRICE_CENTS_RE = re.compile(r"\$?\s*([\d,]+)\.(\d{2})")
+
+
+def _cart_db() -> sqlite3.Connection:
+    DEFIANT_HOME.mkdir(parents=True, exist_ok=True)
+    db = sqlite3.connect(CART_DB)
+    db.execute("""
+        CREATE TABLE IF NOT EXISTS cart_items (
+            cart        TEXT NOT NULL,
+            asin        TEXT NOT NULL,
+            qty         INTEGER NOT NULL,
+            title       TEXT,
+            price_str   TEXT,
+            price_cents INTEGER,
+            url         TEXT,
+            added_at    TEXT NOT NULL,
+            updated_at  TEXT NOT NULL,
+            PRIMARY KEY (cart, asin)
+        )
+    """)
+    return db
+
+
+def _resolve_asin(url: str) -> str | None:
+    if m := ASIN_RE.search(url):
+        return m.group(1).upper()
+    # a.co / amzn.to short links: HEAD to follow the redirect, then re-parse.
+    if "a.co/" in url or "amzn.to/" in url:
+        try:
+            req = urllib.request.Request(url, method="HEAD",
+                                         headers={"User-Agent": AMAZON_UA})
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                final = resp.geturl()
+            if final and final != url:
+                if m := ASIN_RE.search(final):
+                    return m.group(1).upper()
+        except (urllib.error.URLError, TimeoutError, ValueError):
+            return None
+    return None
+
+
+def _parse_price_cents(s: str) -> int | None:
+    if not s:
+        return None
+    if m := PRICE_CENTS_RE.search(s):
+        try:
+            return int(m.group(1).replace(",", "")) * 100 + int(m.group(2))
+        except ValueError:
+            return None
+    return None
+
+
+def _fetch_product(asin: str) -> tuple[str | None, str | None, int | None]:
+    """Best-effort title + price scrape. Returns (title, price_str, price_cents).
+    Any element None on failure — agent typically already saw these while
+    browsing, so enrichment is just a nicety for cart_list summaries."""
+    try:
+        req = urllib.request.Request(
+            f"https://www.amazon.com/dp/{asin}",
+            headers={"User-Agent": AMAZON_UA, "Accept-Language": "en-US,en;q=0.9"},
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            html = resp.read(1_000_000).decode("utf-8", errors="replace")
+    except (urllib.error.URLError, TimeoutError, ValueError):
+        return None, None, None
+    title = None
+    if m := TITLE_RE.search(html):
+        title = re.sub(r"\s+", " ", m.group(1)).strip()[:200] or None
+    price_str = None
+    if m := PRICE_RE.search(html):
+        price_str = m.group(1).strip() or None
+    return title, price_str, _parse_price_cents(price_str or "")
+
+
+def _cart_summary(db: sqlite3.Connection, name: str) -> dict:
+    row = db.execute(
+        """SELECT COUNT(*),
+                  COALESCE(SUM(qty), 0),
+                  COALESCE(SUM(price_cents * qty), 0),
+                  MAX(updated_at)
+           FROM cart_items WHERE cart=?""",
+        (name,),
+    ).fetchone()
+    unique, total_qty, total_cents, last = row
+    return {
+        "unique_count": unique,
+        "total_qty": total_qty,
+        "total_price_cents": total_cents or None,
+        "total_price": (f"${total_cents / 100:.2f}" if total_cents else None),
+        "last_updated": last,
+    }
+
+
+def _emit_json(obj) -> None:
+    json.dump(obj, sys.stdout, indent=2, default=str)
+    sys.stdout.write("\n")
+
+
+def cmd_cart_add(args):
+    asin = _resolve_asin(args.url)
+    if not asin:
+        die(f"could not extract ASIN from {args.url!r}")
+    db = _cart_db()
+    cart = args.cart or CART_DEFAULT_NAME
+    qty = max(1, int(args.quantity))
+
+    existing = db.execute(
+        "SELECT qty, title, price_str, price_cents FROM cart_items WHERE cart=? AND asin=?",
+        (cart, asin),
+    ).fetchone()
+
+    if not existing:
+        unique = db.execute(
+            "SELECT COUNT(*) FROM cart_items WHERE cart=?", (cart,)
+        ).fetchone()[0]
+        if unique >= CART_MAX_ITEMS:
+            die(f"cart {cart!r} at cap ({CART_MAX_ITEMS} unique items); "
+                f"check out via 'cart url' or free a slot via 'cart remove'")
+
+    title = args.title
+    price_str = args.price
+    price_cents = _parse_price_cents(price_str or "")
+    if (not title or not price_str) and not args.no_enrich:
+        t, p, pc = _fetch_product(asin)
+        title = title or t
+        if not price_str:
+            price_str, price_cents = p, pc
+
+    now = now_iso()
+    if existing:
+        new_qty = existing[0] + qty
+        # Don't clobber existing title/price with None on re-add; only fill gaps.
+        merged_title = title or existing[1]
+        merged_price_str = price_str or existing[2]
+        merged_price_cents = price_cents if price_cents is not None else existing[3]
+        db.execute(
+            """UPDATE cart_items
+               SET qty=?, title=?, price_str=?, price_cents=?, updated_at=?
+               WHERE cart=? AND asin=?""",
+            (new_qty, merged_title, merged_price_str, merged_price_cents,
+             now, cart, asin),
+        )
+        title, price_str = merged_title, merged_price_str
+    else:
+        db.execute(
+            """INSERT INTO cart_items
+               (cart, asin, qty, title, price_str, price_cents, url, added_at, updated_at)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+            (cart, asin, qty, title, price_str, price_cents, args.url, now, now),
+        )
+    db.commit()
+
+    final_qty = db.execute(
+        "SELECT qty FROM cart_items WHERE cart=? AND asin=?", (cart, asin)
+    ).fetchone()[0]
+    summary = _cart_summary(db, cart)
+    _emit_json({
+        "cart": cart,
+        "asin": asin,
+        "title": title,
+        "price": price_str,
+        "qty": final_qty,
+        "unique_count": summary["unique_count"],
+        "total_qty": summary["total_qty"],
+        "total_price": summary["total_price"],
+    })
+
+
+def cmd_cart_remove(args):
+    db = _cart_db()
+    cart = args.cart or CART_DEFAULT_NAME
+    asin = args.asin.upper()
+    cur = db.execute(
+        "DELETE FROM cart_items WHERE cart=? AND asin=?", (cart, asin)
+    )
+    db.commit()
+    if cur.rowcount == 0:
+        die(f"no item {asin} in cart {cart!r}")
+    _emit_json({"cart": cart, "removed_asin": asin, **_cart_summary(db, cart)})
+
+
+def cmd_cart_set_quantity(args):
+    db = _cart_db()
+    cart = args.cart or CART_DEFAULT_NAME
+    asin = args.asin.upper()
+    qty = int(args.qty)
+    if qty < 0:
+        die("qty must be >= 0")
+    if qty == 0:
+        cur = db.execute(
+            "DELETE FROM cart_items WHERE cart=? AND asin=?", (cart, asin)
+        )
+        db.commit()
+        if cur.rowcount == 0:
+            die(f"no item {asin} in cart {cart!r}")
+        _emit_json({"cart": cart, "removed_asin": asin, **_cart_summary(db, cart)})
+        return
+    cur = db.execute(
+        "UPDATE cart_items SET qty=?, updated_at=? WHERE cart=? AND asin=?",
+        (qty, now_iso(), cart, asin),
+    )
+    db.commit()
+    if cur.rowcount == 0:
+        die(f"no item {asin} in cart {cart!r}")
+    _emit_json({"cart": cart, "asin": asin, "qty": qty, **_cart_summary(db, cart)})
+
+
+def cmd_cart_list(args):
+    db = _cart_db()
+    cart = args.cart or CART_DEFAULT_NAME
+    rows = db.execute(
+        """SELECT asin, qty, title, price_str, price_cents, url, added_at
+           FROM cart_items WHERE cart=? ORDER BY added_at""",
+        (cart,),
+    ).fetchall()
+    items = [
+        {"asin": r[0], "qty": r[1], "title": r[2],
+         "price": r[3], "price_cents": r[4],
+         "url": r[5], "added_at": r[6]}
+        for r in rows
+    ]
+    _emit_json({"cart": cart, "items": items, **_cart_summary(db, cart)})
+
+
+def cmd_cart_names(args):
+    db = _cart_db()
+    rows = db.execute(
+        """SELECT cart, COUNT(*), COALESCE(SUM(qty), 0),
+                  COALESCE(SUM(price_cents * qty), 0),
+                  MAX(updated_at)
+           FROM cart_items GROUP BY cart ORDER BY MAX(updated_at) DESC"""
+    ).fetchall()
+    _emit_json([
+        {"name": r[0], "unique_count": r[1], "total_qty": r[2],
+         "total_price_cents": r[3] or None,
+         "total_price": (f"${r[3]/100:.2f}" if r[3] else None),
+         "last_updated": r[4]}
+        for r in rows
+    ])
+
+
+def cmd_cart_clear(args):
+    db = _cart_db()
+    cart = args.cart or CART_DEFAULT_NAME
+    cur = db.execute("DELETE FROM cart_items WHERE cart=?", (cart,))
+    db.commit()
+    print(f"cart: cleared {cur.rowcount} item(s) from {cart!r}")
+
+
+def cmd_cart_get_url(args):
+    db = _cart_db()
+    cart = args.cart or CART_DEFAULT_NAME
+    rows = db.execute(
+        "SELECT asin, qty FROM cart_items WHERE cart=? ORDER BY added_at",
+        (cart,),
+    ).fetchall()
+    if not rows:
+        die(f"cart {cart!r} is empty")
+    if len(rows) > CART_MAX_ITEMS:
+        die(f"cart {cart!r} has {len(rows)} items, exceeds cap of {CART_MAX_ITEMS}")
+    qs = []
+    for i, (asin, qty) in enumerate(rows, start=1):
+        qs.append(f"ASIN.{i}={asin}")
+        qs.append(f"Quantity.{i}={qty}")
+    url = f"{AMAZON_CART_BASE}?{'&'.join(qs)}"
+    _emit_json({"cart": cart, "url": url, **_cart_summary(db, cart)})
+
+
 # --- planner ---------------------------------------------------------------
 # Builds data/planner.json from current-iteration issues + calendar events,
 # in the shape the Hugo template at layouts/planner/single.html consumes.
@@ -1975,6 +2263,51 @@ def build_parser() -> argparse.ArgumentParser:
     cv_list.add_argument("--from", dest="from_", help="YYYY-MM-DD (default: today)")
     cv_list.add_argument("--to", help="YYYY-MM-DD (default: today + 7d)")
     cv_list.set_defaults(func=cmd_calendar_list)
+
+    # --- cart ---
+    cart = nouns.add_parser(
+        "cart",
+        help="virtual Amazon cart — agent adds ASINs, you click the final URL",
+    )
+    crv = cart.add_subparsers(dest="verb")
+
+    crv_add = crv.add_parser("add", help="add an Amazon URL to a named cart")
+    crv_add.add_argument("url", help="Amazon product URL or short link (a.co/..., amzn.to/...)")
+    crv_add.add_argument("--qty", "--quantity", dest="quantity", type=int, default=1,
+                         help="quantity to add; same-ASIN re-add increments (default 1)")
+    crv_add.add_argument("--cart", default=None,
+                         help=f"cart name (default {CART_DEFAULT_NAME!r})")
+    crv_add.add_argument("--title", help="known product title; skips the page fetch for that field")
+    crv_add.add_argument("--price", help="known price string, e.g. '$12.99'")
+    crv_add.add_argument("--no-enrich", action="store_true",
+                         help="skip Amazon page fetch even if title/price unknown")
+    crv_add.set_defaults(func=cmd_cart_add)
+
+    crv_rm = crv.add_parser("remove", help="remove an item from a cart")
+    crv_rm.add_argument("asin")
+    crv_rm.add_argument("--cart", default=None)
+    crv_rm.set_defaults(func=cmd_cart_remove)
+
+    crv_qty = crv.add_parser("set-quantity", help="set qty for an item (0 = remove)")
+    crv_qty.add_argument("asin")
+    crv_qty.add_argument("qty", type=int)
+    crv_qty.add_argument("--cart", default=None)
+    crv_qty.set_defaults(func=cmd_cart_set_quantity)
+
+    crv_list = crv.add_parser("list", help="show one cart's contents + totals")
+    crv_list.add_argument("--cart", default=None)
+    crv_list.set_defaults(func=cmd_cart_list)
+
+    crv_names = crv.add_parser("names", help="list all named carts with summaries")
+    crv_names.set_defaults(func=cmd_cart_names)
+
+    crv_clear = crv.add_parser("clear", help="empty a cart (explicit only)")
+    crv_clear.add_argument("--cart", default=None)
+    crv_clear.set_defaults(func=cmd_cart_clear)
+
+    crv_url = crv.add_parser("url", help="emit Amazon add-to-cart URL for a cart")
+    crv_url.add_argument("--cart", default=None)
+    crv_url.set_defaults(func=cmd_cart_get_url)
 
     # --- planner ---
     planner = nouns.add_parser("planner", help="build data/planner.json from current iteration")

@@ -308,6 +308,91 @@ TOOLS: list[Tool] = [
         },
     ),
     Tool(
+        name="cart_add",
+        description=(
+            "Add an Amazon product URL to a named virtual cart. The cart is just "
+            "an ASIN list on disk — the agent never touches Amazon. When the user "
+            "is ready, cart_get_url emits a click-to-checkout URL that populates "
+            "their real Amazon cart for normal review/checkout. Pass title/price "
+            "if you already saw them while browsing; otherwise the server fetches "
+            "the product page once. Same-ASIN re-add increments quantity. Cap is "
+            "40 unique items per cart; new carts are auto-created on first add."
+        ),
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "url": {"type": "string",
+                        "description": "Amazon product URL or short link (a.co/..., amzn.to/...). Use the canonical /dp/ URL after any variant selection — child ASIN, not parent."},
+                "quantity": {"type": "integer", "default": 1, "minimum": 1},
+                "cart": {"type": "string", "default": "stubb",
+                         "description": "cart name; carts are persistent across sessions"},
+                "title": {"type": "string", "description": "known product title; skips the page fetch"},
+                "price": {"type": "string", "description": "known price string, e.g. '$12.99'"},
+            },
+            "required": ["url"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="cart_remove",
+        description="Remove an ASIN from a cart.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "asin": {"type": "string"},
+                "cart": {"type": "string", "default": "stubb"},
+            },
+            "required": ["asin"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="cart_set_quantity",
+        description="Set the quantity for an ASIN already in a cart. qty=0 removes the item.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "asin": {"type": "string"},
+                "qty": {"type": "integer", "minimum": 0},
+                "cart": {"type": "string", "default": "stubb"},
+            },
+            "required": ["asin", "qty"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="cart_list",
+        description="List items in a cart with titles, prices, per-item qty, and grand totals. Use this for the pre-checkout review.",
+        inputSchema={
+            "type": "object",
+            "properties": {"cart": {"type": "string", "default": "stubb"}},
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="cart_list_names",
+        description="List every named cart with item count, total qty, total price, and last-updated timestamp. Use this when the user references a cart loosely (e.g. 'the parts list I started last week') so you can pick the right name.",
+        inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
+    ),
+    Tool(
+        name="cart_clear",
+        description="Empty a cart. Explicit only — cart_get_url never auto-clears.",
+        inputSchema={
+            "type": "object",
+            "properties": {"cart": {"type": "string", "default": "stubb"}},
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="cart_get_url",
+        description="Emit the Amazon add-to-cart URL for a cart. When the user clicks (logged in to Amazon), the items appear in their real cart for normal review/checkout. Idempotent and non-destructive — the cart on disk is untouched, so you can re-emit the URL anytime.",
+        inputSchema={
+            "type": "object",
+            "properties": {"cart": {"type": "string", "default": "stubb"}},
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
         name="planner_publish",
         description="Render data/planner.json from the project iteration + calendar (drives the public planner page on svdefiant.com). Optionally commits and pushes; CI rebuilds the site on merge to main. Use commit=true after a re-plan; otherwise omit and just verify the JSON before pushing.",
         inputSchema={
@@ -529,6 +614,44 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
             argv += ["--from", v]
         if v := args.get("to_date"):
             argv += ["--to", v]
+        return argv, tmp
+
+    if name == "cart_add":
+        argv = ["cart", "add", args["url"],
+                "--qty", str(args.get("quantity", 1))]
+        if v := args.get("cart"):
+            argv += ["--cart", v]
+        if v := args.get("title"):
+            argv += ["--title", v]
+        if v := args.get("price"):
+            argv += ["--price", v]
+        return argv, tmp
+    if name == "cart_remove":
+        argv = ["cart", "remove", args["asin"]]
+        if v := args.get("cart"):
+            argv += ["--cart", v]
+        return argv, tmp
+    if name == "cart_set_quantity":
+        argv = ["cart", "set-quantity", args["asin"], str(args["qty"])]
+        if v := args.get("cart"):
+            argv += ["--cart", v]
+        return argv, tmp
+    if name == "cart_list":
+        argv = ["cart", "list"]
+        if v := args.get("cart"):
+            argv += ["--cart", v]
+        return argv, tmp
+    if name == "cart_list_names":
+        return ["cart", "names"], tmp
+    if name == "cart_clear":
+        argv = ["cart", "clear"]
+        if v := args.get("cart"):
+            argv += ["--cart", v]
+        return argv, tmp
+    if name == "cart_get_url":
+        argv = ["cart", "url"]
+        if v := args.get("cart"):
+            argv += ["--cart", v]
         return argv, tmp
 
     if name == "planner_publish":
