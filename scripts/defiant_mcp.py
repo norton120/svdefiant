@@ -24,6 +24,8 @@ Register on ironclaw with:
 from __future__ import annotations
 
 import asyncio
+import base64
+import binascii
 import os
 import subprocess
 import tempfile
@@ -373,6 +375,34 @@ TOOLS: list[Tool] = [
             "additionalProperties": False,
         },
     ),
+    Tool(
+        name="image_add",
+        description=(
+            "Optimize a photo (resize to ≤2400px long-side, EXIF auto-orient, "
+            "strip metadata, JPEG q85) and commit it to static/images/<name>.jpg "
+            "on the main branch of norton120/svdefiant. CI rebuilds the site "
+            "(~1-2 min), after which the image is hotlinkable at "
+            "https://svdefiant.com/images/<name>.jpg — usable in wiki pages, "
+            "GitHub issues, or Hugo {{< figure >}} shortcodes. Errors if an "
+            "image with the same sanitized name already exists. Returns JSON "
+            "{ok, filename, path, url, pushed}."
+        ),
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "filename stem (without extension). Sanitized to lowercase [a-z0-9._-]; spaces become hyphens. The '.jpg' extension is appended automatically.",
+                },
+                "data_base64": {
+                    "type": "string",
+                    "description": "raw image bytes, base64-encoded. Accepts jpg/jpeg/png/heic/heif/webp/gif/tiff source formats; output is always JPEG.",
+                },
+            },
+            "required": ["name", "data_base64"],
+            "additionalProperties": False,
+        },
+    ),
 ]
 
 
@@ -526,6 +556,19 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
         if args.get("no_tides"):
             argv.append("--no-tides")
         return argv, tmp
+
+    if name == "image_add":
+        try:
+            data = base64.b64decode(args["data_base64"], validate=True)
+        except (binascii.Error, ValueError) as e:
+            raise ValueError(f"invalid base64 in data_base64: {e}")
+        if not data:
+            raise ValueError("data_base64 decoded to zero bytes")
+        f = tempfile.NamedTemporaryFile("wb", suffix=".bin", delete=False)
+        f.write(data)
+        f.close()
+        tmp.append(Path(f.name))
+        return ["image", "add", args["name"], "--file", f.name], tmp
 
     raise ValueError(f"unknown tool: {name}")
 

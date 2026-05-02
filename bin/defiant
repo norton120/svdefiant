@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["tomli-w"]
+# dependencies = ["tomli-w", "pillow", "pillow-heif"]
 # ///
 """defiant — operational CLI for the S/V Defiant agent stack.
 
@@ -1701,6 +1701,122 @@ def cmd_wiki_edit(args):
     print(f"{verb}d {rel}")
 
 
+# --- image -----------------------------------------------------------------
+
+GH_REMOTE = "https://github.com/norton120/svdefiant.git"
+STATIC_IMAGES_DIR = REPO_ROOT / "static" / "images"
+IMG_MAX_DIM = 2400
+IMG_JPEG_QUALITY = 85
+IMG_NAME_RE = re.compile(r"[^a-z0-9._-]+")
+
+
+def _sanitize_image_name(name: str) -> str:
+    base = name.strip().lower().replace(" ", "-")
+    # strip any extension the caller included; we always emit .jpg
+    base = re.sub(r"\.(jpe?g|png|heic|heif|webp|gif|tiff?)$", "", base)
+    base = IMG_NAME_RE.sub("-", base)
+    base = re.sub(r"-+", "-", base).strip("-._")
+    if not base or not re.search(r"[a-z0-9]", base):
+        die("image name must contain at least one alphanumeric character")
+    return base
+
+
+def _optimize_to_jpeg(src: Path, dst: Path) -> None:
+    from PIL import Image, ImageOps
+    try:
+        import pillow_heif  # type: ignore
+        pillow_heif.register_heif_opener()
+    except ImportError:
+        pass
+
+    try:
+        im = Image.open(src)
+    except Exception as e:
+        die(f"could not read image: {e}")
+
+    with im:
+        im = ImageOps.exif_transpose(im)
+        im.thumbnail((IMG_MAX_DIM, IMG_MAX_DIM), Image.LANCZOS)
+        if im.mode in ("RGBA", "LA"):
+            bg = Image.new("RGB", im.size, (255, 255, 255))
+            bg.paste(im, mask=im.split()[-1])
+            im = bg
+        elif im.mode != "RGB":
+            im = im.convert("RGB")
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        im.save(dst, format="JPEG", quality=IMG_JPEG_QUALITY,
+                optimize=True, progressive=True)
+
+
+def _repo_push(token: str, branch: str = "main") -> None:
+    """Push HEAD:<branch> via a token-in-URL one-shot remote — same scheme as
+    _wiki_push (token never serialized; redacted from error output)."""
+    url = GH_REMOTE.replace("https://", f"https://x-access-token:{token}@")
+    r = subprocess.run(
+        ["git", "-C", str(REPO_ROOT), "push", "--quiet", url, f"HEAD:{branch}"],
+        capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        err = (r.stderr or r.stdout).replace(token, "***").strip()
+        die(f"git push failed:\n{err}")
+
+
+def cmd_image_add(args):
+    token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
+    if not token and not args.no_push:
+        die("GH_TOKEN (or GITHUB_TOKEN) env var required to push image — "
+            "scope it to Contents:RW on norton120/svdefiant "
+            "(or pass --no-push for local testing)")
+
+    src = Path(args.file)
+    if not src.exists():
+        die(f"--file not found: {src}")
+
+    name = _sanitize_image_name(args.name)
+    dst = STATIC_IMAGES_DIR / f"{name}.jpg"
+
+    if not args.no_push:
+        porcelain = git_in(REPO_ROOT, "status", "--porcelain").stdout
+        if porcelain.strip():
+            die(f"repo has uncommitted changes:\n{porcelain}"
+                "resolve before adding image")
+        git_in(REPO_ROOT, "pull", "--ff-only", "--quiet")
+
+    if dst.exists():
+        die(f"image already exists: static/images/{name}.jpg "
+            "(rename or remove the existing file first)")
+
+    _optimize_to_jpeg(src, dst)
+
+    rel = str(dst.relative_to(REPO_ROOT))
+    if args.no_push:
+        print(json.dumps({
+            "ok": True,
+            "filename": dst.name,
+            "path": rel,
+            "url": f"https://svdefiant.com/images/{dst.name}",
+            "pushed": False,
+        }))
+        return
+
+    git_in(REPO_ROOT, "add", rel)
+    diff = git_in(REPO_ROOT, "diff", "--cached", "--name-only").stdout.strip()
+    if not diff:
+        # Should be unreachable (we just wrote the file and it's a new path),
+        # but bail cleanly if so.
+        die(f"no changes staged for {rel}")
+    git_in(REPO_ROOT, "commit", "-m", f"agent: add image {name}")
+    _repo_push(token)
+
+    print(json.dumps({
+        "ok": True,
+        "filename": dst.name,
+        "path": rel,
+        "url": f"https://svdefiant.com/images/{dst.name}",
+        "pushed": True,
+    }))
+
+
 # --- main ------------------------------------------------------------------
 
 def build_parser() -> argparse.ArgumentParser:
@@ -1901,6 +2017,21 @@ def build_parser() -> argparse.ArgumentParser:
     wv_edit.add_argument("--body-file", required=True,
                          help="path to a file containing the new page body")
     wv_edit.set_defaults(func=cmd_wiki_edit)
+
+    # --- image ---
+    image = nouns.add_parser("image", help="optimize + commit images to static/images/")
+    iv_img = image.add_subparsers(dest="verb")
+
+    iv_add = iv_img.add_parser(
+        "add",
+        help="optimize an image (≤2400px JPEG q85) and commit it to static/images/",
+    )
+    iv_add.add_argument("name", help="filename stem; sanitized to [a-z0-9._-], '.jpg' appended")
+    iv_add.add_argument("--file", required=True,
+                        help="path to the source image (jpg/png/heic/webp/...)")
+    iv_add.add_argument("--no-push", action="store_true",
+                        help="optimize + write only; skip git add/commit/push (for testing)")
+    iv_add.set_defaults(func=cmd_image_add)
 
     return p
 
