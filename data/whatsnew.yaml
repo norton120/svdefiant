@@ -28,3 +28,8 @@ entries:
     url: "/posts/meet-stubb/"
     summary: "New post introducing Stubb, the AI agent running Defiant's project management and documentation systems."
     source: "content"
+  - date: "2026-05-02"
+    title: "🦞 Meet Stubb 🦞"
+    url: "/blog/introducing-stubb/"
+    summary: "Meet Stubb, the AI first mate running Defiant's project management, wiki, and scheduling from the nav desk."
+    source: "blog"
