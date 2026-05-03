@@ -206,6 +206,8 @@ TOOLS: list[Tool] = [
                 **_label_props(),
                 "blocked_parts": {"type": "boolean", "default": False,
                                   "description": "add the blocked:parts label"},
+                "milestone": {"type": "string",
+                              "description": "milestone title (must already exist; use milestone_create first if not)"},
             },
             "required": ["title"],
             "additionalProperties": False,
@@ -213,7 +215,7 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="task_update",
-        description="Patch labels and/or body on an existing issue. Idempotent dim-replace: setting `priority` removes any prior p* label, `system` replaces any sys:*, `location` replaces the entire loc:* set. blocked_parts is tri-state (omit / true=add / false=remove).",
+        description="Patch labels, body, and/or milestone on an existing issue. Idempotent dim-replace: setting `priority` removes any prior p* label, `system` replaces any sys:*, `location` replaces the entire loc:* set. blocked_parts is tri-state (omit / true=add / false=remove). Milestone: pass `milestone` to set, `clear_milestone=true` to remove; mutually exclusive.",
         inputSchema={
             "type": "object",
             "properties": {
@@ -222,8 +224,87 @@ TOOLS: list[Tool] = [
                 **_label_props(),
                 "blocked_parts": {"type": "boolean",
                                   "description": "true → add blocked:parts; false → remove; omit → no change"},
+                "milestone": {"type": "string",
+                              "description": "milestone title to set (must already exist)"},
+                "clear_milestone": {"type": "boolean", "default": False,
+                                    "description": "true → clear the milestone (mutually exclusive with milestone)"},
             },
             "required": ["num"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="milestone_list",
+        description="List GitHub milestones (norton120/svdefiant), pre-summarized as JSON: {number, title, state, description, due_on, open_issues, closed_issues, url}. Defaults to open milestones; pass state='all' to include closed.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "state": {"type": "string", "enum": ["open", "closed", "all"],
+                          "default": "open"},
+            },
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="milestone_show",
+        description="Show a single milestone, by number or exact title.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "spec": {"type": "string",
+                         "description": "milestone number or exact title"},
+            },
+            "required": ["spec"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="milestone_create",
+        description="Create a new milestone. Title must be unique in the repo. Due date is optional (YYYY-MM-DD or ISO datetime); description is optional markdown.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "title": {"type": "string"},
+                "description": {"type": "string"},
+                "due": {"type": "string",
+                        "description": "YYYY-MM-DD or ISO datetime"},
+                "closed": {"type": "boolean", "default": False,
+                           "description": "create as closed (default open)"},
+            },
+            "required": ["title"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="milestone_update",
+        description="Patch a milestone (number or current title). Any subset of {title, description, due, state} updates only those fields. Pass clear_due=true to remove a due date (mutually exclusive with due). state ∈ {open, closed}.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "spec": {"type": "string",
+                         "description": "milestone number or current title"},
+                "title": {"type": "string", "description": "new title"},
+                "description": {"type": "string"},
+                "due": {"type": "string",
+                        "description": "YYYY-MM-DD or ISO datetime"},
+                "clear_due": {"type": "boolean", "default": False,
+                              "description": "true → remove due date (mutually exclusive with due)"},
+                "state": {"type": "string", "enum": ["open", "closed"]},
+            },
+            "required": ["spec"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="milestone_delete",
+        description="Delete a milestone (irreversible). Issues previously in the milestone are not deleted, just unassigned. Use milestone_update state=closed if you want to retire a milestone non-destructively.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "spec": {"type": "string",
+                         "description": "milestone number or exact title"},
+            },
+            "required": ["spec"],
             "additionalProperties": False,
         },
     ),
@@ -564,6 +645,8 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
             argv += ["--body-file", bodyfile(v)]
         if args.get("blocked_parts"):
             argv.append("--blocked-parts")
+        if v := args.get("milestone"):
+            argv += ["--milestone", v]
         return argv, tmp
     if name == "task_update":
         argv = ["task", "update", str(args["num"])]
@@ -575,6 +658,12 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
             argv.append("--blocked-parts")
         elif bp is False:
             argv.append("--no-blocked-parts")
+        if args.get("milestone") and args.get("clear_milestone"):
+            raise ValueError("milestone and clear_milestone are mutually exclusive")
+        if v := args.get("milestone"):
+            argv += ["--milestone", v]
+        elif args.get("clear_milestone"):
+            argv.append("--no-milestone")
         return argv, tmp
     if name == "task_close":
         argv = ["task", "close", str(args["num"])]
@@ -600,6 +689,37 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
         else:
             raise ValueError("task_day requires either date or clear=true")
         return argv, tmp
+
+    if name == "milestone_list":
+        return ["milestone", "list", "--state", args.get("state", "open")], tmp
+    if name == "milestone_show":
+        return ["milestone", "show", args["spec"]], tmp
+    if name == "milestone_create":
+        argv = ["milestone", "create", args["title"]]
+        if v := args.get("description"):
+            argv += ["--description", v]
+        if v := args.get("due"):
+            argv += ["--due", v]
+        if args.get("closed"):
+            argv.append("--closed")
+        return argv, tmp
+    if name == "milestone_update":
+        argv = ["milestone", "update", args["spec"]]
+        if v := args.get("title"):
+            argv += ["--title", v]
+        if (v := args.get("description")) is not None:
+            argv += ["--description", v]
+        if args.get("due") and args.get("clear_due"):
+            raise ValueError("due and clear_due are mutually exclusive")
+        if v := args.get("due"):
+            argv += ["--due", v]
+        elif args.get("clear_due"):
+            argv.append("--no-due")
+        if v := args.get("state"):
+            argv += ["--state", v]
+        return argv, tmp
+    if name == "milestone_delete":
+        return ["milestone", "delete", args["spec"]], tmp
 
     if name == "calendar_add":
         argv = ["calendar", "add", args["date"], args["label"]]

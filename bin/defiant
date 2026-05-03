@@ -784,6 +784,10 @@ def cmd_task_create(args):
     cmd = ["issue", "create", "--repo", GH_REPO, "--title", args.title, "--body", body]
     for lbl in specified_labels(args):
         cmd += ["--label", lbl]
+    if args.milestone:
+        # Resolve to validate up-front (gh would also error, but ours is cleaner).
+        _resolve_milestone(args.milestone)
+        cmd += ["--milestone", args.milestone]
     url = gh(*cmd).strip().splitlines()[-1]
     print(f"created: {url}")
     # Use raw GraphQL (works with just the `project` scope) instead of
@@ -796,9 +800,10 @@ def cmd_task_create(args):
 
 def cmd_task_update(args):
     view = gh("issue", "view", str(args.num), "--repo", GH_REPO,
-              "--json", "labels,projectItems", parse_json=True)
+              "--json", "labels,projectItems,milestone", parse_json=True)
     current = flatten_labels(view["labels"])
     in_project = any(p["title"] for p in view.get("projectItems", []))
+    current_milestone = (view.get("milestone") or {}).get("title")
 
     to_add, to_remove = diff_labels(current, args)
 
@@ -811,15 +816,33 @@ def cmd_task_update(args):
     if body is not None:
         edit_args += ["--body", body]
 
-    if not edit_args:
-        print(f"#{args.num}: no changes")
-    else:
+    changed = False
+    if edit_args:
         gh("issue", "edit", str(args.num), "--repo", GH_REPO, *edit_args)
         print(f"updated #{args.num}")
         if to_add:
             print(f"  + {' '.join(to_add)}")
         if to_remove:
             print(f"  - {' '.join(to_remove)}")
+        changed = True
+
+    # Milestone changes go through REST PATCH so clearing (null) works
+    # uniformly across gh CLI versions.
+    if args.no_milestone:
+        if current_milestone is not None:
+            _gh_api_json("PATCH", f"repos/{GH_REPO}/issues/{args.num}",
+                         {"milestone": None})
+            print(f"  milestone: cleared (was {current_milestone!r})")
+            changed = True
+    elif args.milestone and args.milestone != current_milestone:
+        ms = _resolve_milestone(args.milestone)
+        _gh_api_json("PATCH", f"repos/{GH_REPO}/issues/{args.num}",
+                     {"milestone": ms["number"]})
+        print(f"  milestone: {args.milestone!r}")
+        changed = True
+
+    if not changed:
+        print(f"#{args.num}: no changes")
 
     if not in_project:
         _ensure_project_item(args.num)
@@ -984,6 +1007,146 @@ def cmd_task_day(args):
                projectId=GH_PROJECT_ID, itemId=item_id,
                fieldId=GH_DAY_FIELD_ID, date=args.date)
     print(f"set day on #{args.num} to {args.date}")
+
+
+# --- milestone -------------------------------------------------------------
+# GitHub milestones, exposed via the REST API. Stubb needs CRUD here so plans
+# can reshape (rename, slip due dates, retire) without leaving the agent.
+
+def _gh_api_json(method: str, path: str, payload: dict | None = None) -> dict:
+    """gh api -X METHOD path with an optional JSON body via stdin."""
+    cmd = ["gh", "api", "-X", method, path]
+    stdin: bytes | None = None
+    if payload is not None:
+        cmd += ["--input", "-"]
+        stdin = json.dumps(payload).encode()
+    r = subprocess.run(cmd, input=stdin, capture_output=True)
+    if r.returncode != 0:
+        die(f"gh api {method} {path} failed: "
+            f"{r.stderr.decode().strip() or 'unknown'}")
+    out = r.stdout.decode().strip()
+    return json.loads(out) if out else {}
+
+
+def _list_milestones_raw(state: str = "open") -> list[dict]:
+    out: list[dict] = []
+    page = 1
+    while True:
+        chunk = gh("api",
+                   f"repos/{GH_REPO}/milestones?state={state}"
+                   f"&per_page=100&page={page}",
+                   parse_json=True) or []
+        if not chunk:
+            break
+        out.extend(chunk)
+        if len(chunk) < 100:
+            break
+        page += 1
+    return out
+
+
+def _resolve_milestone(spec: str) -> dict:
+    """Find a milestone by number or exact title (searches all states)."""
+    if spec.isdigit():
+        r = subprocess.run(
+            ["gh", "api", f"repos/{GH_REPO}/milestones/{int(spec)}"],
+            capture_output=True, text=True,
+        )
+        if r.returncode == 0 and r.stdout.strip():
+            return json.loads(r.stdout)
+        die(f"no milestone #{spec}")
+    matches = [m for m in _list_milestones_raw("all") if m["title"] == spec]
+    if not matches:
+        die(f"no milestone with title {spec!r}")
+    if len(matches) > 1:
+        die(f"multiple milestones titled {spec!r}; specify by number")
+    return matches[0]
+
+
+def _milestone_summary(m: dict) -> dict:
+    return {
+        "number": m["number"],
+        "title": m["title"],
+        "state": m["state"],
+        "description": m.get("description") or "",
+        "due_on": m.get("due_on"),
+        "open_issues": m.get("open_issues"),
+        "closed_issues": m.get("closed_issues"),
+        "url": m.get("html_url"),
+    }
+
+
+def _normalize_due(s: str) -> str:
+    """Accept YYYY-MM-DD or ISO datetime; emit ISO Z."""
+    s = s.strip()
+    try:
+        return datetime.strptime(s, "%Y-%m-%d").strftime("%Y-%m-%dT08:00:00Z")
+    except ValueError:
+        pass
+    try:
+        dt = datetime.fromisoformat(s.replace("Z", "+00:00"))
+    except ValueError:
+        die(f"--due: must be YYYY-MM-DD or ISO datetime, got {s!r}")
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def cmd_milestone_list(args):
+    out = [_milestone_summary(m) for m in _list_milestones_raw(args.state)]
+    json.dump(out, sys.stdout, indent=2, default=str)
+    sys.stdout.write("\n")
+
+
+def cmd_milestone_show(args):
+    json.dump(_milestone_summary(_resolve_milestone(args.spec)),
+              sys.stdout, indent=2, default=str)
+    sys.stdout.write("\n")
+
+
+def cmd_milestone_create(args):
+    payload: dict = {"title": args.title}
+    if args.description is not None:
+        payload["description"] = args.description
+    if args.due:
+        payload["due_on"] = _normalize_due(args.due)
+    if args.closed:
+        payload["state"] = "closed"
+    m = _gh_api_json("POST", f"repos/{GH_REPO}/milestones", payload)
+    print(f"created milestone #{m['number']}: {m['title']}")
+
+
+def cmd_milestone_update(args):
+    m = _resolve_milestone(args.spec)
+    payload: dict = {}
+    if args.title is not None:
+        payload["title"] = args.title
+    if args.description is not None:
+        payload["description"] = args.description
+    if args.no_due:
+        payload["due_on"] = None
+    elif args.due:
+        payload["due_on"] = _normalize_due(args.due)
+    if args.state:
+        payload["state"] = args.state
+    if not payload:
+        print(f"milestone #{m['number']}: no changes")
+        return
+    updated = _gh_api_json("PATCH",
+                           f"repos/{GH_REPO}/milestones/{m['number']}",
+                           payload)
+    print(f"updated milestone #{updated['number']}: {updated['title']}")
+
+
+def cmd_milestone_delete(args):
+    m = _resolve_milestone(args.spec)
+    r = subprocess.run(
+        ["gh", "api", "-X", "DELETE", f"repos/{GH_REPO}/milestones/{m['number']}"],
+        capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        die(f"delete failed: {r.stderr.strip() or 'unknown'}")
+    print(f"deleted milestone #{m['number']}: {m['title']}")
 
 
 # --- calendar --------------------------------------------------------------
@@ -2215,11 +2378,18 @@ def build_parser() -> argparse.ArgumentParser:
     tv_create = tv.add_parser("create", help="open new issue + add to project")
     tv_create.add_argument("title")
     _add_label_args(tv_create, allow_remove_blocked=False)
-    tv_create.set_defaults(func=cmd_task_create)
+    tv_create.add_argument("--milestone",
+                           help="milestone title (must already exist)")
+    tv_create.set_defaults(func=cmd_task_create, no_milestone=False)
 
     tv_update = tv.add_parser("update", help="patch labels/body; idempotent dim replace")
     tv_update.add_argument("num", type=int)
     _add_label_args(tv_update, allow_remove_blocked=True)
+    ms_group = tv_update.add_mutually_exclusive_group()
+    ms_group.add_argument("--milestone",
+                          help="set milestone by title (must already exist)")
+    ms_group.add_argument("--no-milestone", action="store_true",
+                          help="clear the milestone on this issue")
     tv_update.set_defaults(func=cmd_task_update)
 
     tv_close = tv.add_parser("close", help="close issue")
@@ -2242,6 +2412,42 @@ def build_parser() -> argparse.ArgumentParser:
     tv_day.add_argument("--clear", action="store_true",
                         help="clear the day field on this issue")
     tv_day.set_defaults(func=cmd_task_day)
+
+    # --- milestone ---
+    ms = nouns.add_parser("milestone", help="GitHub milestones (CRUD)")
+    mv = ms.add_subparsers(dest="verb")
+
+    mv_list = mv.add_parser("list", help="list milestones (default open only)")
+    mv_list.add_argument("--state", choices=("open", "closed", "all"),
+                         default="open")
+    mv_list.set_defaults(func=cmd_milestone_list)
+
+    mv_show = mv.add_parser("show", help="show one milestone")
+    mv_show.add_argument("spec", help="milestone number or exact title")
+    mv_show.set_defaults(func=cmd_milestone_show)
+
+    mv_create = mv.add_parser("create", help="create a milestone")
+    mv_create.add_argument("title")
+    mv_create.add_argument("--description", default=None)
+    mv_create.add_argument("--due", help="YYYY-MM-DD or ISO datetime")
+    mv_create.add_argument("--closed", action="store_true",
+                           help="create as closed (default open)")
+    mv_create.set_defaults(func=cmd_milestone_create)
+
+    mv_update = mv.add_parser("update", help="patch a milestone")
+    mv_update.add_argument("spec", help="milestone number or current title")
+    mv_update.add_argument("--title", default=None, help="new title")
+    mv_update.add_argument("--description", default=None)
+    mv_due = mv_update.add_mutually_exclusive_group()
+    mv_due.add_argument("--due", help="YYYY-MM-DD or ISO datetime")
+    mv_due.add_argument("--no-due", action="store_true",
+                        help="clear the due date")
+    mv_update.add_argument("--state", choices=("open", "closed"))
+    mv_update.set_defaults(func=cmd_milestone_update)
+
+    mv_del = mv.add_parser("delete", help="delete a milestone (irreversible)")
+    mv_del.add_argument("spec", help="milestone number or exact title")
+    mv_del.set_defaults(func=cmd_milestone_delete)
 
     # --- calendar ---
     cal = nouns.add_parser("calendar", help="day-level events that block/colour scheduling")
