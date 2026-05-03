@@ -33,3 +33,8 @@ entries:
     url: "/blog/what-goes-up/"
     summary: "New post about installing lazy jacks and overcoming a fear of heights while working on the mast."
     source: "blog"
+  - date: "2026-05-03"
+    title: "Engine"
+    url: "https://github.com/norton120/svdefiant/wiki/Engine"
+    summary: "Added substantial new technical details and specifications to the Engine wiki page."
+    source: "wiki"
