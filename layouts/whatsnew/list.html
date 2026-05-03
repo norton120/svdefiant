@@ -67,6 +67,41 @@
     :is(.dark) .whatsnew-source { background: #334155; color: #cbd5e1; }
     .empty-state { color: #64748b; margin-top: 1rem; }
     :is(.dark) .empty-state { color: #94a3b8; }
+
+    .whatsnew-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.25rem 0 0.5rem;
+    }
+    .whatsnew-filter {
+      font: inherit;
+      cursor: pointer;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      border: 1px solid #cbd5e1;
+      background: transparent;
+      color: #475569;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+    .whatsnew-filter:hover { border-color: #6366f1; color: #6366f1; }
+    .whatsnew-filter[aria-pressed="true"] {
+      background: #6366f1;
+      border-color: #6366f1;
+      color: #fff;
+    }
+    :is(.dark) .whatsnew-filter { border-color: #475569; color: #cbd5e1; }
+    :is(.dark) .whatsnew-filter:hover { border-color: #818cf8; color: #818cf8; }
+    :is(.dark) .whatsnew-filter[aria-pressed="true"] {
+      background: #6366f1;
+      border-color: #6366f1;
+      color: #fff;
+    }
+
+    .whatsnew-group:not(:has(.whatsnew-item:not([hidden]))) { display: none; }
   </style>
 
   <section class="whatsnew-section">
@@ -82,18 +117,28 @@
 
     {{ if $entries }}
       {{ $sorted := sort $entries "date" "desc" }}
+      {{ $sources := slice "blog" "gallery" "wiki" }}
+
+      <div class="whatsnew-filters" role="group" aria-label="Filter by source">
+        <button type="button" class="whatsnew-filter" data-filter="all" aria-pressed="true">All</button>
+        {{ range $sources }}
+          <button type="button" class="whatsnew-filter" data-filter="{{ . }}" aria-pressed="false">{{ . }}</button>
+        {{ end }}
+      </div>
+
       {{ $currentMonth := "" }}
       {{ $listOpen := false }}
       {{ range $sorted }}
         {{ $monthKey := substr (string .date) 0 7 }}
         {{ if ne $monthKey $currentMonth }}
-          {{ if $listOpen }}</ul>{{ end }}
+          {{ if $listOpen }}</ul></div>{{ end }}
+          <div class="whatsnew-group">
           <h2 class="whatsnew-month">{{ dateFormat "January 2006" (string .date) }}</h2>
           <ul class="whatsnew-list">
           {{ $currentMonth = $monthKey }}
           {{ $listOpen = true }}
         {{ end }}
-        <li class="whatsnew-item">
+        <li class="whatsnew-item" data-source="{{ .source }}">
           <a href="{{ .url }}"{{ if hasPrefix .url "http" }} target="_blank" rel="noopener"{{ end }}>
             {{ .title }}
           </a>
@@ -102,9 +147,30 @@
           <p class="meta">{{ dateFormat "Jan 2, 2006" (string .date) }}</p>
         </li>
       {{ end }}
-      {{ if $listOpen }}</ul>{{ end }}
+      {{ if $listOpen }}</ul></div>{{ end }}
     {{ else }}
       <p class="empty-state">Nothing posted yet — check back soon.</p>
     {{ end }}
   </section>
+
+  <script>
+    (function () {
+      var filters = document.querySelectorAll('.whatsnew-filter');
+      if (!filters.length) return;
+      var items = document.querySelectorAll('.whatsnew-item');
+      filters.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var target = btn.getAttribute('data-filter');
+          filters.forEach(function (b) {
+            b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+          });
+          items.forEach(function (item) {
+            var match = target === 'all' || item.getAttribute('data-source') === target;
+            if (match) item.removeAttribute('hidden');
+            else item.setAttribute('hidden', '');
+          });
+        });
+      });
+    })();
+  </script>
 {{ end }}
