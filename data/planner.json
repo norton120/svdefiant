@@ -5,7 +5,7 @@
     "end_date": "2026-05-05",
     "duration": 7
   },
-  "generated_at": "2026-05-01T21:39:04Z",
+  "generated_at": "2026-05-03T00:21:15Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -46,49 +46,32 @@
     },
     {
       "date": "2026-05-01",
-      "label": "Today",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 16.5,
-        "gust_kt_max": 24.3,
-        "wave_ft_max": 1.8,
-        "temp_f": [
-          48,
-          60
-        ],
-        "precip": false,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 1 at 2:59PM EDT until May 3 at 10:00AM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.61652&lon=-76.29002"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\u26c5"
-        ],
-        "temp_label": "48\u201360\u00b0",
-        "wind_label": "16g24kt \u00b7 1.8ft"
-      },
+      "label": "Fri May 1",
+      "events": [
+        {
+          "label": "Morning routine check-in: meditation \u2192 shower \u2192 breakfast \u2192 Balmar research",
+          "blocks": true
+        }
+      ],
+      "weather": null,
       "lanes": [],
       "task_count": 0
     },
     {
       "date": "2026-05-02",
-      "label": "Tomorrow",
-      "events": [],
+      "label": "Sat May 2",
+      "events": [
+        {
+          "label": "URGENT: MC-614 programming + impeller change (Day Sails in 2 days)",
+          "blocks": true
+        }
+      ],
       "weather": {
-        "wind_kt_max": 13.2,
-        "gust_kt_max": 20.8,
-        "wave_ft_max": 1.4,
+        "wind_kt_max": 12.5,
+        "gust_kt_max": 19.6,
+        "wave_ft_max": 1.6,
         "temp_f": [
-          53,
+          52,
           58
         ],
         "precip": false,
@@ -99,17 +82,17 @@
           {
             "token": "small_craft_advisory",
             "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 1 at 2:59PM EDT until May 3 at 10:00AM EDT by NWS Wakefield VA",
+            "headline": "Small Craft Advisory issued May 2 at 3:59PM EDT until May 3 at 10:00AM EDT by NWS Wakefield VA",
             "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.61652&lon=-76.29002"
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616608&lon=-76.289975"
           }
         ],
         "icons": [
           "\u2620\ufe0f",
           "\u26c5"
         ],
-        "temp_label": "53\u201358\u00b0",
-        "wind_label": "13g21kt \u00b7 1.4ft"
+        "temp_label": "52\u201358\u00b0",
+        "wind_label": "12g20kt \u00b7 1.6ft"
       },
       "lanes": [
         {
@@ -119,44 +102,6 @@
               "number": 6,
               "title": "Proper engine oil change (drain completely first)",
               "url": "https://github.com/norton120/svdefiant/issues/6",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "day": "2026-05-02"
-            },
-            {
-              "number": 7,
-              "title": "Change water pump oil",
-              "url": "https://github.com/norton120/svdefiant/issues/7",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "day": "2026-05-02"
-            },
-            {
-              "number": 8,
-              "title": "Change impeller",
-              "url": "https://github.com/norton120/svdefiant/issues/8",
               "milestone": "Day Sails",
               "priority": "p1",
               "systems": [
@@ -190,70 +135,43 @@
               "blocked_parts": false,
               "project_status": "Todo",
               "day": "2026-05-02"
-            },
-            {
-              "number": 10,
-              "title": "Replace air filter / snorkel",
-              "url": "https://github.com/norton120/svdefiant/issues/10",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "day": "2026-05-02"
-            },
-            {
-              "number": 12,
-              "title": "Clean out Groco filter",
-              "url": "https://github.com/norton120/svdefiant/issues/12",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "day": "2026-05-02"
             }
           ]
         }
       ],
-      "task_count": 6
+      "task_count": 2
     },
     {
       "date": "2026-05-03",
-      "label": "Sun May 3",
+      "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 15.1,
-        "gust_kt_max": 22.4,
+        "wind_kt_max": 15.5,
+        "gust_kt_max": 25.1,
         "wave_ft_max": 1.7,
         "temp_f": [
-          47,
-          63
+          48,
+          62
         ],
         "precip": false,
-        "hazards": [],
-        "alerts": [],
+        "hazards": [
+          "small_craft_advisory"
+        ],
+        "alerts": [
+          {
+            "token": "small_craft_advisory",
+            "event": "Small Craft Advisory",
+            "headline": "Small Craft Advisory issued May 2 at 3:59PM EDT until May 3 at 10:00AM EDT by NWS Wakefield VA",
+            "tooltip": "\u26f5",
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616608&lon=-76.289975"
+          }
+        ],
         "icons": [
+          "\u2620\ufe0f",
           "\u26c5"
         ],
-        "temp_label": "47\u201363\u00b0",
-        "wind_label": "15g22kt \u00b7 1.7ft"
+        "temp_label": "48\u201362\u00b0",
+        "wind_label": "16g25kt \u00b7 1.7ft"
       },
       "lanes": [
         {
@@ -277,129 +195,22 @@
               "blocked_parts": false,
               "project_status": "Todo",
               "day": "2026-05-03"
-            },
-            {
-              "number": 4,
-              "title": "500A Shunt swap",
-              "url": "https://github.com/norton120/svdefiant/issues/4",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "day": "2026-05-03"
-            },
-            {
-              "number": 62,
-              "title": "Re-run power in quarterberth so doors close",
-              "url": "https://github.com/norton120/svdefiant/issues/62",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "electrical",
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "day": "2026-05-03"
             }
           ]
         },
         {
-          "system": "interior",
+          "system": "engine",
           "issues": [
             {
-              "number": 2,
-              "title": "Clean up quarterberth",
-              "url": "https://github.com/norton120/svdefiant/issues/2",
+              "number": 7,
+              "title": "Change water pump oil",
+              "url": "https://github.com/norton120/svdefiant/issues/7",
               "milestone": "Day Sails",
-              "priority": "p3",
+              "priority": "p1",
               "systems": [
-                "interior"
+                "engine"
               ],
               "energy": "light",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "day": "2026-05-03"
-            },
-            {
-              "number": 61,
-              "title": "Stowage boxes for quarterberth locker",
-              "url": "https://github.com/norton120/svdefiant/issues/61",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "day": "2026-05-03"
-            }
-          ]
-        }
-      ],
-      "task_count": 5
-    },
-    {
-      "date": "2026-05-04",
-      "label": "Mon May 4",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 17.1,
-        "gust_kt_max": 31.5,
-        "wave_ft_max": 1.4,
-        "temp_f": [
-          53,
-          76
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u26c5"
-        ],
-        "temp_label": "53\u201376\u00b0",
-        "wind_label": "17g32kt \u00b7 1.4ft"
-      },
-      "lanes": [
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 16,
-              "title": "Mount Kennedy quote",
-              "url": "https://github.com/norton120/svdefiant/issues/16",
-              "milestone": "Day Sails",
-              "priority": "p3",
-              "systems": [
-                "interior"
-              ],
-              "energy": "couch",
               "weather": "any",
               "time": "lt-1hr",
               "locations": [
@@ -407,12 +218,20 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
-              "day": "2026-05-04"
+              "day": "2026-05-03"
             }
           ]
         }
       ],
-      "task_count": 1
+      "task_count": 2
+    },
+    {
+      "date": "2026-05-04",
+      "label": "Tomorrow",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
     }
   ],
   "unscheduled": []
