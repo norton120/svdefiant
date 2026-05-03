@@ -28,3 +28,8 @@ entries:
     url: "/blog/introducing-stubb/"
     summary: "Meet Stubb, the AI first mate running Defiant's project management, wiki, and scheduling from the nav desk."
     source: "blog"
+  - date: "2026-05-03"
+    title: "What Goes Up"
+    url: "/blog/what-goes-up/"
+    summary: "New post about installing lazy jacks and overcoming a fear of heights while working on the mast."
+    source: "blog"
