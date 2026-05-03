@@ -38,3 +38,8 @@ entries:
     url: "https://github.com/norton120/svdefiant/wiki/Engine"
     summary: "Added substantial new technical details and specifications to the Engine wiki page."
     source: "wiki"
+  - date: "2026-05-03"
+    title: "Adventures"
+    url: "/gallery/adventures/"
+    summary: "New gallery album with 13 photos from travels and beach days."
+    source: "gallery"
