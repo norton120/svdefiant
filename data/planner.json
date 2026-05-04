@@ -5,7 +5,7 @@
     "end_date": "2026-05-05",
     "duration": 7
   },
-  "generated_at": "2026-05-04T01:45:51Z",
+  "generated_at": "2026-05-04T13:29:23Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -69,23 +69,7 @@
       "date": "2026-05-03",
       "label": "Sun May 3",
       "events": [],
-      "weather": {
-        "wind_kt_max": 13.9,
-        "gust_kt_max": 22.7,
-        "wave_ft_max": 2.2,
-        "temp_f": [
-          47,
-          62
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u26c5"
-        ],
-        "temp_label": "47\u201362\u00b0",
-        "wind_label": "14g23kt \u00b7 2.2ft"
-      },
+      "weather": null,
       "lanes": [],
       "task_count": 0
     },
@@ -93,7 +77,34 @@
       "date": "2026-05-04",
       "label": "Today",
       "events": [],
-      "weather": null,
+      "weather": {
+        "wind_kt_max": 15.6,
+        "gust_kt_max": 21.0,
+        "wave_ft_max": 1.6,
+        "temp_f": [
+          52,
+          76
+        ],
+        "precip": false,
+        "hazards": [
+          "small_craft_advisory"
+        ],
+        "alerts": [
+          {
+            "token": "small_craft_advisory",
+            "event": "Small Craft Advisory",
+            "headline": "Small Craft Advisory issued May 4 at 5:43AM EDT until May 5 at 10:00AM EDT by NWS Wakefield VA",
+            "tooltip": "\u26f5",
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616501&lon=-76.290007"
+          }
+        ],
+        "icons": [
+          "\u2620\ufe0f",
+          "\u26c5"
+        ],
+        "temp_label": "52\u201376\u00b0",
+        "wind_label": "16g21kt \u00b7 1.6ft"
+      },
       "lanes": [],
       "task_count": 0
     }
@@ -193,7 +204,7 @@
         "on-deck",
         "dockside-only"
       ],
-      "blocked_parts": true,
+      "blocked_parts": false,
       "project_status": "Todo",
       "day": "2026-05-06"
     }
