@@ -108,29 +108,13 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="state_stale",
-        description="Check whether watched state sections (location, mode) are stale. Output 'fresh' on success, '[exit 1] stale: <section> (...)' if any are older than max. Use this to decide whether to ask the human to confirm location.",
-        inputSchema={
-            "type": "object",
-            "properties": {"max": {"type": "string", "default": "3d",
-                                    "description": "max age, e.g. '3d', '12h', '30m'"}},
-            "additionalProperties": False,
-        },
+        description="Check whether watched state sections (location, mode) are stale (older than 3 days). Output 'fresh' on success, '[exit 1] stale: <section> (...)' if any are stale. Use this to decide whether to ask the human to confirm location.",
+        inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
     ),
     Tool(
         name="inbox_list",
-        description="List inbound mail (SES bucket). Defaults to unprocessed messages from the last 14 days, filtered against ~/.defiant/inbox-state.json so previously-acked messages don't reappear. Returns JSON array of {message_id, s3_key, from, subject, date, snippet}.",
-        inputSchema={
-            "type": "object",
-            "properties": {
-                "since": {"type": "string", "default": "14d",
-                          "description": "lookback window, NNd|NNh|NNm"},
-                "from_pattern": {"type": "string", "description": "regex on the From header"},
-                "subject_pattern": {"type": "string", "description": "regex on the Subject line"},
-                "include_acked": {"type": "boolean", "default": False,
-                                  "description": "include previously-acked messages"},
-            },
-            "additionalProperties": False,
-        },
+        description="List unprocessed inbound mail from the last 14 days (SES bucket). Filtered against ~/.defiant/inbox-state.json so previously-acked messages don't reappear. Returns JSON array of {message_id, s3_key, from, subject, date, snippet}. Filter the result yourself if you need a subset.",
+        inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
     ),
     Tool(
         name="inbox_get",
@@ -147,10 +131,7 @@ TOOLS: list[Tool] = [
         description="Mark a message processed; it won't appear in inbox_list again until unacked. ALWAYS ack messages you've decided about — even ones you decided weren't actionable — so they don't keep re-surfacing.",
         inputSchema={
             "type": "object",
-            "properties": {
-                "id": {"type": "string"},
-                "note": {"type": "string", "description": "one-line reason for the ack (debug aid)"},
-            },
+            "properties": {"id": {"type": "string"}},
             "required": ["id"],
             "additionalProperties": False,
         },
@@ -215,20 +196,57 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="task_update",
-        description="Patch labels, body, and/or milestone on an existing issue. Idempotent dim-replace: setting `priority` removes any prior p* label, `system` replaces any sys:*, `location` replaces the entire loc:* set. blocked_parts is tri-state (omit / true=add / false=remove). Milestone: pass `milestone` to set, `clear_milestone=true` to remove; mutually exclusive.",
+        description="Patch labels and/or body on an existing issue. Idempotent dim-replace: setting `priority` removes any prior p* label, `system` replaces any sys:*, `location` replaces the entire loc:* set. For milestone changes use task_set_milestone / task_clear_milestone; for parts blocking use task_block_parts / task_unblock_parts.",
         inputSchema={
             "type": "object",
             "properties": {
                 "num": {"type": "integer"},
                 "body": {"type": "string"},
                 **_label_props(),
-                "blocked_parts": {"type": "boolean",
-                                  "description": "true → add blocked:parts; false → remove; omit → no change"},
-                "milestone": {"type": "string",
-                              "description": "milestone title to set (must already exist)"},
-                "clear_milestone": {"type": "boolean", "default": False,
-                                    "description": "true → clear the milestone (mutually exclusive with milestone)"},
             },
+            "required": ["num"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="task_block_parts",
+        description="Add the blocked:parts label to an issue (it will be filtered out of schedulable lists). Idempotent.",
+        inputSchema={
+            "type": "object",
+            "properties": {"num": {"type": "integer"}},
+            "required": ["num"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="task_unblock_parts",
+        description="Remove the blocked:parts label from an issue. Idempotent.",
+        inputSchema={
+            "type": "object",
+            "properties": {"num": {"type": "integer"}},
+            "required": ["num"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="task_set_milestone",
+        description="Assign an issue to a milestone. The milestone must already exist (use milestone_create first if not). Replaces any prior milestone.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "num": {"type": "integer"},
+                "milestone": {"type": "string", "description": "milestone title"},
+            },
+            "required": ["num", "milestone"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="task_clear_milestone",
+        description="Remove the milestone from an issue (the issue stays open).",
+        inputSchema={
+            "type": "object",
+            "properties": {"num": {"type": "integer"}},
             "required": ["num"],
             "additionalProperties": False,
         },
@@ -260,7 +278,7 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="milestone_create",
-        description="Create a new milestone. Title must be unique in the repo. Due date is optional (YYYY-MM-DD or ISO datetime); description is optional markdown.",
+        description="Create a new (open) milestone. Title must be unique in the repo. Due date is optional (YYYY-MM-DD or ISO datetime); description is optional markdown.",
         inputSchema={
             "type": "object",
             "properties": {
@@ -268,8 +286,6 @@ TOOLS: list[Tool] = [
                 "description": {"type": "string"},
                 "due": {"type": "string",
                         "description": "YYYY-MM-DD or ISO datetime"},
-                "closed": {"type": "boolean", "default": False,
-                           "description": "create as closed (default open)"},
             },
             "required": ["title"],
             "additionalProperties": False,
@@ -277,7 +293,7 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="milestone_update",
-        description="Patch a milestone (number or current title). Any subset of {title, description, due, state} updates only those fields. Pass clear_due=true to remove a due date (mutually exclusive with due). state ∈ {open, closed}.",
+        description="Patch a milestone (number or current title). Any subset of {title, description, due, state} updates only those fields. To remove a due date use milestone_clear_due. state ∈ {open, closed}.",
         inputSchema={
             "type": "object",
             "properties": {
@@ -287,9 +303,20 @@ TOOLS: list[Tool] = [
                 "description": {"type": "string"},
                 "due": {"type": "string",
                         "description": "YYYY-MM-DD or ISO datetime"},
-                "clear_due": {"type": "boolean", "default": False,
-                              "description": "true → remove due date (mutually exclusive with due)"},
                 "state": {"type": "string", "enum": ["open", "closed"]},
+            },
+            "required": ["spec"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="milestone_clear_due",
+        description="Remove the due date from a milestone.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "spec": {"type": "string",
+                         "description": "milestone number or current title"},
             },
             "required": ["spec"],
             "additionalProperties": False,
@@ -309,14 +336,21 @@ TOOLS: list[Tool] = [
         },
     ),
     Tool(
-        name="task_close",
-        description="Close an issue.",
+        name="task_complete",
+        description="Close an issue as completed (the work was finished). Use task_drop instead if the work won't be done.",
         inputSchema={
             "type": "object",
-            "properties": {
-                "num": {"type": "integer"},
-                "reason": {"type": "string", "enum": ["completed", "not planned"]},
-            },
+            "properties": {"num": {"type": "integer"}},
+            "required": ["num"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="task_drop",
+        description="Close an issue as not planned (the work won't be done — out of scope, no longer relevant, etc.). Use task_complete if the work was actually finished.",
+        inputSchema={
+            "type": "object",
+            "properties": {"num": {"type": "integer"}},
             "required": ["num"],
             "additionalProperties": False,
         },
@@ -336,17 +370,24 @@ TOOLS: list[Tool] = [
         },
     ),
     Tool(
-        name="task_day",
-        description="Set or clear the per-issue 'Target date' (the day the agent intends to do this work) on Project #4. Pass date='YYYY-MM-DD' to set, or clear=true to remove. Adds the issue to the project if it isn't already there.",
+        name="task_day_set",
+        description="Set the per-issue 'Target date' (the day the agent intends to do this work) on Project #4. Adds the issue to the project if it isn't already there.",
         inputSchema={
             "type": "object",
             "properties": {
                 "num": {"type": "integer"},
-                "date": {"type": "string",
-                         "description": "YYYY-MM-DD; mutually exclusive with clear"},
-                "clear": {"type": "boolean", "default": False,
-                          "description": "true → remove the day from this issue"},
+                "date": {"type": "string", "description": "YYYY-MM-DD"},
             },
+            "required": ["num", "date"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="task_day_clear",
+        description="Remove the per-issue 'Target date' on Project #4 (the issue stays in the project and iteration if previously assigned).",
+        inputSchema={
+            "type": "object",
+            "properties": {"num": {"type": "integer"}},
             "required": ["num"],
             "additionalProperties": False,
         },
@@ -394,10 +435,10 @@ TOOLS: list[Tool] = [
             "Add an Amazon product URL to a named virtual cart. The cart is just "
             "an ASIN list on disk — the agent never touches Amazon. When the user "
             "is ready, cart_get_url emits a click-to-checkout URL that populates "
-            "their real Amazon cart for normal review/checkout. Pass title/price "
-            "if you already saw them while browsing; otherwise the server fetches "
-            "the product page once. Same-ASIN re-add increments quantity. Cap is "
-            "40 unique items per cart; new carts are auto-created on first add."
+            "their real Amazon cart for normal review/checkout. The server fetches "
+            "the product page once for title/price. Same-ASIN re-add increments "
+            "quantity. Cap is 40 unique items per cart; new carts are auto-created "
+            "on first add."
         ),
         inputSchema={
             "type": "object",
@@ -407,8 +448,6 @@ TOOLS: list[Tool] = [
                 "quantity": {"type": "integer", "default": 1, "minimum": 1},
                 "cart": {"type": "string", "default": "stubb",
                          "description": "cart name; carts are persistent across sessions"},
-                "title": {"type": "string", "description": "known product title; skips the page fetch"},
-                "price": {"type": "string", "description": "known price string, e.g. '$12.99'"},
             },
             "required": ["url"],
             "additionalProperties": False,
@@ -475,18 +514,12 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="planner_publish",
-        description="Render data/planner.json from the project iteration + calendar (drives the public planner page on svdefiant.com). Optionally commits and pushes; CI rebuilds the site on merge to main. Use commit=true after a re-plan; otherwise omit and just verify the JSON before pushing.",
+        description="Render data/planner.json from the project iteration + calendar, commit, and push (drives the public planner page on svdefiant.com — CI rebuilds the site on push to main). Always includes per-day weather. No-op if data/planner.json is unchanged.",
         inputSchema={
             "type": "object",
             "properties": {
                 "iteration": {"type": "string", "default": "current",
                               "description": "'current' (default), 'next', or a literal iteration id"},
-                "commit": {"type": "boolean", "default": False,
-                           "description": "git add + commit data/planner.json after writing"},
-                "push": {"type": "boolean", "default": False,
-                         "description": "implies commit; also git push (triggers a site rebuild)"},
-                "no_weather": {"type": "boolean", "default": False,
-                               "description": "skip per-day weather fetch (e.g. offline)"},
             },
             "additionalProperties": False,
         },
@@ -529,17 +562,8 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="weather",
-        description="Marine weather + tides for state.location. Tides included automatically when state.mode == underway. Returns per-day {wind_kt_max, gust_kt_max, wave_ft_max, temp_f:[min,max], precip, satisfies:[any|dry|warm|calm], hazards:[NWS tokens]}. Match satisfies against issues' weather:* labels.",
-        inputSchema={
-            "type": "object",
-            "properties": {
-                "days": {"type": "integer", "default": 7,
-                         "description": "forecast horizon, 1-16"},
-                "no_tides": {"type": "boolean", "default": False,
-                             "description": "omit tides even when underway"},
-            },
-            "additionalProperties": False,
-        },
+        description="7-day marine weather + tides for state.location. Tides are included automatically when state.mode == underway. Returns per-day {wind_kt_max, gust_kt_max, wave_ft_max, temp_f:[min,max], precip, satisfies:[any|dry|warm|calm], hazards:[NWS tokens]}. Match satisfies against issues' weather:* labels.",
+        inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
     ),
     Tool(
         name="image_add",
@@ -602,24 +626,14 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
     if name == "state_set":
         return ["state", "set", args["key"], args["value"]], tmp
     if name == "state_stale":
-        return ["state", "stale", "--max", args.get("max", "3d")], tmp
+        return ["state", "stale", "--max", "3d"], tmp
 
     if name == "inbox_list":
-        argv = ["inbox", "list", "--since", args.get("since", "14d")]
-        if args.get("include_acked"):
-            argv.append("--all")
-        if v := args.get("from_pattern"):
-            argv += ["--from", v]
-        if v := args.get("subject_pattern"):
-            argv += ["--subject", v]
-        return argv, tmp
+        return ["inbox", "list", "--since", "14d"], tmp
     if name == "inbox_get":
         return ["inbox", "get", args["id"]], tmp
     if name == "inbox_ack":
-        argv = ["inbox", "ack", args["id"]]
-        if v := args.get("note"):
-            argv += ["--note", v]
-        return argv, tmp
+        return ["inbox", "ack", args["id"]], tmp
     if name == "inbox_unack":
         return ["inbox", "unack", args["id"]], tmp
 
@@ -653,23 +667,20 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
         argv += _label_argv(args)
         if v := args.get("body"):
             argv += ["--body-file", bodyfile(v)]
-        bp = args.get("blocked_parts")
-        if bp is True:
-            argv.append("--blocked-parts")
-        elif bp is False:
-            argv.append("--no-blocked-parts")
-        if args.get("milestone") and args.get("clear_milestone"):
-            raise ValueError("milestone and clear_milestone are mutually exclusive")
-        if v := args.get("milestone"):
-            argv += ["--milestone", v]
-        elif args.get("clear_milestone"):
-            argv.append("--no-milestone")
         return argv, tmp
-    if name == "task_close":
-        argv = ["task", "close", str(args["num"])]
-        if v := args.get("reason"):
-            argv += ["--reason", v]
-        return argv, tmp
+    if name == "task_block_parts":
+        return ["task", "update", str(args["num"]), "--blocked-parts"], tmp
+    if name == "task_unblock_parts":
+        return ["task", "update", str(args["num"]), "--no-blocked-parts"], tmp
+    if name == "task_set_milestone":
+        return ["task", "update", str(args["num"]),
+                "--milestone", args["milestone"]], tmp
+    if name == "task_clear_milestone":
+        return ["task", "update", str(args["num"]), "--no-milestone"], tmp
+    if name == "task_complete":
+        return ["task", "close", str(args["num"]), "--reason", "completed"], tmp
+    if name == "task_drop":
+        return ["task", "close", str(args["num"]), "--reason", "not planned"], tmp
     if name == "task_iteration":
         argv = ["task", "iteration", str(args["num"])]
         spec = args["iteration"]
@@ -680,15 +691,10 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
         else:
             argv += ["--id", spec]
         return argv, tmp
-    if name == "task_day":
-        argv = ["task", "day", str(args["num"])]
-        if args.get("clear"):
-            argv.append("--clear")
-        elif v := args.get("date"):
-            argv.append(v)
-        else:
-            raise ValueError("task_day requires either date or clear=true")
-        return argv, tmp
+    if name == "task_day_set":
+        return ["task", "day", str(args["num"]), args["date"]], tmp
+    if name == "task_day_clear":
+        return ["task", "day", str(args["num"]), "--clear"], tmp
 
     if name == "milestone_list":
         return ["milestone", "list", "--state", args.get("state", "open")], tmp
@@ -700,8 +706,6 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
             argv += ["--description", v]
         if v := args.get("due"):
             argv += ["--due", v]
-        if args.get("closed"):
-            argv.append("--closed")
         return argv, tmp
     if name == "milestone_update":
         argv = ["milestone", "update", args["spec"]]
@@ -709,15 +713,13 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
             argv += ["--title", v]
         if (v := args.get("description")) is not None:
             argv += ["--description", v]
-        if args.get("due") and args.get("clear_due"):
-            raise ValueError("due and clear_due are mutually exclusive")
         if v := args.get("due"):
             argv += ["--due", v]
-        elif args.get("clear_due"):
-            argv.append("--no-due")
         if v := args.get("state"):
             argv += ["--state", v]
         return argv, tmp
+    if name == "milestone_clear_due":
+        return ["milestone", "update", args["spec"], "--no-due"], tmp
     if name == "milestone_delete":
         return ["milestone", "delete", args["spec"]], tmp
 
@@ -741,10 +743,6 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
                 "--qty", str(args.get("quantity", 1))]
         if v := args.get("cart"):
             argv += ["--cart", v]
-        if v := args.get("title"):
-            argv += ["--title", v]
-        if v := args.get("price"):
-            argv += ["--price", v]
         return argv, tmp
     if name == "cart_remove":
         argv = ["cart", "remove", args["asin"]]
@@ -775,15 +773,9 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
         return argv, tmp
 
     if name == "planner_publish":
-        argv = ["planner", "publish",
-                "--iteration", args.get("iteration", "current")]
-        if args.get("push"):
-            argv.append("--push")
-        elif args.get("commit"):
-            argv.append("--commit")
-        if args.get("no_weather"):
-            argv.append("--no-weather")
-        return argv, tmp
+        return ["planner", "publish",
+                "--iteration", args.get("iteration", "current"),
+                "--push"], tmp
 
     if name == "wiki_search":
         return ["wiki", "search", args["query"],
@@ -795,10 +787,7 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
                 "--body-file", bodyfile(args["body"])], tmp
 
     if name == "weather":
-        argv = ["weather", "--days", str(args.get("days", 7))]
-        if args.get("no_tides"):
-            argv.append("--no-tides")
-        return argv, tmp
+        return ["weather", "--days", "7"], tmp
 
     if name == "image_add":
         try:
