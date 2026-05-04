@@ -5,7 +5,7 @@
     "end_date": "2026-05-05",
     "duration": 7
   },
-  "generated_at": "2026-05-04T13:29:23Z",
+  "generated_at": "2026-05-04T14:05:21Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -78,7 +78,7 @@
       "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 15.6,
+        "wind_kt_max": 12.2,
         "gust_kt_max": 21.0,
         "wave_ft_max": 1.6,
         "temp_f": [
@@ -93,9 +93,9 @@
           {
             "token": "small_craft_advisory",
             "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 4 at 5:43AM EDT until May 5 at 10:00AM EDT by NWS Wakefield VA",
+            "headline": "Small Craft Advisory issued May 4 at 9:45AM EDT until May 5 at 10:00AM EDT by NWS Wakefield VA",
             "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616501&lon=-76.290007"
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616489&lon=-76.290013"
           }
         ],
         "icons": [
@@ -103,110 +103,179 @@
           "\u26c5"
         ],
         "temp_label": "52\u201376\u00b0",
-        "wind_label": "16g21kt \u00b7 1.6ft"
+        "wind_label": "12g21kt \u00b7 1.6ft"
       },
       "lanes": [],
       "task_count": 0
+    },
+    {
+      "date": "2026-05-05",
+      "label": "Tomorrow",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 17.7,
+        "gust_kt_max": 30.7,
+        "wave_ft_max": 2.2,
+        "temp_f": [
+          61,
+          82
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "61\u201382\u00b0",
+        "wind_label": "18g31kt \u00b7 2.2ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 1,
+              "title": "Wire & replace running lights (bow + stern)",
+              "url": "https://github.com/norton120/svdefiant/issues/1",
+              "milestone": "Day Sails",
+              "priority": "p0",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "day": "2026-05-05"
+            }
+          ]
+        },
+        {
+          "system": "engine",
+          "issues": [
+            {
+              "number": 6,
+              "title": "Proper engine oil change (drain completely first)",
+              "url": "https://github.com/norton120/svdefiant/issues/6",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "engine"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "day": "2026-05-05"
+            },
+            {
+              "number": 7,
+              "title": "Change water pump oil",
+              "url": "https://github.com/norton120/svdefiant/issues/7",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "day": "2026-05-05"
+            }
+          ]
+        }
+      ],
+      "task_count": 3
+    },
+    {
+      "date": "2026-05-06",
+      "label": "Wed May 6",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 17.0,
+        "gust_kt_max": 30.9,
+        "wave_ft_max": 2.2,
+        "temp_f": [
+          63,
+          72
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "63\u201372\u00b0",
+        "wind_label": "17g31kt \u00b7 2.2ft"
+      },
+      "lanes": [
+        {
+          "system": "engine",
+          "issues": [
+            {
+              "number": 9,
+              "title": "Replace engine coolant",
+              "url": "https://github.com/norton120/svdefiant/issues/9",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "engine"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "day": "2026-05-06"
+            }
+          ]
+        },
+        {
+          "system": "hull",
+          "issues": [
+            {
+              "number": 71,
+              "title": "Repair cracked companionway door frame with copper edge wrap",
+              "url": "https://github.com/norton120/svdefiant/issues/71",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "hull",
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "day": "2026-05-06"
+            }
+          ]
+        }
+      ],
+      "task_count": 2
     }
   ],
-  "unscheduled": [
-    {
-      "number": 1,
-      "title": "Wire & replace running lights (bow + stern)",
-      "url": "https://github.com/norton120/svdefiant/issues/1",
-      "milestone": "Day Sails",
-      "priority": "p0",
-      "systems": [
-        "electrical"
-      ],
-      "energy": "moderate",
-      "weather": "dry",
-      "time": "half-day",
-      "locations": [
-        "on-deck"
-      ],
-      "blocked_parts": false,
-      "project_status": "Todo",
-      "day": "2026-05-05"
-    },
-    {
-      "number": 6,
-      "title": "Proper engine oil change (drain completely first)",
-      "url": "https://github.com/norton120/svdefiant/issues/6",
-      "milestone": "Day Sails",
-      "priority": "p1",
-      "systems": [
-        "engine"
-      ],
-      "energy": "moderate",
-      "weather": "any",
-      "time": "lt-1hr",
-      "locations": [
-        "indoors"
-      ],
-      "blocked_parts": false,
-      "project_status": "Todo",
-      "day": "2026-05-05"
-    },
-    {
-      "number": 7,
-      "title": "Change water pump oil",
-      "url": "https://github.com/norton120/svdefiant/issues/7",
-      "milestone": "Day Sails",
-      "priority": "p1",
-      "systems": [
-        "engine"
-      ],
-      "energy": "light",
-      "weather": "any",
-      "time": "lt-1hr",
-      "locations": [
-        "indoors"
-      ],
-      "blocked_parts": false,
-      "project_status": "Todo",
-      "day": "2026-05-05"
-    },
-    {
-      "number": 9,
-      "title": "Replace engine coolant",
-      "url": "https://github.com/norton120/svdefiant/issues/9",
-      "milestone": "Day Sails",
-      "priority": "p1",
-      "systems": [
-        "engine"
-      ],
-      "energy": "moderate",
-      "weather": "any",
-      "time": "lt-1hr",
-      "locations": [
-        "indoors"
-      ],
-      "blocked_parts": false,
-      "project_status": "Todo",
-      "day": "2026-05-06"
-    },
-    {
-      "number": 71,
-      "title": "Repair cracked companionway door frame with copper edge wrap",
-      "url": "https://github.com/norton120/svdefiant/issues/71",
-      "milestone": "Day Sails",
-      "priority": "p1",
-      "systems": [
-        "hull",
-        "interior"
-      ],
-      "energy": "moderate",
-      "weather": "dry",
-      "time": "half-day",
-      "locations": [
-        "indoors",
-        "on-deck",
-        "dockside-only"
-      ],
-      "blocked_parts": false,
-      "project_status": "Todo",
-      "day": "2026-05-06"
-    }
-  ]
+  "unscheduled": []
 }
