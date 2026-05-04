@@ -84,9 +84,13 @@ GH_REPO_OWNER, GH_REPO_NAME = GH_REPO.split("/")
 GH_PROJECT_NUMBER = 4
 GH_PROJECT_OWNER = "@me"
 GH_PROJECT_ID = "PVT_kwHOAGJGHM4BVufn"
-GH_ITERATION_FIELD_ID = "PVTIF_lAHOAGJGHM4BVufnzhRaGt0"
 # Project field "Target date" — used as the per-issue scheduled day.
 GH_DAY_FIELD_ID = "PVTF_lAHOAGJGHM4BVufnzhRak3E"
+
+# Rolling planner window defaults — shared between `task list --in-window`
+# and `planner publish` so the agent's view and the public page agree.
+WINDOW_DAYS_BACK = 2
+WINDOW_DAYS_FORWARD = 7
 
 # Task label dimensions. Single-value dims replace any prior label in the same
 # dim on update; `loc` is multi-value and replaces the full set when given.
@@ -560,8 +564,11 @@ def filter_schedulable(issues: list[dict], mode_status: str | None) -> list[dict
 
 
 def cmd_task_list(args, state):
-    if args.iteration:
-        issues = _list_by_iteration(args)
+    needs_project = bool(
+        args.in_window is not None or args.overdue or args.unscheduled
+    )
+    if needs_project:
+        issues = _list_project_items(args)
     else:
         fields = "number,title,url,labels,milestone,state"
         if args.with_body:
@@ -588,6 +595,24 @@ def cmd_task_list(args, state):
                 item["body"] = r.get("body") or ""
             issues.append(item)
 
+    today = datetime.now(timezone.utc).date()
+    if args.in_window is not None:
+        back = today - timedelta(days=WINDOW_DAYS_BACK)
+        forward = today + timedelta(days=args.in_window)
+        issues = [
+            i for i in issues
+            if i.get("day")
+            and back <= datetime.strptime(i["day"], "%Y-%m-%d").date() <= forward
+        ]
+    elif args.overdue:
+        issues = [
+            i for i in issues
+            if i.get("day")
+            and datetime.strptime(i["day"], "%Y-%m-%d").date() < today
+        ]
+    elif args.unscheduled:
+        issues = [i for i in issues if not i.get("day")]
+
     if args.schedulable:
         mode_status = state.get("mode", {}).get("status")
         issues = filter_schedulable(issues, mode_status)
@@ -607,10 +632,6 @@ query($projectId: ID!, $cursor: String) {
           fieldValues(first: 30) {
             nodes {
               __typename
-              ... on ProjectV2ItemFieldIterationValue {
-                title iterationId
-                field { ... on ProjectV2IterationField { id name } }
-              }
               ... on ProjectV2ItemFieldSingleSelectValue {
                 name
                 field { ... on ProjectV2SingleSelectField { id name } }
@@ -637,10 +658,11 @@ query($projectId: ID!, $cursor: String) {
 """
 
 
-def _list_by_iteration(args) -> list[dict]:
-    """List open issues whose project Iteration matches args.iteration."""
-    iteration = _resolve_iteration(args.iteration)
-    target_id = iteration["id"]
+def _list_project_items(args) -> list[dict]:
+    """List open project issues with Target date + Status fields populated.
+
+    Caller is responsible for any window/overdue/unscheduled filtering.
+    """
     label_set = set(args.labels or [])
     out: list[dict] = []
     cursor: str | None = None
@@ -656,14 +678,6 @@ def _list_by_iteration(args) -> list[dict]:
                 continue
             if content.get("state") != "OPEN":
                 continue
-            iter_val = None
-            for fv in (it.get("fieldValues") or {}).get("nodes", []):
-                f = fv.get("field") or {}
-                if f.get("name") == "Iteration":
-                    iter_val = fv.get("iterationId")
-                    break
-            if iter_val != target_id:
-                continue
             labels = [l["name"] for l in content["labels"]["nodes"]]
             if label_set and not label_set.issubset(labels):
                 continue
@@ -677,7 +691,6 @@ def _list_by_iteration(args) -> list[dict]:
                 "state": content["state"],
                 "labels": labels,
                 "milestone": milestone,
-                "iteration": _field_value(it, "Iteration"),
                 "day": _field_value(it, "Target date"),
                 "project_status": _field_value(it, "Status"),
             }
@@ -705,10 +718,6 @@ query($number: Int!) {
           fieldValues(first: 30) {
             nodes {
               __typename
-              ... on ProjectV2ItemFieldIterationValue {
-                title iterationId
-                field { ... on ProjectV2IterationField { id name } }
-              }
               ... on ProjectV2ItemFieldSingleSelectValue {
                 name
                 field { ... on ProjectV2SingleSelectField { id name } }
@@ -762,7 +771,6 @@ def cmd_task_show(args):
         "labels": [l["name"] for l in issue["labels"]["nodes"]],
         "in_project": item is not None,
         "project_status": _field_value(item, "Status") if item else None,
-        "iteration": _field_value(item, "Iteration") if item else None,
         "day": _field_value(item, "Target date") if item else None,
     }
     json.dump(out, sys.stdout, indent=2, default=str)
@@ -857,58 +865,6 @@ def cmd_task_close(args):
     print(f"closed #{args.num}")
 
 
-_ITERATION_FIELD_QUERY = """
-{
-  node(id: "%s") {
-    ... on ProjectV2IterationField {
-      configuration {
-        duration
-        iterations { id title startDate duration }
-        completedIterations { id title startDate duration }
-      }
-    }
-  }
-}
-""" % GH_ITERATION_FIELD_ID
-
-
-def _resolve_iteration(spec: str) -> dict:
-    data = gh_graphql(_ITERATION_FIELD_QUERY)
-    cfg = ((data.get("node") or {}).get("configuration")) or {}
-    iterations = cfg.get("iterations") or []
-    if not iterations:
-        die("iteration field has no active iterations configured "
-            "(open project settings, set a cadence)")
-
-    iterations = sorted(iterations, key=lambda i: i["startDate"])
-
-    if spec not in ("current", "next"):
-        for it in iterations:
-            if it["id"] == spec:
-                return it
-        for it in (cfg.get("completedIterations") or []):
-            if it["id"] == spec:
-                return it
-        die(f"no iteration with id {spec!r}")
-
-    today = datetime.now(timezone.utc).date()
-    cur_idx = None
-    for i, it in enumerate(iterations):
-        start = datetime.fromisoformat(it["startDate"]).date()
-        end = start + timedelta(days=it["duration"])
-        if start <= today < end:
-            cur_idx = i
-            break
-    if cur_idx is None:
-        die("no iteration covers today; set a cadence on the iteration field")
-
-    if spec == "current":
-        return iterations[cur_idx]
-    if cur_idx + 1 >= len(iterations):
-        die("no `next` iteration configured beyond the current one")
-    return iterations[cur_idx + 1]
-
-
 _ISSUE_NODE_QUERY = """
 query($number: Int!) {
   repository(owner: "%s", name: "%s") {
@@ -941,31 +897,6 @@ def _ensure_project_item(issue_num: int) -> str:
     """
     res = gh_graphql(mut, projectId=GH_PROJECT_ID, contentId=issue["id"])
     return res["addProjectV2ItemById"]["item"]["id"]
-
-
-def cmd_task_iteration(args):
-    chosen = sum(1 for x in (args.current, args.next, args.id) if x)
-    if chosen != 1:
-        die("specify exactly one of --current, --next, --id <iter-id>")
-    spec = "current" if args.current else "next" if args.next else args.id
-    iteration = _resolve_iteration(spec)
-
-    item_id = _ensure_project_item(args.num)
-
-    mut = """
-    mutation($projectId: ID!, $itemId: ID!, $fieldId: ID!, $iterationId: String!) {
-      updateProjectV2ItemFieldValue(input: {
-        projectId: $projectId
-        itemId: $itemId
-        fieldId: $fieldId
-        value: { iterationId: $iterationId }
-      }) { projectV2Item { id } }
-    }
-    """
-    gh_graphql(mut,
-               projectId=GH_PROJECT_ID, itemId=item_id,
-               fieldId=GH_ITERATION_FIELD_ID, iterationId=iteration["id"])
-    print(f"assigned #{args.num} to {iteration['title']} (start {iteration['startDate']})")
 
 
 def cmd_task_day(args):
@@ -1496,8 +1427,9 @@ def cmd_cart_get_url(args):
 
 
 # --- planner ---------------------------------------------------------------
-# Builds data/planner.json from current-iteration issues + calendar events,
-# in the shape the Hugo template at layouts/planner/single.html consumes.
+# Builds data/planner.json from the rolling window of dated project issues +
+# calendar events, in the shape the Hugo template at layouts/planner/list.html
+# consumes.
 
 PLANNER_DATA_FILE = REPO_ROOT / "data" / "planner.json"
 
@@ -1656,42 +1588,45 @@ def _planner_weather_for_window(state: dict, dates: list[str]) -> dict[str, dict
 
 
 def cmd_planner_publish(args, state):
-    iteration = _resolve_iteration(args.iteration)
-    start = datetime.fromisoformat(iteration["startDate"])
-    duration = iteration.get("duration") or 7
+    today = datetime.now(timezone.utc)
+    days_back = args.days_back
+    days_forward = args.days_forward
+    window_start = today.date() - timedelta(days=days_back)
+    window_end = today.date() + timedelta(days=days_forward)
 
     list_args = argparse.Namespace(
-        iteration=args.iteration,
-        labels=None, milestone=None, with_body=False,
-        schedulable=False, limit=300,
+        labels=None, milestone=None, with_body=False, limit=300,
     )
-    items = _list_by_iteration(list_args)
+    items = _list_project_items(list_args)
 
-    today = datetime.now(timezone.utc)
     cal_by_date: dict[str, list[dict]] = {}
     for ev in _load_calendar():
         cal_by_date.setdefault(ev["date"], []).append(
             {"label": ev["label"], "blocks": ev.get("blocks", True)}
         )
 
+    # Public planner page is operational-only: items dated outside the window
+    # (and items with no Target date at all) are deliberately omitted. Slipped
+    # work and the bench live behind `defiant task list --overdue` /
+    # `--unscheduled` for the agent, not on the public page.
     by_day: dict[str, list[dict]] = {}
-    unscheduled: list[dict] = []
+    rendered = 0
     for it in items:
         pi = _planner_issue(it)
         d = pi["day"]
-        if d:
-            by_day.setdefault(d, []).append(pi)
-        else:
-            unscheduled.append(pi)
+        if not d:
+            continue
+        item_date = datetime.strptime(d, "%Y-%m-%d").date()
+        if item_date < window_start or item_date > window_end:
+            continue
+        by_day.setdefault(d, []).append(pi)
+        rendered += 1
 
-    iteration_dates = {
-        (start + timedelta(days=i)).strftime("%Y-%m-%d")
-        for i in range(duration)
+    window_dates = {
+        (window_start + timedelta(days=i)).strftime("%Y-%m-%d")
+        for i in range((window_end - window_start).days + 1)
     }
-    # Day grid = iteration window ∪ any date with scheduled work, so an item
-    # with a Target date set never lands in `unscheduled` just because its
-    # date sits outside the iteration's nominal window.
-    all_dates = sorted(iteration_dates | by_day.keys())
+    all_dates = sorted(window_dates)
 
     if args.no_weather:
         weather_by_date: dict[str, dict] = {}
@@ -1706,7 +1641,6 @@ def cmd_planner_publish(args, state):
         for issue in day_issues:
             primary = _primary_system(issue["systems"])
             lanes.setdefault(primary, []).append(issue)
-        # drop empty lanes for compactness
         lanes_compact = [
             {"system": s, "issues": lanes[s]}
             for s in PLANNER_LANE_ORDER
@@ -1722,23 +1656,15 @@ def cmd_planner_publish(args, state):
         })
 
     payload = {
-        "iteration": {
-            "title": iteration["title"],
-            "start_date": start.strftime("%Y-%m-%d"),
-            "end_date": (start + timedelta(days=duration)).strftime("%Y-%m-%d"),
-            "duration": duration,
-        },
         "generated_at": now_iso(),
         "lane_order": PLANNER_LANE_ORDER,
         "days": days,
-        "unscheduled": unscheduled,
     }
 
     PLANNER_DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
     atomic_write_bytes(PLANNER_DATA_FILE, (json.dumps(payload, indent=2) + "\n").encode())
     print(f"wrote {PLANNER_DATA_FILE} "
-          f"({len(items)} issues, {len(unscheduled)} unscheduled, "
-          f"iteration {iteration['title']})")
+          f"({rendered} of {len(items)} project items in window {window_start}→{window_end})")
 
     if args.commit or args.push:
         rel = PLANNER_DATA_FILE.relative_to(REPO_ROOT)
@@ -1749,7 +1675,7 @@ def cmd_planner_publish(args, state):
             print("planner: no changes to commit")
             return
         subprocess.run(["git", "add", str(rel)], check=True, cwd=cwd)
-        msg = f"planner: refresh data/planner.json ({iteration['title']})"
+        msg = "planner: refresh data/planner.json"
         subprocess.run(["git", "commit", "-m", msg], check=True, cwd=cwd)
         print(f"committed: {msg}")
         if args.push:
@@ -1907,7 +1833,7 @@ def fetch_tides(lat: float, lon: float, days: int) -> tuple[list[dict], dict | N
 
 def derive_satisfies(wind_kt: float, wave_ft: float | None,
                      precip: bool, temp_min: float, temp_max: float) -> list[str]:
-    """Per .claude/skills/plan-iteration/SKILL.md vocabulary:
+    """Per .claude/skills/coordinate/SKILL.md vocabulary:
        any (always) / dry (no rain, ≤20kt) / warm (>65F, dry) / calm (≤10kt, <2ft, dry, mild)."""
     s = ["any"]
     if not precip and wind_kt <= 20:
@@ -2350,13 +2276,25 @@ def build_parser() -> argparse.ArgumentParser:
                          help="apply boat-mode filter (excludes blocked:parts; "
                               "underway → loc:underway-ok only; not-docked → drops "
                               "loc:dockside-only)")
-    tv_list.add_argument("--iteration",
-                         help="restrict to a project iteration: 'current', "
-                              "'next', or a literal iteration ID. Adds "
-                              "iteration/day/project_status to each item.")
-    tv_list.set_defaults(func=cmd_task_list, needs_state=True)
+    win_group = tv_list.add_mutually_exclusive_group()
+    win_group.add_argument("--in-window", dest="in_window",
+                           type=int, nargs="?",
+                           const=WINDOW_DAYS_FORWARD, default=None,
+                           metavar="N",
+                           help=f"Target date in [today−{WINDOW_DAYS_BACK}, today+N], "
+                                f"default N={WINDOW_DAYS_FORWARD}. "
+                                "Adds day/project_status to each item.")
+    win_group.add_argument("--overdue", action="store_true",
+                           help="Target date in the past (before today), still open. "
+                                "Adds day/project_status to each item.")
+    win_group.add_argument("--unscheduled", action="store_true",
+                           help="no Target date set yet — the candidate pool. "
+                                "Adds day/project_status to each item.")
+    tv_list.set_defaults(func=cmd_task_list, needs_state=True,
+                         in_window=None, overdue=False, unscheduled=False)
 
-    tv_show = tv.add_parser("show", help="full issue + project status + iteration")
+    tv_show = tv.add_parser("show",
+                            help="full issue + project status + Target date")
     tv_show.add_argument("num", type=int)
     tv_show.set_defaults(func=cmd_task_show)
 
@@ -2401,15 +2339,6 @@ def build_parser() -> argparse.ArgumentParser:
     tv_close.add_argument("num", type=int)
     tv_close.add_argument("--reason", choices=("completed", "not planned"))
     tv_close.set_defaults(func=cmd_task_close)
-
-    tv_iter = tv.add_parser("iteration", help="assign issue to project iteration")
-    tv_iter.add_argument("num", type=int)
-    g = tv_iter.add_mutually_exclusive_group(required=True)
-    g.add_argument("--current", action="store_true", help="this week's iteration")
-    g.add_argument("--next", dest="next", action="store_true",
-                   help="the iteration after the current one")
-    g.add_argument("--id", help="literal iteration ID (e.g. c1d92a83)")
-    tv_iter.set_defaults(func=cmd_task_iteration)
 
     tv_day = tv.add_parser("day", help="set the project Target date (per-issue day)")
     tv_day.add_argument("num", type=int)
@@ -2521,12 +2450,17 @@ def build_parser() -> argparse.ArgumentParser:
     crv_url.set_defaults(func=cmd_cart_get_url)
 
     # --- planner ---
-    planner = nouns.add_parser("planner", help="build data/planner.json from current iteration")
+    planner = nouns.add_parser("planner",
+                               help="build data/planner.json from the rolling window")
     pv = planner.add_subparsers(dest="verb")
 
     pv_pub = pv.add_parser("publish", help="render data/planner.json (optionally commit/push)")
-    pv_pub.add_argument("--iteration", default="current",
-                        help="iteration spec: 'current' (default), 'next', or literal ID")
+    pv_pub.add_argument("--days-back", dest="days_back", type=int,
+                        default=WINDOW_DAYS_BACK,
+                        help=f"days of history to render (default {WINDOW_DAYS_BACK})")
+    pv_pub.add_argument("--days-forward", dest="days_forward", type=int,
+                        default=WINDOW_DAYS_FORWARD,
+                        help=f"forecast horizon to render (default {WINDOW_DAYS_FORWARD})")
     pv_pub.add_argument("--commit", action="store_true",
                         help="git add + commit data/planner.json after writing")
     pv_pub.add_argument("--push", action="store_true",

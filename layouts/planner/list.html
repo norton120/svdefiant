@@ -119,14 +119,6 @@
     .planner-chip.warn { background: #fed7aa; color: #7c2d12; }
     :is(.dark) .planner-chip.warn { background: #431407; color: #fed7aa; }
 
-    .planner-unscheduled { max-width: 1100px; margin: 1.75rem auto 0; }
-    .planner-unscheduled h2 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; color: #334155; }
-    :is(.dark) .planner-unscheduled h2 { color: #e2e8f0; }
-    .planner-unscheduled .grid {
-      display: grid; gap: 0.4rem;
-      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    }
-
     .planner-empty { padding: 2rem 0; color: #64748b; text-align: center; }
     :is(.dark) .planner-empty { color: #94a3b8; }
 
@@ -184,9 +176,11 @@
   <section class="planner-section">
     <header>
       <h1>This Week</h1>
-      {{ if $p }}
+      {{ if and $p $p.days }}
+        {{ $first := index $p.days 0 }}
+        {{ $last := index $p.days (sub (len $p.days) 1) }}
         <div class="planner-meta">
-          {{ $p.iteration.title }} · {{ $p.iteration.start_date }} → {{ $p.iteration.end_date }}
+          {{ $first.date }} → {{ $last.date }}
           · refreshed {{ dateFormat "Jan 2 15:04 MST" $p.generated_at }}
         </div>
       {{ end }}
@@ -319,24 +313,6 @@
         {{ end }}
       </div>
 
-      {{ with $p.unscheduled }}
-        <div class="planner-unscheduled">
-          <h2>In iteration, no day yet ({{ len . }})</h2>
-          <div class="grid">
-            {{ range . }}
-              <a class="planner-card p-{{ default "none" .priority }}" href="{{ .url }}" target="_blank" rel="noopener">
-                <span class="num">#{{ .number }}{{ with .priority }} · {{ . }}{{ end }}{{ with .day }} · day {{ . }} (out of window){{ end }}</span>
-                <div class="title">{{ .title }}</div>
-                <div class="planner-chips">
-                  {{ range .systems }}<span class="planner-chip">{{ . }}</span>{{ end }}
-                  {{ with .time }}<span class="planner-chip">{{ . }}</span>{{ end }}
-                  {{ if .blocked_parts }}<span class="planner-chip warn">blocked: parts</span>{{ end }}
-                </div>
-              </a>
-            {{ end }}
-          </div>
-        </div>
-      {{ end }}
     {{ end }}
   </section>
 {{ end }}

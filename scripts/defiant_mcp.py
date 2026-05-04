@@ -148,27 +148,31 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="task_list",
-        description="List open issues (norton120/svdefiant), pre-summarized as JSON. With schedulable=true, applies the boat-mode filter: drops blocked:parts always, drops loc:dockside-only unless docked, and (when underway) keeps only loc:underway-ok issues. With iteration set, restricts to that project iteration and adds iteration/day/project_status to each item.",
+        description="List open issues (norton120/svdefiant), pre-summarized as JSON. With schedulable=true, applies the boat-mode filter: drops blocked:parts always, drops loc:dockside-only unless docked, and (when underway) keeps only loc:underway-ok issues. The three window flags are mutually exclusive; any of them surfaces day + project_status on each item. in_window=N → Target date in [today−1, today+N]. overdue=true → Target date older than yesterday, still open (the slipped pile). unscheduled=true → no Target date set yet (the candidate pool / bench).",
         inputSchema={
             "type": "object",
             "properties": {
                 "milestone": {"type": "string", "description": "filter by milestone title"},
                 "labels": {"type": "array", "items": {"type": "string"},
-                           "description": "additional label filters (all-of when iteration is set, any-of otherwise)"},
+                           "description": "label filters (all-of)"},
                 "limit": {"type": "integer", "default": 300},
                 "with_body": {"type": "boolean", "default": False,
                               "description": "include the issue body in each item (large; only when matching/triage requires it)"},
                 "schedulable": {"type": "boolean", "default": False,
                                 "description": "apply boat-mode filter"},
-                "iteration": {"type": "string",
-                              "description": "'current', 'next', or a literal iteration id; restricts to that iteration and surfaces day/iteration/project_status"},
+                "in_window": {"type": "integer",
+                              "description": "Target date in [today−1, today+N]; surfaces day/project_status. Typical N=7."},
+                "overdue": {"type": "boolean", "default": False,
+                            "description": "Target date older than yesterday, still open."},
+                "unscheduled": {"type": "boolean", "default": False,
+                                "description": "no Target date set yet — the candidate pool."},
             },
             "additionalProperties": False,
         },
     ),
     Tool(
         name="task_show",
-        description="Full issue details: body, labels, milestone, project status, current iteration. One GraphQL round-trip.",
+        description="Full issue details: body, labels, milestone, project status, Target date. One GraphQL round-trip.",
         inputSchema={
             "type": "object",
             "properties": {"num": {"type": "integer"}},
@@ -356,20 +360,6 @@ TOOLS: list[Tool] = [
         },
     ),
     Tool(
-        name="task_iteration",
-        description="Assign an issue to an iteration on Project #4. iteration='current' for this week, 'next' for the upcoming one, or a literal iteration id. Adds the issue to the project if it isn't already there.",
-        inputSchema={
-            "type": "object",
-            "properties": {
-                "num": {"type": "integer"},
-                "iteration": {"type": "string",
-                              "description": "'current', 'next', or a literal iteration id"},
-            },
-            "required": ["num", "iteration"],
-            "additionalProperties": False,
-        },
-    ),
-    Tool(
         name="task_day_set",
         description="Set the per-issue 'Target date' (the day the agent intends to do this work) on Project #4. Adds the issue to the project if it isn't already there.",
         inputSchema={
@@ -384,7 +374,7 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="task_day_clear",
-        description="Remove the per-issue 'Target date' on Project #4 (the issue stays in the project and iteration if previously assigned).",
+        description="Remove the per-issue 'Target date' on Project #4 (the issue stays in the project).",
         inputSchema={
             "type": "object",
             "properties": {"num": {"type": "integer"}},
@@ -514,12 +504,14 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="planner_publish",
-        description="Render data/planner.json from the project iteration + calendar, commit, and push (drives the public planner page on svdefiant.com — CI rebuilds the site on push to main). Always includes per-day weather. No-op if data/planner.json is unchanged.",
+        description="Render data/planner.json from the rolling window + calendar, commit, and push (drives the public planner page on svdefiant.com — CI rebuilds the site on push to main). Includes per-day weather. No-op if data/planner.json is unchanged. Default window is yesterday + next 7 days.",
         inputSchema={
             "type": "object",
             "properties": {
-                "iteration": {"type": "string", "default": "current",
-                              "description": "'current' (default), 'next', or a literal iteration id"},
+                "days_back": {"type": "integer", "default": 1,
+                              "description": "days of history to render (default 1)"},
+                "days_forward": {"type": "integer", "default": 7,
+                                 "description": "forecast horizon to render (default 7)"},
             },
             "additionalProperties": False,
         },
@@ -647,8 +639,12 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
             argv.append("--with-body")
         if args.get("schedulable"):
             argv.append("--schedulable")
-        if v := args.get("iteration"):
-            argv += ["--iteration", v]
+        if (v := args.get("in_window")) is not None:
+            argv += ["--in-window", str(v)]
+        elif args.get("overdue"):
+            argv.append("--overdue")
+        elif args.get("unscheduled"):
+            argv.append("--unscheduled")
         return argv, tmp
     if name == "task_show":
         return ["task", "show", str(args["num"])], tmp
@@ -681,16 +677,6 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
         return ["task", "close", str(args["num"]), "--reason", "completed"], tmp
     if name == "task_drop":
         return ["task", "close", str(args["num"]), "--reason", "not planned"], tmp
-    if name == "task_iteration":
-        argv = ["task", "iteration", str(args["num"])]
-        spec = args["iteration"]
-        if spec == "current":
-            argv.append("--current")
-        elif spec == "next":
-            argv.append("--next")
-        else:
-            argv += ["--id", spec]
-        return argv, tmp
     if name == "task_day_set":
         return ["task", "day", str(args["num"]), args["date"]], tmp
     if name == "task_day_clear":
@@ -774,7 +760,8 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
 
     if name == "planner_publish":
         return ["planner", "publish",
-                "--iteration", args.get("iteration", "current"),
+                "--days-back", str(args.get("days_back", 1)),
+                "--days-forward", str(args.get("days_forward", 7)),
                 "--push"], tmp
 
     if name == "wiki_search":
