@@ -1674,28 +1674,33 @@ def cmd_planner_publish(args, state):
             {"label": ev["label"], "blocks": ev.get("blocks", True)}
         )
 
-    window_dates = {
-        (start + timedelta(days=i)).strftime("%Y-%m-%d")
-        for i in range(duration)
-    }
-    if args.no_weather:
-        weather_by_date: dict[str, dict] = {}
-    else:
-        weather_by_date = _planner_weather_for_window(state, sorted(window_dates))
     by_day: dict[str, list[dict]] = {}
     unscheduled: list[dict] = []
     for it in items:
         pi = _planner_issue(it)
         d = pi["day"]
-        if d and d in window_dates:
+        if d:
             by_day.setdefault(d, []).append(pi)
         else:
             unscheduled.append(pi)
 
+    iteration_dates = {
+        (start + timedelta(days=i)).strftime("%Y-%m-%d")
+        for i in range(duration)
+    }
+    # Day grid = iteration window ∪ any date with scheduled work, so an item
+    # with a Target date set never lands in `unscheduled` just because its
+    # date sits outside the iteration's nominal window.
+    all_dates = sorted(iteration_dates | by_day.keys())
+
+    if args.no_weather:
+        weather_by_date: dict[str, dict] = {}
+    else:
+        weather_by_date = _planner_weather_for_window(state, all_dates)
+
     days = []
-    for i in range(duration):
-        d = start + timedelta(days=i)
-        date_str = d.strftime("%Y-%m-%d")
+    for date_str in all_dates:
+        d = datetime.strptime(date_str, "%Y-%m-%d").replace(tzinfo=timezone.utc)
         day_issues = by_day.get(date_str, [])
         lanes: dict[str, list[dict]] = {s: [] for s in PLANNER_LANE_ORDER}
         for issue in day_issues:
