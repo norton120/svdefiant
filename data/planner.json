@@ -5,7 +5,7 @@
     "end_date": "2026-05-05",
     "duration": 7
   },
-  "generated_at": "2026-05-03T16:11:32Z",
+  "generated_at": "2026-05-04T01:12:09Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -67,50 +67,15 @@
     },
     {
       "date": "2026-05-03",
-      "label": "Today",
+      "label": "Sun May 3",
       "events": [],
       "weather": {
-        "wind_kt_max": 14.6,
+        "wind_kt_max": 13.9,
         "gust_kt_max": 22.7,
-        "wave_ft_max": 2.0,
+        "wave_ft_max": 2.2,
         "temp_f": [
           47,
           62
-        ],
-        "precip": false,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 3 at 9:41AM EDT until May 3 at 1:00PM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616501&lon=-76.290015"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\u26c5"
-        ],
-        "temp_label": "47\u201362\u00b0",
-        "wind_label": "15g23kt \u00b7 2.0ft"
-      },
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-04",
-      "label": "Tomorrow",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 15.4,
-        "gust_kt_max": 25.5,
-        "wave_ft_max": 1.9,
-        "temp_f": [
-          53,
-          76
         ],
         "precip": false,
         "hazards": [],
@@ -118,9 +83,17 @@
         "icons": [
           "\u26c5"
         ],
-        "temp_label": "53\u201376\u00b0",
-        "wind_label": "15g26kt \u00b7 1.9ft"
+        "temp_label": "47\u201362\u00b0",
+        "wind_label": "14g23kt \u00b7 2.2ft"
       },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-04",
+      "label": "Today",
+      "events": [],
+      "weather": null,
       "lanes": [],
       "task_count": 0
     }
@@ -143,7 +116,7 @@
       ],
       "blocked_parts": false,
       "project_status": "Todo",
-      "day": "2026-05-08"
+      "day": "2026-05-05"
     },
     {
       "number": 6,
@@ -162,7 +135,7 @@
       ],
       "blocked_parts": false,
       "project_status": "Todo",
-      "day": "2026-05-08"
+      "day": "2026-05-05"
     },
     {
       "number": 7,
@@ -181,7 +154,7 @@
       ],
       "blocked_parts": false,
       "project_status": "Todo",
-      "day": "2026-05-08"
+      "day": "2026-05-05"
     },
     {
       "number": 9,
@@ -200,19 +173,20 @@
       ],
       "blocked_parts": false,
       "project_status": "Todo",
-      "day": "2026-05-08"
+      "day": "2026-05-06"
     },
     {
-      "number": 70,
-      "title": "Icebox refrigeration conversion (R134a)",
-      "url": "https://github.com/norton120/svdefiant/issues/70",
-      "milestone": null,
+      "number": 71,
+      "title": "Repair cracked companionway door frame with copper edge wrap",
+      "url": "https://github.com/norton120/svdefiant/issues/71",
+      "milestone": "Day Sails",
       "priority": "p1",
       "systems": [
-        "plumbing"
+        "hull",
+        "interior"
       ],
       "energy": "moderate",
-      "weather": "any",
+      "weather": "dry",
       "time": "half-day",
       "locations": [
         "indoors",
@@ -221,7 +195,7 @@
       ],
       "blocked_parts": true,
       "project_status": "Todo",
-      "day": "2026-05-08"
+      "day": "2026-05-06"
     }
   ]
 }
