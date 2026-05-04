@@ -5,7 +5,7 @@
     "end_date": "2026-05-05",
     "duration": 7
   },
-  "generated_at": "2026-05-04T01:12:09Z",
+  "generated_at": "2026-05-04T01:18:53Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -69,23 +69,7 @@
       "date": "2026-05-03",
       "label": "Sun May 3",
       "events": [],
-      "weather": {
-        "wind_kt_max": 13.9,
-        "gust_kt_max": 22.7,
-        "wave_ft_max": 2.2,
-        "temp_f": [
-          47,
-          62
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u26c5"
-        ],
-        "temp_label": "47\u201362\u00b0",
-        "wind_label": "14g23kt \u00b7 2.2ft"
-      },
+      "weather": null,
       "lanes": [],
       "task_count": 0
     },
