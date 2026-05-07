@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-06T00:37:28Z",
+  "generated_at": "2026-05-07T01:50:53Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -18,122 +18,31 @@
       "date": "2026-05-05",
       "label": "Tue May 5",
       "events": [],
-      "weather": {
-        "wind_kt_max": 15.2,
-        "gust_kt_max": 25.5,
-        "wave_ft_max": 2.2,
-        "temp_f": [
-          62,
-          84
-        ],
-        "precip": false,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 5 at 2:22PM EDT until May 6 at 1:00PM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616572&lon=-76.28998"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "62\u201384\u00b0",
-        "wind_label": "15g26kt \u00b7 2.2ft"
-      },
+      "weather": null,
       "lanes": [],
       "task_count": 0
     },
     {
       "date": "2026-05-06",
-      "label": "Today",
+      "label": "Wed May 6",
       "events": [],
-      "weather": {
-        "wind_kt_max": 17.1,
-        "gust_kt_max": 33.4,
-        "wave_ft_max": 2.2,
-        "temp_f": [
-          63,
-          81
-        ],
-        "precip": true,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 5 at 2:22PM EDT until May 6 at 1:00PM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616572&lon=-76.28998"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "63\u201381\u00b0",
-        "wind_label": "17g33kt \u00b7 2.2ft"
-      },
+      "weather": null,
       "lanes": [],
       "task_count": 0
     },
     {
       "date": "2026-05-07",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
-      "weather": {
-        "wind_kt_max": 16.1,
-        "gust_kt_max": 20.6,
-        "wave_ft_max": 1.7,
-        "temp_f": [
-          51,
-          69
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "51\u201369\u00b0",
-        "wind_label": "16g21kt \u00b7 1.7ft"
-      },
+      "weather": null,
       "lanes": [],
       "task_count": 0
     },
     {
       "date": "2026-05-08",
-      "label": "Fri May 8",
-      "events": [
-        {
-          "label": "Launch Defiant - weather window",
-          "blocks": true
-        }
-      ],
-      "weather": {
-        "wind_kt_max": 13.9,
-        "gust_kt_max": 26.6,
-        "wave_ft_max": 1.9,
-        "temp_f": [
-          46,
-          62
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u26c5"
-        ],
-        "temp_label": "46\u201362\u00b0",
-        "wind_label": "14g27kt \u00b7 1.9ft"
-      },
+      "label": "Tomorrow",
+      "events": [],
+      "weather": null,
       "lanes": [
         {
           "system": "electrical",
@@ -154,7 +63,9 @@
                 "indoors"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-08"
             }
           ]
@@ -181,6 +92,8 @@
               ],
               "blocked_parts": true,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-08"
             }
           ]
@@ -192,23 +105,7 @@
       "date": "2026-05-09",
       "label": "Sat May 9",
       "events": [],
-      "weather": {
-        "wind_kt_max": 14.2,
-        "gust_kt_max": 29.4,
-        "wave_ft_max": 1.5,
-        "temp_f": [
-          57,
-          72
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "57\u201372\u00b0",
-        "wind_label": "14g29kt \u00b7 1.5ft"
-      },
+      "weather": null,
       "lanes": [
         {
           "system": "electrical",
@@ -230,6 +127,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -249,6 +148,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -269,6 +170,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -289,6 +192,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             }
           ]
@@ -312,7 +217,9 @@
                 "indoors"
               ],
               "blocked_parts": true,
-              "project_status": "Todo",
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-09"
             },
             {
@@ -332,6 +239,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -350,7 +259,9 @@
                 "indoors"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-09"
             },
             {
@@ -370,6 +281,29 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-09"
+            },
+            {
+              "number": 10,
+              "title": "Replace air filter / snorkel",
+              "url": "https://github.com/norton120/svdefiant/issues/10",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-09"
             },
             {
@@ -389,6 +323,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -408,6 +344,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -428,6 +366,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -448,6 +388,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             }
           ]
@@ -475,6 +417,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             }
           ]
@@ -499,6 +443,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -518,6 +464,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -537,6 +485,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             },
             {
@@ -556,34 +506,20 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-09"
             }
           ]
         }
       ],
-      "task_count": 17
+      "task_count": 18
     },
     {
       "date": "2026-05-10",
       "label": "Sun May 10",
       "events": [],
-      "weather": {
-        "wind_kt_max": 12.1,
-        "gust_kt_max": 24.1,
-        "wave_ft_max": 1.7,
-        "temp_f": [
-          56,
-          69
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "56\u201369\u00b0",
-        "wind_label": "12g24kt \u00b7 1.7ft"
-      },
+      "weather": null,
       "lanes": [],
       "task_count": 0
     },
@@ -591,23 +527,7 @@
       "date": "2026-05-11",
       "label": "Mon May 11",
       "events": [],
-      "weather": {
-        "wind_kt_max": 14.8,
-        "gust_kt_max": 21.8,
-        "wave_ft_max": 1.5,
-        "temp_f": [
-          55,
-          70
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "55\u201370\u00b0",
-        "wind_label": "15g22kt \u00b7 1.5ft"
-      },
+      "weather": null,
       "lanes": [
         {
           "system": "interior",
@@ -629,6 +549,8 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
               "day": "2026-05-11"
             }
           ]
@@ -640,29 +562,21 @@
       "date": "2026-05-12",
       "label": "Tue May 12",
       "events": [],
-      "weather": {
-        "wind_kt_max": 16.0,
-        "gust_kt_max": 21.0,
-        "wave_ft_max": 1.3,
-        "temp_f": [
-          46,
-          61
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u26c5"
-        ],
-        "temp_label": "46\u201361\u00b0",
-        "wind_label": "16g21kt \u00b7 1.3ft"
-      },
+      "weather": null,
       "lanes": [],
       "task_count": 0
     },
     {
       "date": "2026-05-13",
       "label": "Wed May 13",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-14",
+      "label": "Thu May 14",
       "events": [],
       "weather": null,
       "lanes": [],

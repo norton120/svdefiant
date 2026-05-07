@@ -664,6 +664,7 @@ def _list_project_items(args) -> list[dict]:
     Caller is responsible for any window/overdue/unscheduled filtering.
     """
     label_set = set(args.labels or [])
+    include_closed = getattr(args, "include_closed", False)
     out: list[dict] = []
     cursor: str | None = None
     while True:
@@ -676,7 +677,7 @@ def _list_project_items(args) -> list[dict]:
             content = it.get("content") or {}
             if content.get("__typename") != "Issue":
                 continue
-            if content.get("state") != "OPEN":
+            if not include_closed and content.get("state") != "OPEN":
                 continue
             labels = [l["name"] for l in content["labels"]["nodes"]]
             if label_set and not label_set.issubset(labels):
@@ -1476,6 +1477,8 @@ def _day_label(d: datetime, today: datetime) -> str:
 
 def _planner_issue(item: dict) -> dict:
     labels = item["labels"]
+    status = item.get("project_status")
+    state = item.get("state")
     return {
         "number": item["number"],
         "title": item["title"],
@@ -1488,7 +1491,9 @@ def _planner_issue(item: dict) -> dict:
         "time": _label_dim(labels, "time:"),
         "locations": [l[len("loc:"):] for l in labels if l.startswith("loc:")],
         "blocked_parts": "blocked:parts" in labels,
-        "project_status": item.get("project_status"),
+        "project_status": status,
+        "state": state,
+        "done": state == "CLOSED" or status == "Done",
         "day": item.get("day"),
     }
 
@@ -1596,6 +1601,7 @@ def cmd_planner_publish(args, state):
 
     list_args = argparse.Namespace(
         labels=None, milestone=None, with_body=False, limit=300,
+        include_closed=True,
     )
     items = _list_project_items(list_args)
 

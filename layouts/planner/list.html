@@ -103,6 +103,11 @@
     .planner-card.p-p2 { border-left-color: #ca8a04; }
     .planner-card.p-p3 { border-left-color: #16a34a; }
 
+    .planner-card.done { opacity: 0.55; border-left-color: #94a3b8; }
+    :is(.dark) .planner-card.done { border-left-color: #475569; }
+    .planner-card.done .title { text-decoration: line-through; }
+    .planner-card.done:hover { opacity: 0.85; }
+
     .planner-card .num { font-size: 0.7rem; color: #64748b; font-weight: 600; }
     :is(.dark) .planner-card .num { color: #94a3b8; }
     .planner-card .title {
@@ -245,7 +250,7 @@
               {{ end }}
               <div class="planner-cell{{ if $isToday }} today{{ end }}{{ if $blocked }} blocked{{ end }}">
                 {{ range $cellIssues }}
-                  <a class="planner-card p-{{ default "none" .priority }}" href="{{ .url }}" target="_blank" rel="noopener">
+                  <a class="planner-card p-{{ default "none" .priority }}{{ if .done }} done{{ end }}" href="{{ .url }}" target="_blank" rel="noopener">
                     <span class="num">#{{ .number }}{{ with .priority }} · {{ . }}{{ end }}</span>
                     <div class="title">{{ .title }}</div>
                     <div class="planner-chips">
@@ -296,7 +301,7 @@
               {{ range .lanes }}
                 <div class="sm-lane">{{ .system }}</div>
                 {{ range .issues }}
-                  <a class="planner-card p-{{ default "none" .priority }}" href="{{ .url }}" target="_blank" rel="noopener">
+                  <a class="planner-card p-{{ default "none" .priority }}{{ if .done }} done{{ end }}" href="{{ .url }}" target="_blank" rel="noopener">
                     <span class="num">#{{ .number }}{{ with .priority }} · {{ . }}{{ end }}</span>
                     <div class="title">{{ .title }}</div>
                     <div class="planner-chips">
