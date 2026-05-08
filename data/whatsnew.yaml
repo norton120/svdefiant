@@ -43,3 +43,8 @@ entries:
     url: "/gallery/adventures/"
     summary: "New gallery album with 13 photos from travels and beach days."
     source: "gallery"
+  - date: "2026-05-08"
+    title: "Pi-Monitoring"
+    url: "https://github.com/norton120/svdefiant/wiki/Pi-Monitoring"
+    summary: "New wiki page documenting rpi-mqtt-monitor installation and host inventory setup."
+    source: "wiki"
