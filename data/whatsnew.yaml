@@ -48,3 +48,8 @@ entries:
     url: "https://github.com/norton120/svdefiant/wiki/Pi-Monitoring"
     summary: "New wiki page documenting rpi-mqtt-monitor installation and host inventory setup."
     source: "wiki"
+  - date: "2026-05-08"
+    title: "Pi-Provisioning"
+    url: "https://github.com/norton120/svdefiant/wiki/Pi-Provisioning"
+    summary: "New guide documenting Raspberry Pi USB power configuration and EEPROM settings."
+    source: "wiki"
