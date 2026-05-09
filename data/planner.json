@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-07T01:50:53Z",
+  "generated_at": "2026-05-09T12:18:08Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,32 +15,8 @@
   ],
   "days": [
     {
-      "date": "2026-05-05",
-      "label": "Tue May 5",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-06",
-      "label": "Wed May 6",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-07",
-      "label": "Today",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
       "date": "2026-05-08",
-      "label": "Tomorrow",
+      "label": "Fri May 8",
       "events": [],
       "weather": null,
       "lanes": [
@@ -103,9 +79,25 @@
     },
     {
       "date": "2026-05-09",
-      "label": "Sat May 9",
+      "label": "Today",
       "events": [],
-      "weather": null,
+      "weather": {
+        "wind_kt_max": 15.1,
+        "gust_kt_max": 22.7,
+        "wave_ft_max": 1.6,
+        "temp_f": [
+          59,
+          73
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "59\u201373\u00b0",
+        "wind_label": "15g23kt \u00b7 1.6ft"
+      },
       "lanes": [
         {
           "system": "electrical",
@@ -148,6 +140,27 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-09"
+            },
+            {
+              "number": 60,
+              "title": "Mount Light Switches",
+              "url": "https://github.com/norton120/svdefiant/issues/60",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "full-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "In Progress",
               "state": "OPEN",
               "done": false,
               "day": "2026-05-09"
@@ -513,21 +526,123 @@
           ]
         }
       ],
-      "task_count": 18
+      "task_count": 19
     },
     {
       "date": "2026-05-10",
-      "label": "Sun May 10",
+      "label": "Tomorrow",
       "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
+      "weather": {
+        "wind_kt_max": 18.3,
+        "gust_kt_max": 28.8,
+        "wave_ft_max": 0.8,
+        "temp_f": [
+          62,
+          78
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f",
+          "\ud83d\udca8"
+        ],
+        "temp_label": "62\u201378\u00b0",
+        "wind_label": "18g29kt \u00b7 0.8ft"
+      },
+      "lanes": [
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 17,
+              "title": "Cutting board \u2192 galley hook hanger",
+              "url": "https://github.com/norton120/svdefiant/issues/17",
+              "milestone": "Day Sails",
+              "priority": "p3",
+              "systems": [
+                "interior"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-10"
+            },
+            {
+              "number": 41,
+              "title": "Galley shelf for compressor compartment",
+              "url": "https://github.com/norton120/svdefiant/issues/41",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-10"
+            },
+            {
+              "number": 79,
+              "title": "Install galley backsplash tile",
+              "url": "https://github.com/norton120/svdefiant/issues/79",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "full-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-10"
+            }
+          ]
+        }
+      ],
+      "task_count": 3
     },
     {
       "date": "2026-05-11",
       "label": "Mon May 11",
       "events": [],
-      "weather": null,
+      "weather": {
+        "wind_kt_max": 17.2,
+        "gust_kt_max": 25.9,
+        "wave_ft_max": 2.2,
+        "temp_f": [
+          53,
+          67
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "53\u201367\u00b0",
+        "wind_label": "17g26kt \u00b7 2.2ft"
+      },
       "lanes": [
         {
           "system": "interior",
@@ -562,23 +677,277 @@
       "date": "2026-05-12",
       "label": "Tue May 12",
       "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
+      "weather": {
+        "wind_kt_max": 15.8,
+        "gust_kt_max": 15.4,
+        "wave_ft_max": 1.8,
+        "temp_f": [
+          50,
+          62
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u26c5"
+        ],
+        "temp_label": "50\u201362\u00b0",
+        "wind_label": "16kt \u00b7 1.8ft"
+      },
+      "lanes": [
+        {
+          "system": "plumbing",
+          "issues": [
+            {
+              "number": 30,
+              "title": "Galley sink rebuild",
+              "url": "https://github.com/norton120/svdefiant/issues/30",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "heavy",
+              "weather": "any",
+              "time": "full-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-12"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
     },
     {
       "date": "2026-05-13",
       "label": "Wed May 13",
       "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
+      "weather": {
+        "wind_kt_max": 17.7,
+        "gust_kt_max": 25.5,
+        "wave_ft_max": 2.3,
+        "temp_f": [
+          53,
+          65
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u26c5"
+        ],
+        "temp_label": "53\u201365\u00b0",
+        "wind_label": "18g26kt \u00b7 2.3ft"
+      },
+      "lanes": [
+        {
+          "system": "plumbing",
+          "issues": [
+            {
+              "number": 28,
+              "title": "3-phase filter on drinking tap",
+              "url": "https://github.com/norton120/svdefiant/issues/28",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-13"
+            },
+            {
+              "number": 29,
+              "title": "UV filter on main water",
+              "url": "https://github.com/norton120/svdefiant/issues/29",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-13"
+            }
+          ]
+        }
+      ],
+      "task_count": 2
     },
     {
       "date": "2026-05-14",
       "label": "Thu May 14",
       "events": [],
-      "weather": null,
+      "weather": {
+        "wind_kt_max": 15.3,
+        "gust_kt_max": 27.0,
+        "wave_ft_max": 2.2,
+        "temp_f": [
+          54,
+          66
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "54\u201366\u00b0",
+        "wind_label": "15g27kt \u00b7 2.2ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 57,
+              "title": "Mount electric kettle above galley counter",
+              "url": "https://github.com/norton120/svdefiant/issues/57",
+              "milestone": "Day Sails",
+              "priority": "p3",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-14"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
+    {
+      "date": "2026-05-15",
+      "label": "Fri May 15",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 8.3,
+        "gust_kt_max": 17.1,
+        "wave_ft_max": 2.9,
+        "temp_f": [
+          46,
+          67
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u26c5"
+        ],
+        "temp_label": "46\u201367\u00b0",
+        "wind_label": "8g17kt \u00b7 2.9ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 59,
+              "title": "Move salon view screen pi to external location",
+              "url": "https://github.com/norton120/svdefiant/issues/59",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "electrical",
+                "nav"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-15"
+            }
+          ]
+        },
+        {
+          "system": "nav",
+          "issues": [
+            {
+              "number": 73,
+              "title": "Replace bow and stern running light mounts",
+              "url": "https://github.com/norton120/svdefiant/issues/73",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "nav",
+                "safety"
+              ],
+              "energy": "light",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-15"
+            }
+          ]
+        }
+      ],
+      "task_count": 2
+    },
+    {
+      "date": "2026-05-16",
+      "label": "Sat May 16",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 10.5,
+        "gust_kt_max": 18.1,
+        "wave_ft_max": 2.8,
+        "temp_f": [
+          58,
+          78
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "58\u201378\u00b0",
+        "wind_label": "10g18kt \u00b7 2.8ft"
+      },
       "lanes": [],
       "task_count": 0
     }
