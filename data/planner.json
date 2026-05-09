@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-09T12:18:08Z",
+  "generated_at": "2026-05-09T13:14:12Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -82,12 +82,12 @@
       "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 15.1,
+        "wind_kt_max": 12.9,
         "gust_kt_max": 22.7,
-        "wave_ft_max": 1.6,
+        "wave_ft_max": 1.4,
         "temp_f": [
           59,
-          73
+          77
         ],
         "precip": false,
         "hazards": [],
@@ -95,8 +95,8 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "59\u201373\u00b0",
-        "wind_label": "15g23kt \u00b7 1.6ft"
+        "temp_label": "59\u201377\u00b0",
+        "wind_label": "13g23kt \u00b7 1.4ft"
       },
       "lanes": [
         {
@@ -535,7 +535,7 @@
       "weather": {
         "wind_kt_max": 18.3,
         "gust_kt_max": 28.8,
-        "wave_ft_max": 0.8,
+        "wave_ft_max": 0.9,
         "temp_f": [
           62,
           78
@@ -548,7 +548,7 @@
           "\ud83d\udca8"
         ],
         "temp_label": "62\u201378\u00b0",
-        "wind_label": "18g29kt \u00b7 0.8ft"
+        "wind_label": "18g29kt \u00b7 0.9ft"
       },
       "lanes": [
         {
@@ -680,7 +680,7 @@
       "weather": {
         "wind_kt_max": 15.8,
         "gust_kt_max": 15.4,
-        "wave_ft_max": 1.8,
+        "wave_ft_max": 2.0,
         "temp_f": [
           50,
           62
@@ -692,7 +692,7 @@
           "\u26c5"
         ],
         "temp_label": "50\u201362\u00b0",
-        "wind_label": "16kt \u00b7 1.8ft"
+        "wind_label": "16kt \u00b7 2.0ft"
       },
       "lanes": [
         {
@@ -731,7 +731,7 @@
       "weather": {
         "wind_kt_max": 17.7,
         "gust_kt_max": 25.5,
-        "wave_ft_max": 2.3,
+        "wave_ft_max": 2.4,
         "temp_f": [
           53,
           65
@@ -743,7 +743,7 @@
           "\u26c5"
         ],
         "temp_label": "53\u201365\u00b0",
-        "wind_label": "18g26kt \u00b7 2.3ft"
+        "wind_label": "18g26kt \u00b7 2.4ft"
       },
       "lanes": [
         {
@@ -854,7 +854,7 @@
       "weather": {
         "wind_kt_max": 8.3,
         "gust_kt_max": 17.1,
-        "wave_ft_max": 2.9,
+        "wave_ft_max": 1.3,
         "temp_f": [
           46,
           67
@@ -866,7 +866,7 @@
           "\u26c5"
         ],
         "temp_label": "46\u201367\u00b0",
-        "wind_label": "8g17kt \u00b7 2.9ft"
+        "wind_label": "8g17kt \u00b7 1.3ft"
       },
       "lanes": [
         {
@@ -934,7 +934,7 @@
       "weather": {
         "wind_kt_max": 10.5,
         "gust_kt_max": 18.1,
-        "wave_ft_max": 2.8,
+        "wave_ft_max": 1.0,
         "temp_f": [
           58,
           78
@@ -946,7 +946,7 @@
           "\u2600\ufe0f"
         ],
         "temp_label": "58\u201378\u00b0",
-        "wind_label": "10g18kt \u00b7 2.8ft"
+        "wind_label": "10g18kt \u00b7 1.0ft"
       },
       "lanes": [],
       "task_count": 0
