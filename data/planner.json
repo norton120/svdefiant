@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T14:25:36Z",
+  "generated_at": "2026-05-10T15:37:08Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -169,12 +169,12 @@
       "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 16.6,
-        "gust_kt_max": 23.9,
+        "wind_kt_max": 14.5,
+        "gust_kt_max": 22.9,
         "wave_ft_max": 1.1,
         "temp_f": [
           58,
-          78
+          79
         ],
         "precip": false,
         "hazards": [
@@ -186,39 +186,15 @@
             "event": "Small Craft Advisory",
             "headline": "Small Craft Advisory issued May 10 at 9:46AM EDT until May 11 at 1:00PM EDT by NWS Wakefield VA",
             "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616533&lon=-76.290041"
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616499&lon=-76.290011"
           }
         ],
         "icons": [
           "\u2620\ufe0f",
           "\u2600\ufe0f"
         ],
-        "temp_label": "58\u201378\u00b0",
-        "wind_label": "17g24kt \u00b7 1.1ft"
-      },
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-11",
-      "label": "Tomorrow",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 17.6,
-        "gust_kt_max": 24.9,
-        "wave_ft_max": 2.1,
-        "temp_f": [
-          53,
-          64
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "53\u201364\u00b0",
-        "wind_label": "18g25kt \u00b7 2.1ft"
+        "temp_label": "58\u201379\u00b0",
+        "wind_label": "14g23kt \u00b7 1.1ft"
       },
       "lanes": [
         {
@@ -243,7 +219,7 @@
               "project_status": "In Progress",
               "state": "OPEN",
               "done": false,
-              "day": "2026-05-11"
+              "day": "2026-05-10"
             },
             {
               "number": 62,
@@ -265,10 +241,61 @@
               "project_status": "Todo",
               "state": "OPEN",
               "done": false,
-              "day": "2026-05-11"
+              "day": "2026-05-10"
             }
           ]
         },
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 2,
+              "title": "Clean up quarterberth",
+              "url": "https://github.com/norton120/svdefiant/issues/2",
+              "milestone": "Day Sails",
+              "priority": "p3",
+              "systems": [
+                "interior"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-10"
+            }
+          ]
+        }
+      ],
+      "task_count": 3
+    },
+    {
+      "date": "2026-05-11",
+      "label": "Tomorrow",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 18.0,
+        "gust_kt_max": 26.6,
+        "wave_ft_max": 2.1,
+        "temp_f": [
+          53,
+          65
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "53\u201365\u00b0",
+        "wind_label": "18g27kt \u00b7 2.1ft"
+      },
+      "lanes": [
         {
           "system": "hull",
           "issues": [
@@ -301,27 +328,6 @@
         {
           "system": "interior",
           "issues": [
-            {
-              "number": 2,
-              "title": "Clean up quarterberth",
-              "url": "https://github.com/norton120/svdefiant/issues/2",
-              "milestone": "Day Sails",
-              "priority": "p3",
-              "systems": [
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-11"
-            },
             {
               "number": 61,
               "title": "Stowage boxes for quarterberth locker",
@@ -367,7 +373,7 @@
           ]
         }
       ],
-      "task_count": 6
+      "task_count": 3
     },
     {
       "date": "2026-05-12",
