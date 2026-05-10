@@ -58,3 +58,8 @@ entries:
     url: "/blog/let-there-be-light/"
     summary: "New blog post about the surprisingly epic journey to get the nav lights working."
     source: "blog"
+  - date: "2026-05-10"
+    title: "Little Things Compound"
+    url: "/blog/little-things/"
+    summary: "New blog post about tidying up the forward berth fan installation with before/after photos."
+    source: "blog"
