@@ -53,3 +53,8 @@ entries:
     url: "https://github.com/norton120/svdefiant/wiki/Pi-Provisioning"
     summary: "New guide documenting Raspberry Pi USB power configuration and EEPROM settings."
     source: "wiki"
+  - date: "2026-05-10"
+    title: "Let There Be Light"
+    url: "/blog/let-there-be-light/"
+    summary: "New blog post about the surprisingly epic journey to get the nav lights working."
+    source: "blog"
