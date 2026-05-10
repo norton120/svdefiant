@@ -33,5 +33,7 @@ photos:
     caption: "The new sacrifical cover is oddly Bash-toned"
   - file: IMG_7467.jpg
     caption: "Doggo potty mat, complete with 'pee on me' safety cone"
+  - file: IMG_7752.jpg
+    caption: "Port hole sized doggo"
 ---
 

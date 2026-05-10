@@ -37,5 +37,7 @@ photos:
     caption: "The captain's quarters is a pullman layout with a more drawer and closet space than I could need"
   - file: IMG_6230.jpg
     caption: "queen size captain's birth"
+  - file: IMG_7752.jpg
+    caption: "JFK had a point"
 ---
 
