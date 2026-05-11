@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-11T01:12:44Z",
+  "generated_at": "2026-05-11T22:23:06Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -18,34 +18,7 @@
       "date": "2026-05-10",
       "label": "Sun May 10",
       "events": [],
-      "weather": {
-        "wind_kt_max": 11.7,
-        "gust_kt_max": 21.4,
-        "wave_ft_max": 1.1,
-        "temp_f": [
-          58,
-          80
-        ],
-        "precip": false,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 10 at 6:53PM EDT until May 11 at 1:00PM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.61658&lon=-76.290025"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "58\u201380\u00b0",
-        "wind_label": "12g21kt \u00b7 1.1ft"
-      },
+      "weather": null,
       "lanes": [
         {
           "system": "electrical",
@@ -107,103 +80,36 @@
       "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 19.6,
-        "gust_kt_max": 26.8,
-        "wave_ft_max": 2.1,
+        "wind_kt_max": 16.9,
+        "gust_kt_max": 26.6,
+        "wave_ft_max": 1.9,
         "temp_f": [
-          52,
-          64
+          51,
+          66
         ],
         "precip": true,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 10 at 6:53PM EDT until May 11 at 1:00PM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.61658&lon=-76.290025"
-          }
-        ],
+        "hazards": [],
+        "alerts": [],
         "icons": [
-          "\u2620\ufe0f",
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "52\u201364\u00b0",
-        "wind_label": "20g27kt \u00b7 2.1ft"
+        "temp_label": "51\u201366\u00b0",
+        "wind_label": "17g27kt \u00b7 1.9ft"
       },
-      "lanes": [
-        {
-          "system": "hull",
-          "issues": [
-            {
-              "number": 71,
-              "title": "Repair cracked companionway door frame with copper edge wrap",
-              "url": "https://github.com/norton120/svdefiant/issues/71",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "hull",
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-11"
-            }
-          ]
-        },
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 61,
-              "title": "Stowage boxes for quarterberth locker",
-              "url": "https://github.com/norton120/svdefiant/issues/61",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-11"
-            }
-          ]
-        }
-      ],
-      "task_count": 2
+      "lanes": [],
+      "task_count": 0
     },
     {
       "date": "2026-05-12",
       "label": "Tomorrow",
       "events": [],
       "weather": {
-        "wind_kt_max": 11.5,
-        "gust_kt_max": 15.9,
-        "wave_ft_max": 1.2,
+        "wind_kt_max": 16.8,
+        "gust_kt_max": 23.5,
+        "wave_ft_max": 1.6,
         "temp_f": [
           48,
-          63
+          65
         ],
         "precip": false,
         "hazards": [],
@@ -211,8 +117,8 @@
         "icons": [
           "\u26c5"
         ],
-        "temp_label": "48\u201363\u00b0",
-        "wind_label": "12g16kt \u00b7 1.2ft"
+        "temp_label": "48\u201365\u00b0",
+        "wind_label": "17g24kt \u00b7 1.6ft"
       },
       "lanes": [
         {
@@ -346,12 +252,12 @@
       "label": "Wed May 13",
       "events": [],
       "weather": {
-        "wind_kt_max": 19.2,
-        "gust_kt_max": 28.8,
-        "wave_ft_max": 2.3,
+        "wind_kt_max": 20.0,
+        "gust_kt_max": 29.2,
+        "wave_ft_max": 2.5,
         "temp_f": [
-          56,
-          71
+          57,
+          73
         ],
         "precip": true,
         "hazards": [],
@@ -359,8 +265,8 @@
         "icons": [
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "56\u201371\u00b0",
-        "wind_label": "19g29kt \u00b7 2.3ft"
+        "temp_label": "57\u201373\u00b0",
+        "wind_label": "20g29kt \u00b7 2.5ft"
       },
       "lanes": [
         {
@@ -418,12 +324,12 @@
       "label": "Thu May 14",
       "events": [],
       "weather": {
-        "wind_kt_max": 14.5,
-        "gust_kt_max": 23.7,
-        "wave_ft_max": 2.2,
+        "wind_kt_max": 12.9,
+        "gust_kt_max": 21.6,
+        "wave_ft_max": 1.9,
         "temp_f": [
-          50,
-          63
+          52,
+          61
         ],
         "precip": true,
         "hazards": [],
@@ -431,8 +337,8 @@
         "icons": [
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "50\u201363\u00b0",
-        "wind_label": "14g24kt \u00b7 2.2ft"
+        "temp_label": "52\u201361\u00b0",
+        "wind_label": "13g22kt \u00b7 1.9ft"
       },
       "lanes": [
         {
@@ -460,20 +366,46 @@
               "day": "2026-05-14"
             }
           ]
+        },
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 61,
+              "title": "Stowage boxes for quarterberth locker",
+              "url": "https://github.com/norton120/svdefiant/issues/61",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-14"
+            }
+          ]
         }
       ],
-      "task_count": 1
+      "task_count": 2
     },
     {
       "date": "2026-05-15",
       "label": "Fri May 15",
       "events": [],
       "weather": {
-        "wind_kt_max": 12.6,
-        "gust_kt_max": 20.8,
+        "wind_kt_max": 15.9,
+        "gust_kt_max": 21.6,
         "wave_ft_max": 1.6,
         "temp_f": [
-          45,
+          49,
           66
         ],
         "precip": false,
@@ -482,8 +414,8 @@
         "icons": [
           "\u26c5"
         ],
-        "temp_label": "45\u201366\u00b0",
-        "wind_label": "13g21kt \u00b7 1.6ft"
+        "temp_label": "49\u201366\u00b0",
+        "wind_label": "16g22kt \u00b7 1.6ft"
       },
       "lanes": [
         {
@@ -583,21 +515,50 @@
               "day": "2026-05-15"
             }
           ]
+        },
+        {
+          "system": "hull",
+          "issues": [
+            {
+              "number": 71,
+              "title": "Repair cracked companionway door frame with copper edge wrap",
+              "url": "https://github.com/norton120/svdefiant/issues/71",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "hull",
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-15"
+            }
+          ]
         }
       ],
-      "task_count": 4
+      "task_count": 5
     },
     {
       "date": "2026-05-16",
       "label": "Sat May 16",
       "events": [],
       "weather": {
-        "wind_kt_max": 10.7,
-        "gust_kt_max": 22.7,
-        "wave_ft_max": 1.2,
+        "wind_kt_max": 10.2,
+        "gust_kt_max": 14.8,
+        "wave_ft_max": 1.0,
         "temp_f": [
           56,
-          82
+          77
         ],
         "precip": false,
         "hazards": [],
@@ -605,8 +566,8 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "56\u201382\u00b0",
-        "wind_label": "11g23kt \u00b7 1.2ft"
+        "temp_label": "56\u201377\u00b0",
+        "wind_label": "10g15kt \u00b7 1.0ft"
       },
       "lanes": [],
       "task_count": 0
@@ -616,21 +577,21 @@
       "label": "Sun May 17",
       "events": [],
       "weather": {
-        "wind_kt_max": 12.7,
-        "gust_kt_max": 26.4,
-        "wave_ft_max": 1.6,
+        "wind_kt_max": 6.5,
+        "gust_kt_max": 11.5,
+        "wave_ft_max": 1.2,
         "temp_f": [
-          66,
-          85
+          63,
+          83
         ],
-        "precip": true,
+        "precip": false,
         "hazards": [],
         "alerts": [],
         "icons": [
-          "\ud83c\udf27\ufe0f"
+          "\u2600\ufe0f"
         ],
-        "temp_label": "66\u201385\u00b0",
-        "wind_label": "13g26kt \u00b7 1.6ft"
+        "temp_label": "63\u201383\u00b0",
+        "wind_label": "6g12kt \u00b7 1.2ft"
       },
       "lanes": [],
       "task_count": 0
@@ -639,7 +600,23 @@
       "date": "2026-05-18",
       "label": "Mon May 18",
       "events": [],
-      "weather": null,
+      "weather": {
+        "wind_kt_max": 10.3,
+        "gust_kt_max": 20.2,
+        "wave_ft_max": 1.6,
+        "temp_f": [
+          65,
+          74
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "65\u201374\u00b0",
+        "wind_label": "10g20kt \u00b7 1.6ft"
+      },
       "lanes": [],
       "task_count": 0
     }
