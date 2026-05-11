@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-10T15:37:08Z",
+  "generated_at": "2026-05-11T01:12:44Z",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,166 +15,16 @@
   ],
   "days": [
     {
-      "date": "2026-05-09",
-      "label": "Sat May 9",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 1,
-              "title": "Wire & replace running lights (bow + stern)",
-              "url": "https://github.com/norton120/svdefiant/issues/1",
-              "milestone": "Day Sails",
-              "priority": "p0",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-09"
-            }
-          ]
-        },
-        {
-          "system": "engine",
-          "issues": [
-            {
-              "number": 5,
-              "title": "Replace engine air intake (Chesapeake Cove)",
-              "url": "https://github.com/norton120/svdefiant/issues/5",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": true,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-09"
-            },
-            {
-              "number": 7,
-              "title": "Change water pump oil",
-              "url": "https://github.com/norton120/svdefiant/issues/7",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-09"
-            },
-            {
-              "number": 10,
-              "title": "Replace air filter / snorkel",
-              "url": "https://github.com/norton120/svdefiant/issues/10",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-09"
-            }
-          ]
-        },
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 3,
-              "title": "Repair & re-install cockpit table",
-              "url": "https://github.com/norton120/svdefiant/issues/3",
-              "milestone": "Solomans",
-              "priority": "p2",
-              "systems": [
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-09"
-            },
-            {
-              "number": 16,
-              "title": "Mount Kennedy quote",
-              "url": "https://github.com/norton120/svdefiant/issues/16",
-              "milestone": "Day Sails",
-              "priority": "p3",
-              "systems": [
-                "interior"
-              ],
-              "energy": "couch",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-09"
-            }
-          ]
-        }
-      ],
-      "task_count": 6
-    },
-    {
       "date": "2026-05-10",
-      "label": "Today",
+      "label": "Sun May 10",
       "events": [],
       "weather": {
-        "wind_kt_max": 14.5,
-        "gust_kt_max": 22.9,
+        "wind_kt_max": 11.7,
+        "gust_kt_max": 21.4,
         "wave_ft_max": 1.1,
         "temp_f": [
           58,
-          79
+          80
         ],
         "precip": false,
         "hazards": [
@@ -184,17 +34,17 @@
           {
             "token": "small_craft_advisory",
             "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 10 at 9:46AM EDT until May 11 at 1:00PM EDT by NWS Wakefield VA",
+            "headline": "Small Craft Advisory issued May 10 at 6:53PM EDT until May 11 at 1:00PM EDT by NWS Wakefield VA",
             "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616499&lon=-76.290011"
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.61658&lon=-76.290025"
           }
         ],
         "icons": [
           "\u2620\ufe0f",
           "\u2600\ufe0f"
         ],
-        "temp_label": "58\u201379\u00b0",
-        "wind_label": "14g23kt \u00b7 1.1ft"
+        "temp_label": "58\u201380\u00b0",
+        "wind_label": "12g21kt \u00b7 1.1ft"
       },
       "lanes": [
         {
@@ -216,31 +66,9 @@
                 "indoors"
               ],
               "blocked_parts": false,
-              "project_status": "In Progress",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-10"
-            },
-            {
-              "number": 62,
-              "title": "Re-run power in quarterberth so doors close",
-              "url": "https://github.com/norton120/svdefiant/issues/62",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "electrical",
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-10"
             }
           ]
@@ -272,28 +100,39 @@
           ]
         }
       ],
-      "task_count": 3
+      "task_count": 2
     },
     {
       "date": "2026-05-11",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 18.0,
-        "gust_kt_max": 26.6,
+        "wind_kt_max": 19.6,
+        "gust_kt_max": 26.8,
         "wave_ft_max": 2.1,
         "temp_f": [
-          53,
-          65
+          52,
+          64
         ],
         "precip": true,
-        "hazards": [],
-        "alerts": [],
+        "hazards": [
+          "small_craft_advisory"
+        ],
+        "alerts": [
+          {
+            "token": "small_craft_advisory",
+            "event": "Small Craft Advisory",
+            "headline": "Small Craft Advisory issued May 10 at 6:53PM EDT until May 11 at 1:00PM EDT by NWS Wakefield VA",
+            "tooltip": "\u26f5",
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.61658&lon=-76.290025"
+          }
+        ],
         "icons": [
+          "\u2620\ufe0f",
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "53\u201365\u00b0",
-        "wind_label": "18g27kt \u00b7 2.1ft"
+        "temp_label": "52\u201364\u00b0",
+        "wind_label": "20g27kt \u00b7 2.1ft"
       },
       "lanes": [
         {
@@ -348,44 +187,23 @@
               "state": "OPEN",
               "done": false,
               "day": "2026-05-11"
-            },
-            {
-              "number": 74,
-              "title": "Add sliding door rails and plexi doors to lazarette shelf",
-              "url": "https://github.com/norton120/svdefiant/issues/74",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-11"
             }
           ]
         }
       ],
-      "task_count": 3
+      "task_count": 2
     },
     {
       "date": "2026-05-12",
-      "label": "Tue May 12",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
-        "wind_kt_max": 14.8,
-        "gust_kt_max": 18.1,
+        "wind_kt_max": 11.5,
+        "gust_kt_max": 15.9,
         "wave_ft_max": 1.2,
         "temp_f": [
-          50,
-          61
+          48,
+          63
         ],
         "precip": false,
         "hazards": [],
@@ -393,8 +211,8 @@
         "icons": [
           "\u26c5"
         ],
-        "temp_label": "50\u201361\u00b0",
-        "wind_label": "15g18kt \u00b7 1.2ft"
+        "temp_label": "48\u201363\u00b0",
+        "wind_label": "12g16kt \u00b7 1.2ft"
       },
       "lanes": [
         {
@@ -465,7 +283,7 @@
                 "on-deck",
                 "dockside-only"
               ],
-              "blocked_parts": true,
+              "blocked_parts": false,
               "project_status": "Todo",
               "state": "OPEN",
               "done": false,
@@ -528,12 +346,12 @@
       "label": "Wed May 13",
       "events": [],
       "weather": {
-        "wind_kt_max": 17.1,
-        "gust_kt_max": 26.0,
+        "wind_kt_max": 19.2,
+        "gust_kt_max": 28.8,
         "wave_ft_max": 2.3,
         "temp_f": [
-          53,
-          69
+          56,
+          71
         ],
         "precip": true,
         "hazards": [],
@@ -541,8 +359,8 @@
         "icons": [
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "53\u201369\u00b0",
-        "wind_label": "17g26kt \u00b7 2.3ft"
+        "temp_label": "56\u201371\u00b0",
+        "wind_label": "19g29kt \u00b7 2.3ft"
       },
       "lanes": [
         {
@@ -600,12 +418,12 @@
       "label": "Thu May 14",
       "events": [],
       "weather": {
-        "wind_kt_max": 13.8,
-        "gust_kt_max": 21.8,
+        "wind_kt_max": 14.5,
+        "gust_kt_max": 23.7,
         "wave_ft_max": 2.2,
         "temp_f": [
-          53,
-          66
+          50,
+          63
         ],
         "precip": true,
         "hazards": [],
@@ -613,8 +431,8 @@
         "icons": [
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "53\u201366\u00b0",
-        "wind_label": "14g22kt \u00b7 2.2ft"
+        "temp_label": "50\u201363\u00b0",
+        "wind_label": "14g24kt \u00b7 2.2ft"
       },
       "lanes": [
         {
@@ -651,12 +469,12 @@
       "label": "Fri May 15",
       "events": [],
       "weather": {
-        "wind_kt_max": 12.1,
-        "gust_kt_max": 20.6,
+        "wind_kt_max": 12.6,
+        "gust_kt_max": 20.8,
         "wave_ft_max": 1.6,
         "temp_f": [
-          47,
-          67
+          45,
+          66
         ],
         "precip": false,
         "hazards": [],
@@ -664,8 +482,8 @@
         "icons": [
           "\u26c5"
         ],
-        "temp_label": "47\u201367\u00b0",
-        "wind_label": "12g21kt \u00b7 1.6ft"
+        "temp_label": "45\u201366\u00b0",
+        "wind_label": "13g21kt \u00b7 1.6ft"
       },
       "lanes": [
         {
@@ -714,6 +532,28 @@
               "state": "OPEN",
               "done": false,
               "day": "2026-05-15"
+            },
+            {
+              "number": 62,
+              "title": "Re-run power in quarterberth so doors close",
+              "url": "https://github.com/norton120/svdefiant/issues/62",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "electrical",
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-15"
             }
           ]
         },
@@ -745,19 +585,19 @@
           ]
         }
       ],
-      "task_count": 3
+      "task_count": 4
     },
     {
       "date": "2026-05-16",
       "label": "Sat May 16",
       "events": [],
       "weather": {
-        "wind_kt_max": 13.7,
-        "gust_kt_max": 30.1,
+        "wind_kt_max": 10.7,
+        "gust_kt_max": 22.7,
         "wave_ft_max": 1.2,
         "temp_f": [
-          59,
-          85
+          56,
+          82
         ],
         "precip": false,
         "hazards": [],
@@ -765,8 +605,8 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "59\u201385\u00b0",
-        "wind_label": "14g30kt \u00b7 1.2ft"
+        "temp_label": "56\u201382\u00b0",
+        "wind_label": "11g23kt \u00b7 1.2ft"
       },
       "lanes": [],
       "task_count": 0
@@ -776,22 +616,30 @@
       "label": "Sun May 17",
       "events": [],
       "weather": {
-        "wind_kt_max": 13.8,
+        "wind_kt_max": 12.7,
         "gust_kt_max": 26.4,
         "wave_ft_max": 1.6,
         "temp_f": [
           66,
-          87
+          85
         ],
-        "precip": false,
+        "precip": true,
         "hazards": [],
         "alerts": [],
         "icons": [
-          "\u2600\ufe0f"
+          "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "66\u201387\u00b0",
-        "wind_label": "14g26kt \u00b7 1.6ft"
+        "temp_label": "66\u201385\u00b0",
+        "wind_label": "13g26kt \u00b7 1.6ft"
       },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-18",
+      "label": "Mon May 18",
+      "events": [],
+      "weather": null,
       "lanes": [],
       "task_count": 0
     }
