@@ -4,6 +4,14 @@ on:
   push:
     branches: ["main"]
   workflow_dispatch:
+  # `workflow_run` is the documented escape hatch from the recursion guard
+  # that suppresses `push` events from commits authored with GITHUB_TOKEN.
+  # The daily planner-refresh job pushes a JSON update with that token, so
+  # we re-trigger Hugo here when it completes successfully.
+  workflow_run:
+    workflows: ["planner-refresh"]
+    types: [completed]
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -20,6 +28,9 @@ defaults:
 
 jobs:
   build:
+    # When triggered by workflow_run, only build if the upstream succeeded.
+    # Other triggers (push, workflow_dispatch) always proceed.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
