@@ -31,7 +31,7 @@ import sys
 import tomllib
 import urllib.error
 import urllib.request
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -122,8 +122,20 @@ WATCHED_SECTIONS = ("location", "mode")
 
 # --- helpers ---------------------------------------------------------------
 
+def now_local() -> datetime:
+    """Aware-local now. Anchors all 'what day is it' decisions to wall-clock time."""
+    return datetime.now().astimezone()
+
+
+def today_local() -> date:
+    """Local calendar date — the only valid notion of 'today' for scheduling."""
+    return now_local().date()
+
+
 def now_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    # Local time with offset (e.g. 2026-05-12T18:30:00-04:00). Aware, parseable
+    # by fromisoformat, and matches what a human reading the JSON expects.
+    return now_local().isoformat(timespec="seconds")
 
 
 def parse_duration(s: str) -> timedelta:
@@ -595,7 +607,7 @@ def cmd_task_list(args, state):
                 item["body"] = r.get("body") or ""
             issues.append(item)
 
-    today = datetime.now(timezone.utc).date()
+    today = today_local()
     if args.in_window is not None:
         back = today - timedelta(days=WINDOW_DAYS_BACK)
         forward = today + timedelta(days=args.in_window)
@@ -617,7 +629,16 @@ def cmd_task_list(args, state):
         mode_status = state.get("mode", {}).get("status")
         issues = filter_schedulable(issues, mode_status)
 
-    json.dump(issues, sys.stdout, indent=2, default=str)
+    # Envelope with today anchor so the agent can't drift off the calendar.
+    # The bare array shape moved here; both window/overdue/unscheduled and
+    # plain listings go out the same way for consistency.
+    payload = {
+        "today": today.strftime("%Y-%m-%d"),
+        "generated_at": now_iso(),
+        "count": len(issues),
+        "issues": issues,
+    }
+    json.dump(payload, sys.stdout, indent=2, default=str)
     sys.stdout.write("\n")
 
 
@@ -900,10 +921,42 @@ def _ensure_project_item(issue_num: int) -> str:
     return res["addProjectV2ItemById"]["item"]["id"]
 
 
+_PROJECT_ITEM_DAY_QUERY = """
+query($itemId: ID!) {
+  node(id: $itemId) {
+    ... on ProjectV2Item {
+      fieldValues(first: 30) {
+        nodes {
+          __typename
+          ... on ProjectV2ItemFieldDateValue {
+            date
+            field { ... on ProjectV2Field { id } }
+          }
+        }
+      }
+    }
+  }
+}
+"""
+
+
+def _read_target_date(item_id: str) -> str | None:
+    """Read the current Target date on a project item; None if unset."""
+    data = gh_graphql(_PROJECT_ITEM_DAY_QUERY, itemId=item_id)
+    node = data.get("node") or {}
+    for fv in (node.get("fieldValues") or {}).get("nodes", []) or []:
+        f = fv.get("field") or {}
+        if f.get("id") == GH_DAY_FIELD_ID:
+            return fv.get("date")
+    return None
+
+
 def cmd_task_day(args):
     if bool(args.date) == bool(args.clear):
         die("specify either YYYY-MM-DD or --clear (not both, not neither)")
     item_id = _ensure_project_item(args.num)
+    before = _read_target_date(item_id)
+    today = today_local().strftime("%Y-%m-%d")
 
     if args.clear:
         mut = """
@@ -917,7 +970,13 @@ def cmd_task_day(args):
         """
         gh_graphql(mut, projectId=GH_PROJECT_ID, itemId=item_id,
                    fieldId=GH_DAY_FIELD_ID)
-        print(f"cleared day on #{args.num}")
+        after = _read_target_date(item_id)
+        if after is not None:
+            die(f"verify failed on #{args.num}: expected cleared, got {after}")
+        json.dump({"number": args.num, "today": today,
+                   "before": before, "after": None, "verified": True},
+                  sys.stdout, indent=2)
+        sys.stdout.write("\n")
         return
 
     try:
@@ -938,7 +997,13 @@ def cmd_task_day(args):
     gh_graphql(mut,
                projectId=GH_PROJECT_ID, itemId=item_id,
                fieldId=GH_DAY_FIELD_ID, date=args.date)
-    print(f"set day on #{args.num} to {args.date}")
+    after = _read_target_date(item_id)
+    if after != args.date:
+        die(f"verify failed on #{args.num}: expected {args.date}, got {after}")
+    json.dump({"number": args.num, "today": today,
+               "before": before, "after": after, "verified": True},
+              sys.stdout, indent=2)
+    sys.stdout.write("\n")
 
 
 # --- milestone -------------------------------------------------------------
@@ -1132,7 +1197,7 @@ def cmd_calendar_remove(args):
 
 
 def cmd_calendar_list(args):
-    today = datetime.now(timezone.utc).date()
+    today = today_local()
     start = datetime.strptime(args.from_, "%Y-%m-%d").date() if args.from_ else today
     end = datetime.strptime(args.to, "%Y-%m-%d").date() if args.to else (today + timedelta(days=7))
     out = [e for e in _load_calendar()
@@ -1541,7 +1606,7 @@ def _planner_weather_for_window(state: dict, dates: list[str]) -> dict[str, dict
         return {}
     # NWS public forecast page for the point — renders active alerts up top + marine
     forecast_url = f"https://forecast.weather.gov/MapClick.php?lat={lat}&lon={lon}"
-    today = datetime.now(timezone.utc).date()
+    today = today_local()
     horizon = max((datetime.strptime(d, "%Y-%m-%d").date() - today).days
                   for d in dates) + 1
     if horizon <= 0:
@@ -1593,7 +1658,7 @@ def _planner_weather_for_window(state: dict, dates: list[str]) -> dict[str, dict
 
 
 def cmd_planner_publish(args, state):
-    today = datetime.now(timezone.utc)
+    today = now_local()
     days_back = args.days_back
     days_forward = args.days_forward
     window_start = today.date() - timedelta(days=days_back)

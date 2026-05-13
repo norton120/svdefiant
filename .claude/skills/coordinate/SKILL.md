@@ -16,6 +16,14 @@ This is **not** a once-per-sprint ritual. Run it whenever the picture changes �
 - **The bench.** Issues with priority + system + estimate but no Target date are the candidate pool — pulled in as window slots open.
 - **The deep backlog.** Issues with Target dates far in the future (months / years out) are deliberate long-horizon scheduling, not stale data. The refit captures *everything* — some of it the user won't get to for years. Move these freely when there's a reason (pull forward into capacity, push back when something slips, milestone reshuffle), but don't churn dates that are working fine just to "tidy up."
 
+## Step 0 — anchor on today
+
+**Before anything else**, run `defiant task list --in-window 7` once and quote the `today` field from the envelope back to the user verbatim, e.g.:
+
+> Anchoring on **today = 2026-05-12**.
+
+Every subsequent decision (which items are overdue, which day is "today", which weather forecast applies to which date) must reference that exact date. Do not infer the date from elsewhere — the CLI envelope is the source of truth. If you ever lose track mid-run, re-run a list command and re-anchor.
+
 ## Always confirm location and ask about capacity
 
 The boat moves and HA may be stale. Run:
@@ -105,6 +113,14 @@ defiant task day <number> --clear          # send back to the bench
 
 Both are idempotent and add the issue to the project if it isn't already there.
 
+Both commands print a verified JSON receipt:
+
+```json
+{"number": 42, "today": "2026-05-12", "before": "2026-05-09", "after": "2026-05-12", "verified": true}
+```
+
+The CLI reads the field back from GitHub after the mutation and exits non-zero if `after` doesn't match. **You must capture each receipt and quote it in the final report.** Do not claim a move landed without a receipt — if there's no receipt, the move didn't happen. If `task day` exits non-zero, surface that to the user; do not continue as if it succeeded.
+
 ### 6. Republish
 
 ```
@@ -116,6 +132,8 @@ This rebuilds `data/planner.json` from the now-updated Target dates and pushes; 
 ### 7. Final report
 
 One-paragraph summary: scheduled / unscheduled / pushed / dropped, plus any open questions or risks for next run.
+
+Include a "Receipts" subsection listing the `task day` JSON receipt for every move. No receipt → don't claim the move. The user will audit against this.
 
 ## Conservatism / safety
 
