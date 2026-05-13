@@ -37,7 +37,8 @@
 
 set -euo pipefail
 
-REPO="${HOME}/app/svdefiant"
+# Self-locate so the script works regardless of where the repo is cloned.
+REPO="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "${REPO}"
 
 # Pull latest so we don't republish on top of a stale checkout (the deploy
