@@ -1,0 +1,40 @@
+name: planner-refresh
+
+# Republish data/planner.json once a day so the "Today" / "Tomorrow" labels
+# roll over with the calendar even when nobody runs the coordinate skill.
+# Weather is preserved from the prior planner.json since the runner has no
+# Home Assistant access for live forecasts.
+
+on:
+  schedule:
+    # 05:10 UTC covers both seasons just-after-local-midnight in NY:
+    #   EDT: 01:10 local   EST: 00:10 local
+    - cron: "10 5 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    env:
+      TZ: America/New_York
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Configure git identity for the auto-commit
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Refresh planner.json
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bin/defiant planner publish --push --no-weather >> "$GITHUB_STEP_SUMMARY"
