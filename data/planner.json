@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T20:25:13-04:00",
+  "generated_at": "2026-05-13T20:27:11-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -44,7 +44,7 @@
             "event": "Small Craft Advisory",
             "headline": "Small Craft Advisory issued May 13 at 3:28PM EDT until May 14 at 1:00AM EDT by NWS Wakefield VA",
             "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616514&lon=-76.290006"
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616514&lon=-76.290012"
           }
         ],
         "icons": [
@@ -55,62 +55,8 @@
         "temp_label": "57\u201375\u00b0",
         "wind_label": "23g30kt \u00b7 2.5ft"
       },
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 77,
-              "title": "Replace alternator (regulator burned out)",
-              "url": "https://github.com/norton120/svdefiant/issues/77",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-13"
-            }
-          ]
-        },
-        {
-          "system": "engine",
-          "issues": [
-            {
-              "number": 11,
-              "title": "Replace zip tie on transmission",
-              "url": "https://github.com/norton120/svdefiant/issues/11",
-              "milestone": "Day Sails",
-              "priority": "p3",
-              "systems": [
-                "engine"
-              ],
-              "energy": "couch",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-13"
-            }
-          ]
-        }
-      ],
-      "task_count": 2
+      "lanes": [],
+      "task_count": 0
     },
     {
       "date": "2026-05-14",
@@ -134,7 +80,7 @@
             "event": "Small Craft Advisory",
             "headline": "Small Craft Advisory issued May 13 at 3:28PM EDT until May 14 at 1:00AM EDT by NWS Wakefield VA",
             "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616514&lon=-76.290006"
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616514&lon=-76.290012"
           }
         ],
         "icons": [
@@ -162,6 +108,28 @@
               "time": "lt-1hr",
               "locations": [
                 "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-14"
+            },
+            {
+              "number": 77,
+              "title": "Replace alternator (regulator burned out)",
+              "url": "https://github.com/norton120/svdefiant/issues/77",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "dockside-only"
               ],
               "blocked_parts": false,
               "project_status": "Todo",
@@ -318,7 +286,7 @@
           ]
         }
       ],
-      "task_count": 7
+      "task_count": 8
     },
     {
       "date": "2026-05-15",
