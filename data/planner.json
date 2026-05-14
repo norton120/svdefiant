@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-13T09:59:34-04:00",
+  "generated_at": "2026-05-13T20:25:13-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,45 +15,10 @@
   ],
   "days": [
     {
-      "date": "2026-05-11",
-      "label": "Mon May 11",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
       "date": "2026-05-12",
       "label": "Tue May 12",
       "events": [],
-      "weather": {
-        "wind_kt_max": 16.5,
-        "gust_kt_max": 25.1,
-        "wave_ft_max": 1.4,
-        "temp_f": [
-          45,
-          64
-        ],
-        "precip": false,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 12 at 2:45PM EDT until May 14 at 1:00AM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616504&lon=-76.290046"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\u26c5"
-        ],
-        "temp_label": "45\u201364\u00b0",
-        "wind_label": "16g25kt \u00b7 1.4ft"
-      },
+      "weather": null,
       "lanes": [],
       "task_count": 0
     },
@@ -62,12 +27,12 @@
       "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 23.3,
-        "gust_kt_max": 31.3,
-        "wave_ft_max": 2.3,
+        "wind_kt_max": 22.8,
+        "gust_kt_max": 30.3,
+        "wave_ft_max": 2.5,
         "temp_f": [
-          58,
-          74
+          57,
+          75
         ],
         "precip": false,
         "hazards": [
@@ -77,9 +42,9 @@
           {
             "token": "small_craft_advisory",
             "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 12 at 2:45PM EDT until May 14 at 1:00AM EDT by NWS Wakefield VA",
+            "headline": "Small Craft Advisory issued May 13 at 3:28PM EDT until May 14 at 1:00AM EDT by NWS Wakefield VA",
             "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616504&lon=-76.290046"
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616514&lon=-76.290006"
           }
         ],
         "icons": [
@@ -87,8 +52,8 @@
           "\u2600\ufe0f",
           "\ud83d\udca8"
         ],
-        "temp_label": "58\u201374\u00b0",
-        "wind_label": "23g31kt \u00b7 2.3ft"
+        "temp_label": "57\u201375\u00b0",
+        "wind_label": "23g30kt \u00b7 2.5ft"
       },
       "lanes": [
         {
@@ -108,97 +73,6 @@
               "time": "half-day",
               "locations": [
                 "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-13"
-            }
-          ]
-        },
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 28,
-              "title": "3-phase filter on drinking tap",
-              "url": "https://github.com/norton120/svdefiant/issues/28",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-13"
-            },
-            {
-              "number": 29,
-              "title": "UV filter on main water",
-              "url": "https://github.com/norton120/svdefiant/issues/29",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-13"
-            },
-            {
-              "number": 30,
-              "title": "Galley sink rebuild",
-              "url": "https://github.com/norton120/svdefiant/issues/30",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "heavy",
-              "weather": "any",
-              "time": "full-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-13"
-            },
-            {
-              "number": 70,
-              "title": "Icebox refrigeration conversion (R134a)",
-              "url": "https://github.com/norton120/svdefiant/issues/70",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
                 "dockside-only"
               ],
               "blocked_parts": false,
@@ -232,6 +106,94 @@
               "state": "OPEN",
               "done": false,
               "day": "2026-05-13"
+            }
+          ]
+        }
+      ],
+      "task_count": 2
+    },
+    {
+      "date": "2026-05-14",
+      "label": "Tomorrow",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 15.8,
+        "gust_kt_max": 22.4,
+        "wave_ft_max": 1.6,
+        "temp_f": [
+          54,
+          65
+        ],
+        "precip": false,
+        "hazards": [
+          "small_craft_advisory"
+        ],
+        "alerts": [
+          {
+            "token": "small_craft_advisory",
+            "event": "Small Craft Advisory",
+            "headline": "Small Craft Advisory issued May 13 at 3:28PM EDT until May 14 at 1:00AM EDT by NWS Wakefield VA",
+            "tooltip": "\u26f5",
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616514&lon=-76.290006"
+          }
+        ],
+        "icons": [
+          "\u2620\ufe0f",
+          "\u26c5"
+        ],
+        "temp_label": "54\u201365\u00b0",
+        "wind_label": "16g22kt \u00b7 1.6ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 57,
+              "title": "Mount electric kettle above galley counter",
+              "url": "https://github.com/norton120/svdefiant/issues/57",
+              "milestone": "Day Sails",
+              "priority": "p3",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-14"
+            }
+          ]
+        },
+        {
+          "system": "engine",
+          "issues": [
+            {
+              "number": 6,
+              "title": "Proper engine oil change (drain completely first)",
+              "url": "https://github.com/norton120/svdefiant/issues/6",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "engine"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-14"
             },
             {
               "number": 12,
@@ -252,52 +214,45 @@
               "project_status": "Todo",
               "state": "OPEN",
               "done": false,
-              "day": "2026-05-13"
-            }
-          ]
-        }
-      ],
-      "task_count": 7
-    },
-    {
-      "date": "2026-05-14",
-      "label": "Tomorrow",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 15.6,
-        "gust_kt_max": 24.7,
-        "wave_ft_max": 1.7,
-        "temp_f": [
-          53,
-          65
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "53\u201365\u00b0",
-        "wind_label": "16g25kt \u00b7 1.7ft"
-      },
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
+              "day": "2026-05-14"
+            },
             {
-              "number": 57,
-              "title": "Mount electric kettle above galley counter",
-              "url": "https://github.com/norton120/svdefiant/issues/57",
+              "number": 72,
+              "title": "Replace fuel filter",
+              "url": "https://github.com/norton120/svdefiant/issues/72",
               "milestone": "Day Sails",
-              "priority": "p3",
+              "priority": "p1",
               "systems": [
-                "electrical"
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "dry",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-14"
+            },
+            {
+              "number": 78,
+              "title": "Flush coolant system with distilled water and add fresh coolant",
+              "url": "https://github.com/norton120/svdefiant/issues/78",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "engine"
               ],
               "energy": "light",
               "weather": "any",
               "time": "lt-1hr",
               "locations": [
-                "indoors"
+                "indoors",
+                "dockside-only"
               ],
               "blocked_parts": false,
               "project_status": "Todo",
@@ -363,19 +318,19 @@
           ]
         }
       ],
-      "task_count": 3
+      "task_count": 7
     },
     {
       "date": "2026-05-15",
       "label": "Fri May 15",
       "events": [],
       "weather": {
-        "wind_kt_max": 12.6,
-        "gust_kt_max": 21.2,
+        "wind_kt_max": 15.0,
+        "gust_kt_max": 24.5,
         "wave_ft_max": 1.7,
         "temp_f": [
-          52,
-          66
+          50,
+          68
         ],
         "precip": false,
         "hazards": [],
@@ -383,8 +338,8 @@
         "icons": [
           "\u26c5"
         ],
-        "temp_label": "52\u201366\u00b0",
-        "wind_label": "13g21kt \u00b7 1.7ft"
+        "temp_label": "50\u201368\u00b0",
+        "wind_label": "15g24kt \u00b7 1.7ft"
       },
       "lanes": [
         {
@@ -451,9 +406,9 @@
                 "indoors"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-15"
             }
           ]
@@ -493,12 +448,12 @@
       "label": "Sat May 16",
       "events": [],
       "weather": {
-        "wind_kt_max": 11.3,
-        "gust_kt_max": 22.7,
+        "wind_kt_max": 9.1,
+        "gust_kt_max": 18.3,
         "wave_ft_max": 1.9,
         "temp_f": [
           58,
-          83
+          80
         ],
         "precip": false,
         "hazards": [],
@@ -506,8 +461,8 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "58\u201383\u00b0",
-        "wind_label": "11g23kt \u00b7 1.9ft"
+        "temp_label": "58\u201380\u00b0",
+        "wind_label": "9g18kt \u00b7 1.9ft"
       },
       "lanes": [],
       "task_count": 0
@@ -517,12 +472,12 @@
       "label": "Sun May 17",
       "events": [],
       "weather": {
-        "wind_kt_max": 8.4,
-        "gust_kt_max": 18.7,
+        "wind_kt_max": 12.7,
+        "gust_kt_max": 26.2,
         "wave_ft_max": 1.9,
         "temp_f": [
-          64,
-          73
+          66,
+          85
         ],
         "precip": true,
         "hazards": [],
@@ -530,8 +485,8 @@
         "icons": [
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "64\u201373\u00b0",
-        "wind_label": "8g19kt \u00b7 1.9ft"
+        "temp_label": "66\u201385\u00b0",
+        "wind_label": "13g26kt \u00b7 1.9ft"
       },
       "lanes": [],
       "task_count": 0
@@ -541,12 +496,12 @@
       "label": "Mon May 18",
       "events": [],
       "weather": {
-        "wind_kt_max": 8.5,
-        "gust_kt_max": 15.6,
-        "wave_ft_max": 1.7,
+        "wind_kt_max": 13.9,
+        "gust_kt_max": 23.7,
+        "wave_ft_max": 1.3,
         "temp_f": [
-          63,
-          78
+          68,
+          82
         ],
         "precip": false,
         "hazards": [],
@@ -554,8 +509,8 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "63\u201378\u00b0",
-        "wind_label": "8g16kt \u00b7 1.7ft"
+        "temp_label": "68\u201382\u00b0",
+        "wind_label": "14g24kt \u00b7 1.3ft"
       },
       "lanes": [],
       "task_count": 0
@@ -566,11 +521,11 @@
       "events": [],
       "weather": {
         "wind_kt_max": 13.9,
-        "gust_kt_max": 27.2,
-        "wave_ft_max": 1.6,
+        "gust_kt_max": 23.5,
+        "wave_ft_max": 1.7,
         "temp_f": [
           68,
-          83
+          85
         ],
         "precip": false,
         "hazards": [],
@@ -578,8 +533,8 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "68\u201383\u00b0",
-        "wind_label": "14g27kt \u00b7 1.6ft"
+        "temp_label": "68\u201385\u00b0",
+        "wind_label": "14g24kt \u00b7 1.7ft"
       },
       "lanes": [],
       "task_count": 0
@@ -588,7 +543,23 @@
       "date": "2026-05-20",
       "label": "Wed May 20",
       "events": [],
-      "weather": null,
+      "weather": {
+        "wind_kt_max": 12.0,
+        "gust_kt_max": 21.4,
+        "wave_ft_max": 1.7,
+        "temp_f": [
+          61,
+          80
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "61\u201380\u00b0",
+        "wind_label": "12g21kt \u00b7 1.7ft"
+      },
       "lanes": [],
       "task_count": 0
     }
