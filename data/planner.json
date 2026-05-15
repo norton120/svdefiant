@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-14T02:16:03-04:00",
+  "generated_at": "2026-05-15T02:20:20-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,14 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-05-12",
-      "label": "Tue May 12",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
     {
       "date": "2026-05-13",
       "label": "Wed May 13",
@@ -60,7 +52,7 @@
     },
     {
       "date": "2026-05-14",
-      "label": "Today",
+      "label": "Thu May 14",
       "events": [],
       "weather": {
         "wind_kt_max": 15.8,
@@ -290,7 +282,7 @@
     },
     {
       "date": "2026-05-15",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 15.0,
@@ -413,7 +405,7 @@
     },
     {
       "date": "2026-05-16",
-      "label": "Sat May 16",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 9.1,
@@ -534,6 +526,14 @@
     {
       "date": "2026-05-21",
       "label": "Thu May 21",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-22",
+      "label": "Fri May 22",
       "events": [],
       "weather": null,
       "lanes": [],
