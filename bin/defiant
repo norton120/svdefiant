@@ -13,7 +13,7 @@ Subcommands:
   weather  marine weather + tides (auto when underway)
   calendar day-level events the agent should respect when scheduling
   cart     virtual Amazon cart (ASINs on disk; emit add-to-cart URL on demand)
-  photo    Ente photo inbox (album sync'd by ente CLI; list/path/archive)
+  photo    Ente photo inbox (album sync'd by ente CLI; list/archive)
 
 Cache, ack, calendar, and wiki files live under DEFIANT_HOME (default: ~/.defiant).
 HA endpoint: HA_URL env (default http://homeassistant.local:8123),
@@ -22,6 +22,7 @@ HA token: HOME_ASSISTANT_ACCESS_TOKEN env (or .env in repo root).
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import math
 import os
@@ -29,6 +30,7 @@ import re
 import sqlite3
 import subprocess
 import sys
+import tempfile
 import tomllib
 import urllib.error
 import urllib.request
@@ -44,7 +46,8 @@ INBOX_STATE_FILE = DEFIANT_HOME / "inbox-state.json"
 CALENDAR_FILE = DEFIANT_HOME / "calendar.json"
 PHOTO_INBOX = DEFIANT_HOME / "photos" / "inbox"
 PHOTO_ARCHIVE = DEFIANT_HOME / "photos" / "archive"
-PHOTO_IMAGE_EXTS = (".heic", ".heif", ".jpg", ".jpeg", ".png", ".webp", ".gif")
+PHOTO_IMAGE_EXTS = (".heic", ".heif", ".jpg", ".jpeg", ".png",
+                    ".tif", ".tiff", ".webp", ".gif")
 PHOTO_VIDEO_EXTS = (".mov", ".mp4", ".m4v")
 PHOTO_EXTS = PHOTO_IMAGE_EXTS + PHOTO_VIDEO_EXTS
 
@@ -2238,9 +2241,7 @@ def cmd_image_add(args):
             "scope it to Contents:RW on norton120/svdefiant "
             "(or pass --no-push for local testing)")
 
-    src = Path(args.file)
-    if not src.exists():
-        die(f"--file not found: {src}")
+    src = _resolve_inbox_image(args.stem)
 
     name = _sanitize_image_name(args.name)
     dst = STATIC_IMAGES_DIR / f"{name}.jpg"
@@ -2263,7 +2264,6 @@ def cmd_image_add(args):
         print(json.dumps({
             "ok": True,
             "filename": dst.name,
-            "path": rel,
             "url": f"https://svdefiant.com/images/{dst.name}",
             "pushed": False,
         }))
@@ -2281,10 +2281,76 @@ def cmd_image_add(args):
     print(json.dumps({
         "ok": True,
         "filename": dst.name,
-        "path": rel,
         "url": f"https://svdefiant.com/images/{dst.name}",
         "pushed": True,
     }))
+
+
+# --- image analyze (vision via NEAR AI OpenAI-compatible proxy) ------------
+
+NEARAI_CHAT_API = "https://cloud-api.near.ai/v1/chat/completions"
+# NEAR AI's anthropic/* path is image-blind (proxy drops the image part of an
+# OpenAI multimodal message); Qwen3-VL reads images correctly via the standard
+# image_url data-URL form. Override per-call with DEFIANT_VISION_MODEL.
+DEFAULT_VISION_MODEL = "Qwen/Qwen3-VL-30B-A3B-Instruct"
+
+
+def _vision_analyze(jpeg: bytes, question: str) -> str:
+    """POST a JPEG + prompt to NEAR AI's OpenAI-compatible chat endpoint.
+
+    Model is env-overridable via DEFIANT_VISION_MODEL (default Qwen3-VL;
+    anthropic/* models can't see images through this proxy). The agent never
+    sees the key or the bytes — both stay in this process.
+    """
+    key = os.environ.get("NEAR_AI_KEY") or os.environ.get("NEARAI_API_KEY")
+    if not key:
+        die("NEAR_AI_KEY (or NEARAI_API_KEY) env var required for image analysis")
+    model = os.environ.get("DEFIANT_VISION_MODEL", DEFAULT_VISION_MODEL)
+    b64 = base64.b64encode(jpeg).decode("ascii")
+    payload = json.dumps({
+        "model": model,
+        "messages": [{
+            "role": "user",
+            "content": [
+                {"type": "text", "text": question},
+                {"type": "image_url",
+                 "image_url": {"url": f"data:image/jpeg;base64,{b64}"}},
+            ],
+        }],
+    }).encode()
+    req = urllib.request.Request(
+        NEARAI_CHAT_API, data=payload, method="POST",
+        headers={"Authorization": f"Bearer {key}",
+                 "Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            data = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")[:500]
+        die(f"vision API HTTP {e.code}: {body}")
+    except (urllib.error.URLError, TimeoutError) as e:
+        die(f"vision API unreachable: {e}")
+    try:
+        text = data["choices"][0]["message"]["content"]
+    except (KeyError, IndexError, TypeError):
+        die(f"unexpected vision API response: {json.dumps(data)[:500]}")
+    return (text or "").strip()
+
+
+def cmd_image_analyze(args):
+    src = _resolve_inbox_image(args.stem)
+    # Normalize to a modest JPEG: HEIC/TIFF aren't accepted by most vision
+    # endpoints, and shrinking keeps the request small.
+    fd, tmp = tempfile.mkstemp(suffix=".jpg")
+    os.close(fd)
+    tmp_path = Path(tmp)
+    try:
+        _optimize_to_jpeg(src, tmp_path)
+        jpeg = tmp_path.read_bytes()
+    finally:
+        tmp_path.unlink(missing_ok=True)
+    print(json.dumps({"analysis": _vision_analyze(jpeg, args.question)}))
 
 
 # --- photo (ente inbox) ----------------------------------------------------
@@ -2346,6 +2412,29 @@ def _photo_resolve(id_str: str) -> dict:
     return match[0]
 
 
+# Inbox-stem → still-image resolution. HEIC > JPEG > PNG > TIFF, then the
+# remaining web formats; the Live Photo .mov companion is never a candidate.
+IMG_RESOLVE_ORDER = (".heic", ".heif", ".jpg", ".jpeg", ".png",
+                     ".tif", ".tiff", ".webp", ".gif")
+
+
+def _resolve_inbox_image(stem: str) -> Path:
+    """Resolve a bare inbox stem (e.g. 'IMG_1234') to its best still image.
+
+    Album-aware and Live-Photo-grouped (reuses _photo_resolve). Errors clearly
+    if the stem is missing/ambiguous or has only a video companion.
+    """
+    it = _photo_resolve(stem)
+    by_ext: dict[str, Path] = {}
+    for p in it["files"]:
+        by_ext.setdefault(p.suffix.lower(), p)
+    for ext in IMG_RESOLVE_ORDER:
+        if ext in by_ext:
+            return by_ext[ext]
+    found = sorted({p.suffix.lower() for p in it["files"]})
+    die(f"no image file for stem {stem!r} in inbox (found only: {found})")
+
+
 def cmd_photo_list(args):
     now = datetime.now(timezone.utc).timestamp()
     out = []
@@ -2367,11 +2456,6 @@ def cmd_photo_list(args):
         })
     json.dump(out, sys.stdout, indent=2)
     sys.stdout.write("\n")
-
-
-def cmd_photo_path(args):
-    it = _photo_resolve(args.id)
-    print(it["files"][0])
 
 
 def cmd_photo_archive(args):
@@ -2707,29 +2791,31 @@ def build_parser() -> argparse.ArgumentParser:
         "add",
         help="optimize an image (≤2400px JPEG q85) and commit it to static/images/",
     )
-    iv_add.add_argument("name", help="filename stem; sanitized to [a-z0-9._-], '.jpg' appended")
-    iv_add.add_argument("--file", required=True,
-                        help="path to the source image (jpg/png/heic/webp/...)")
+    iv_add.add_argument("name", help="output filename stem; sanitized to [a-z0-9._-], '.jpg' appended")
+    iv_add.add_argument("--stem", required=True,
+                        help="inbox photo stem (no ext); resolved HEIC>JPEG>PNG>TIFF from the Ente inbox")
     iv_add.add_argument("--no-push", action="store_true",
                         help="optimize + write only; skip git add/commit/push (for testing)")
     iv_add.set_defaults(func=cmd_image_add)
 
+    iv_an = iv_img.add_parser(
+        "analyze",
+        help="analyze an inbox photo with a vision model (NEAR AI proxy)",
+    )
+    iv_an.add_argument("stem", help="inbox photo stem (no ext); resolved HEIC>JPEG>PNG>TIFF")
+    iv_an.add_argument("--question", default="Describe this image in detail.",
+                       help="analysis prompt (default: describe the image in detail)")
+    iv_an.set_defaults(func=cmd_image_analyze)
+
     # --- photo ---
     photo = nouns.add_parser(
         "photo",
-        help="Ente photo inbox — list/path/archive sync'd photos",
+        help="Ente photo inbox — list/archive sync'd photos",
     )
     pv_ph = photo.add_subparsers(dest="verb")
 
     pv_list = pv_ph.add_parser("list", help="list photos in the inbox (JSON)")
     pv_list.set_defaults(func=cmd_photo_list)
-
-    pv_path = pv_ph.add_parser(
-        "path",
-        help="print absolute path to a photo's primary file (still preferred over motion)",
-    )
-    pv_path.add_argument("id", help="<album>/<stem> from `photo list`, or just <stem> if unambiguous")
-    pv_path.set_defaults(func=cmd_photo_path)
 
     pv_arch = pv_ph.add_parser(
         "archive",

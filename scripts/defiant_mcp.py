@@ -19,13 +19,17 @@ Register on ironclaw with:
       --env AWS_ACCESS_KEY_ID=… \\
       --env AWS_SECRET_ACCESS_KEY=… \\
       --env AWS_DEFAULT_REGION=us-east-1 \\
-      --env HOME_ASSISTANT_ACCESS_TOKEN=…
+      --env HOME_ASSISTANT_ACCESS_TOKEN=… \\
+      --env NEARAI_API_KEY=…              # required by image_analyze \\
+      --env DEFIANT_VISION_MODEL=…        # optional; default Qwen/Qwen3-VL-30B-A3B-Instruct
+
+image_add / image_analyze take a `stem` (inbox filename without extension);
+the server resolves ~/.defiant/photos/inbox/<stem>.<ext> internally
+(HEIC > JPEG > PNG > TIFF). No image bytes ever cross the tool boundary.
 """
 from __future__ import annotations
 
 import asyncio
-import base64
-import binascii
 import os
 import subprocess
 import tempfile
@@ -560,28 +564,61 @@ TOOLS: list[Tool] = [
     Tool(
         name="image_add",
         description=(
-            "Optimize a photo (resize to ≤2400px long-side, EXIF auto-orient, "
-            "strip metadata, JPEG q85) and commit it to static/images/<name>.jpg "
-            "on the main branch of norton120/svdefiant. CI rebuilds the site "
+            "Publish a photo from the Ente inbox to the website. Reads the "
+            "inbox photo identified by `stem` (the server resolves "
+            "~/.defiant/photos/inbox/<stem>.<ext>, preferring HEIC > JPEG > "
+            "PNG > TIFF; the Live Photo .mov is never used), optimizes it "
+            "(resize ≤2400px long-side, EXIF auto-orient, strip metadata, "
+            "JPEG q85), and commits it to static/images/<name>.jpg on the "
+            "main branch of norton120/svdefiant. CI rebuilds the site "
             "(~1-2 min), after which the image is hotlinkable at "
             "https://svdefiant.com/images/<name>.jpg — usable in wiki pages, "
             "GitHub issues, or Hugo {{< figure >}} shortcodes. Errors if an "
-            "image with the same sanitized name already exists. Returns JSON "
-            "{ok, filename, path, url, pushed}."
+            "image with the same sanitized name already exists, or if the "
+            "stem has no still image. Get `stem` values from photo_list. "
+            "Returns JSON {ok, filename, url, pushed}."
         ),
         inputSchema={
             "type": "object",
             "properties": {
+                "stem": {
+                    "type": "string",
+                    "description": "inbox photo stem (filename without extension), e.g. 'IMG_1234'. From photo_list's `stem` field. The server resolves the actual file; you never construct a path.",
+                },
                 "name": {
                     "type": "string",
-                    "description": "filename stem (without extension). Sanitized to lowercase [a-z0-9._-]; spaces become hyphens. The '.jpg' extension is appended automatically.",
-                },
-                "data_base64": {
-                    "type": "string",
-                    "description": "raw image bytes, base64-encoded. Accepts jpg/jpeg/png/heic/heif/webp/gif/tiff source formats; output is always JPEG.",
+                    "description": "output filename stem (without extension). Sanitized to lowercase [a-z0-9._-]; spaces become hyphens. The '.jpg' extension is appended automatically.",
                 },
             },
-            "required": ["name", "data_base64"],
+            "required": ["stem", "name"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="image_analyze",
+        description=(
+            "Analyze an Ente inbox photo with a vision model. Reads the inbox "
+            "photo identified by `stem` (server resolves "
+            "~/.defiant/photos/inbox/<stem>.<ext>, preferring HEIC > JPEG > "
+            "PNG > TIFF; the Live Photo .mov is never used), normalizes it to "
+            "JPEG, and sends it to the configured vision model. Use this to "
+            "read text/labels off a part, identify a component, or answer a "
+            "question about what's in a photo before deciding what to do with "
+            "it. Get `stem` values from photo_list. Returns JSON {analysis}."
+        ),
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "stem": {
+                    "type": "string",
+                    "description": "inbox photo stem (filename without extension), e.g. 'IMG_1234'. From photo_list's `stem` field. The server resolves the actual file; you never construct a path.",
+                },
+                "question": {
+                    "type": "string",
+                    "description": "what to ask about the image. Defaults to 'Describe this image in detail.' if omitted.",
+                },
+            },
+            "required": ["stem"],
             "additionalProperties": False,
         },
     ),
@@ -592,27 +629,12 @@ TOOLS: list[Tool] = [
             "systemd timer auto-pulls every ~5 min from the user's `stubb-index` "
             "Ente album. Returns JSON array of "
             "{id, album, stem, path, extensions, files, size_bytes, mtime_iso, age_seconds}. "
-            "`id` is '<album>/<stem>' — use it as-is for photo_path / photo_archive. "
-            "Live Photos arrive as paired HEIC + .mov; they are grouped under one item, "
-            "with `path` pointing at the still (HEIC preferred). Empty array = nothing waiting."
+            "Pass the `stem` field to image_add / image_analyze / photo_archive — "
+            "the server resolves the file; you never use `path` or `id` to read bytes. "
+            "Live Photos arrive as paired HEIC + .mov; they are grouped under one item "
+            "(the .mov is never processed). Empty array = nothing waiting."
         ),
         inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
-    ),
-    Tool(
-        name="photo_path",
-        description=(
-            "Return the absolute filesystem path to a photo's primary still "
-            "(HEIC > JPEG > others; the Live Photo .mov is NOT returned by this verb). "
-            "Use this to pass a photo into other tools that take a file path. "
-            "For wiki ingestion, prefer image_add with the file's bytes."
-        ),
-        inputSchema={
-            "type": "object",
-            "properties": {"id": {"type": "string",
-                                  "description": "<album>/<stem> from photo_list, or just <stem> if unambiguous"}},
-            "required": ["id"],
-            "additionalProperties": False,
-        },
     ),
     Tool(
         name="photo_archive",
@@ -826,22 +848,15 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
         return ["weather", "--days", "7"], tmp
 
     if name == "image_add":
-        try:
-            data = base64.b64decode(args["data_base64"], validate=True)
-        except (binascii.Error, ValueError) as e:
-            raise ValueError(f"invalid base64 in data_base64: {e}")
-        if not data:
-            raise ValueError("data_base64 decoded to zero bytes")
-        f = tempfile.NamedTemporaryFile("wb", suffix=".bin", delete=False)
-        f.write(data)
-        f.close()
-        tmp.append(Path(f.name))
-        return ["image", "add", args["name"], "--file", f.name], tmp
+        return ["image", "add", args["name"], "--stem", args["stem"]], tmp
+    if name == "image_analyze":
+        argv = ["image", "analyze", args["stem"]]
+        if q := args.get("question"):
+            argv += ["--question", q]
+        return argv, tmp
 
     if name == "photo_list":
         return ["photo", "list"], tmp
-    if name == "photo_path":
-        return ["photo", "path", args["id"]], tmp
     if name == "photo_archive":
         return ["photo", "archive", args["id"]], tmp
 
