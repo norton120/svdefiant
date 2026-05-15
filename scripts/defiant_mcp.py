@@ -585,6 +585,55 @@ TOOLS: list[Tool] = [
             "additionalProperties": False,
         },
     ),
+    Tool(
+        name="photo_list",
+        description=(
+            "List photos in the Ente inbox (~/.defiant/photos/inbox), which a "
+            "systemd timer auto-pulls every ~5 min from the user's `stubb-index` "
+            "Ente album. Returns JSON array of "
+            "{id, album, stem, path, extensions, files, size_bytes, mtime_iso, age_seconds}. "
+            "`id` is '<album>/<stem>' — use it as-is for photo_path / photo_archive. "
+            "Live Photos arrive as paired HEIC + .mov; they are grouped under one item, "
+            "with `path` pointing at the still (HEIC preferred). Empty array = nothing waiting."
+        ),
+        inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
+    ),
+    Tool(
+        name="photo_path",
+        description=(
+            "Return the absolute filesystem path to a photo's primary still "
+            "(HEIC > JPEG > others; the Live Photo .mov is NOT returned by this verb). "
+            "Use this to pass a photo into other tools that take a file path. "
+            "For wiki ingestion, prefer image_add with the file's bytes."
+        ),
+        inputSchema={
+            "type": "object",
+            "properties": {"id": {"type": "string",
+                                  "description": "<album>/<stem> from photo_list, or just <stem> if unambiguous"}},
+            "required": ["id"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
+        name="photo_archive",
+        description=(
+            "Mark a photo consumed: move its files (and .meta sidecars) out of "
+            "the inbox into ~/.defiant/photos/archive/YYYY-MM-DD/<album>/. "
+            "ente CLI treats local-deleted files as already-handled and will NOT "
+            "re-download them on the next sync, so archive is the canonical "
+            "'done with this one' signal. ALWAYS archive after you've used a photo "
+            "— for a Q&A answer, for wiki ingestion, or for explicit discard — "
+            "so it doesn't keep reappearing in photo_list. A daily prune timer "
+            "deletes archive entries older than 30 days."
+        ),
+        inputSchema={
+            "type": "object",
+            "properties": {"id": {"type": "string",
+                                  "description": "<album>/<stem> from photo_list, or just <stem> if unambiguous"}},
+            "required": ["id"],
+            "additionalProperties": False,
+        },
+    ),
 ]
 
 
@@ -788,6 +837,13 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
         f.close()
         tmp.append(Path(f.name))
         return ["image", "add", args["name"], "--file", f.name], tmp
+
+    if name == "photo_list":
+        return ["photo", "list"], tmp
+    if name == "photo_path":
+        return ["photo", "path", args["id"]], tmp
+    if name == "photo_archive":
+        return ["photo", "archive", args["id"]], tmp
 
     raise ValueError(f"unknown tool: {name}")
 
