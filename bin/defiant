@@ -13,6 +13,7 @@ Subcommands:
   weather  marine weather + tides (auto when underway)
   calendar day-level events the agent should respect when scheduling
   cart     virtual Amazon cart (ASINs on disk; emit add-to-cart URL on demand)
+  photo    Ente photo inbox (album sync'd by ente CLI; list/path/archive)
 
 Cache, ack, calendar, and wiki files live under DEFIANT_HOME (default: ~/.defiant).
 HA endpoint: HA_URL env (default http://homeassistant.local:8123),
@@ -41,6 +42,11 @@ DEFIANT_HOME = Path(os.environ.get("DEFIANT_HOME", Path.home() / ".defiant"))
 STATE_CACHE = DEFIANT_HOME / "state-cache.toml"
 INBOX_STATE_FILE = DEFIANT_HOME / "inbox-state.json"
 CALENDAR_FILE = DEFIANT_HOME / "calendar.json"
+PHOTO_INBOX = DEFIANT_HOME / "photos" / "inbox"
+PHOTO_ARCHIVE = DEFIANT_HOME / "photos" / "archive"
+PHOTO_IMAGE_EXTS = (".heic", ".heif", ".jpg", ".jpeg", ".png", ".webp", ".gif")
+PHOTO_VIDEO_EXTS = (".mov", ".mp4", ".m4v")
+PHOTO_EXTS = PHOTO_IMAGE_EXTS + PHOTO_VIDEO_EXTS
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INBOX_SCRIPT = REPO_ROOT / "scripts" / "inbox.py"
@@ -2281,6 +2287,121 @@ def cmd_image_add(args):
     }))
 
 
+# --- photo (ente inbox) ----------------------------------------------------
+
+# ente CLI exports to <ExportDir>/<album>/<file>, with per-file sidecars at
+# <ExportDir>/<album>/.meta/<file>.json. We scan one level deep into albums.
+# Live Photos arrive as a HEIC + paired .mov with the same stem — treated as
+# one item keyed by (album, stem). Local delete is durable: ente CLI won't
+# re-pull a file that's missing locally, so `photo archive` consumes the
+# inbox without fighting the sync.
+
+def _photo_primary_sort_key(p: "Path") -> tuple:
+    # Prefer the still over the Live Photo motion component.
+    rank = {
+        ".heic": 0, ".heif": 0,
+        ".jpg": 1, ".jpeg": 1,
+        ".png": 2, ".webp": 3, ".gif": 4,
+        ".mov": 8, ".mp4": 8, ".m4v": 8,
+    }.get(p.suffix.lower(), 9)
+    return (rank, p.name)
+
+
+def _photo_scan() -> list[dict]:
+    items: dict[tuple[str, str], dict] = {}
+    if not PHOTO_INBOX.exists():
+        return []
+    for album_dir in sorted(PHOTO_INBOX.iterdir()):
+        if not album_dir.is_dir() or album_dir.name.startswith("."):
+            continue
+        for p in album_dir.iterdir():
+            if p.is_dir() or p.name.startswith("."):
+                continue
+            if p.suffix.lower() not in PHOTO_EXTS:
+                continue
+            key = (album_dir.name, p.stem)
+            entry = items.setdefault(key, {
+                "album": album_dir.name,
+                "stem": p.stem,
+                "files": [],
+            })
+            entry["files"].append(p)
+    for entry in items.values():
+        entry["files"].sort(key=_photo_primary_sort_key)
+    return sorted(items.values(), key=lambda e: (e["album"], e["stem"]))
+
+
+def _photo_resolve(id_str: str) -> dict:
+    items = _photo_scan()
+    if "/" in id_str:
+        album, stem = id_str.split("/", 1)
+        match = [it for it in items if it["album"] == album and it["stem"] == stem]
+    else:
+        match = [it for it in items if it["stem"] == id_str]
+    if not match:
+        die(f"no photo in inbox: {id_str}")
+    if len(match) > 1:
+        die(f"ambiguous id {id_str!r}; matches: "
+            + ", ".join(f"{m['album']}/{m['stem']}" for m in match))
+    return match[0]
+
+
+def cmd_photo_list(args):
+    now = datetime.now(timezone.utc).timestamp()
+    out = []
+    for it in _photo_scan():
+        primary = it["files"][0]
+        st = primary.stat()
+        total = sum(p.stat().st_size for p in it["files"])
+        out.append({
+            "id": f"{it['album']}/{it['stem']}",
+            "album": it["album"],
+            "stem": it["stem"],
+            "path": str(primary),
+            "extensions": sorted({p.suffix.lower() for p in it["files"]}),
+            "files": [str(p) for p in it["files"]],
+            "size_bytes": total,
+            "mtime_iso": datetime.fromtimestamp(
+                st.st_mtime, timezone.utc).isoformat(timespec="seconds"),
+            "age_seconds": int(now - st.st_mtime),
+        })
+    json.dump(out, sys.stdout, indent=2)
+    sys.stdout.write("\n")
+
+
+def cmd_photo_path(args):
+    it = _photo_resolve(args.id)
+    print(it["files"][0])
+
+
+def cmd_photo_archive(args):
+    it = _photo_resolve(args.id)
+    today = date.today().isoformat()
+    dst_dir = PHOTO_ARCHIVE / today / it["album"]
+    dst_dir.mkdir(parents=True, exist_ok=True)
+    meta_src = PHOTO_INBOX / it["album"] / ".meta"
+    meta_dst = dst_dir / ".meta"
+    moved: list[dict[str, str]] = []
+    for p in it["files"]:
+        dst = dst_dir / p.name
+        p.rename(dst)
+        moved.append({"from": str(p), "to": str(dst)})
+    if meta_src.is_dir():
+        for p in it["files"]:
+            sidecar = meta_src / f"{p.name}.json"
+            if sidecar.exists():
+                meta_dst.mkdir(parents=True, exist_ok=True)
+                dst = meta_dst / sidecar.name
+                sidecar.rename(dst)
+                moved.append({"from": str(sidecar), "to": str(dst)})
+    print(json.dumps({
+        "ok": True,
+        "id": f"{it['album']}/{it['stem']}",
+        "archive_dir": str(dst_dir),
+        "moved": moved,
+    }, indent=2))
+
+
 # --- main ------------------------------------------------------------------
 
 def build_parser() -> argparse.ArgumentParser:
@@ -2592,6 +2713,30 @@ def build_parser() -> argparse.ArgumentParser:
     iv_add.add_argument("--no-push", action="store_true",
                         help="optimize + write only; skip git add/commit/push (for testing)")
     iv_add.set_defaults(func=cmd_image_add)
+
+    # --- photo ---
+    photo = nouns.add_parser(
+        "photo",
+        help="Ente photo inbox — list/path/archive sync'd photos",
+    )
+    pv_ph = photo.add_subparsers(dest="verb")
+
+    pv_list = pv_ph.add_parser("list", help="list photos in the inbox (JSON)")
+    pv_list.set_defaults(func=cmd_photo_list)
+
+    pv_path = pv_ph.add_parser(
+        "path",
+        help="print absolute path to a photo's primary file (still preferred over motion)",
+    )
+    pv_path.add_argument("id", help="<album>/<stem> from `photo list`, or just <stem> if unambiguous")
+    pv_path.set_defaults(func=cmd_photo_path)
+
+    pv_arch = pv_ph.add_parser(
+        "archive",
+        help="move all files (and .meta sidecars) for a photo to archive/YYYY-MM-DD/<album>/",
+    )
+    pv_arch.add_argument("id", help="<album>/<stem> from `photo list`, or just <stem> if unambiguous")
+    pv_arch.set_defaults(func=cmd_photo_archive)
 
     return p
 
