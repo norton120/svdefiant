@@ -544,13 +544,31 @@ TOOLS: list[Tool] = [
         },
     ),
     Tool(
+        name="wiki_replace",
+        description="PREFERRED for editing an existing wiki page: targeted find/replace, so untouched sections cannot be lost. Replaces `old_string` with `new_string` and pushes. `old_string` must match the page's current text EXACTLY (whitespace included) and be unique unless `replace_all` is set — call wiki_show first to copy the exact text. Refuses if the wiki clone is dirty; pulls --ff-only; commits as 'agent: edit <page>'.",
+        inputSchema={
+            "type": "object",
+            "properties": {
+                "page": {"type": "string"},
+                "old_string": {"type": "string", "description": "exact existing text to find"},
+                "new_string": {"type": "string", "description": "replacement text"},
+                "replace_all": {"type": "boolean", "default": False,
+                                "description": "replace every occurrence (default: require a unique match)"},
+            },
+            "required": ["page", "old_string", "new_string"],
+            "additionalProperties": False,
+        },
+    ),
+    Tool(
         name="wiki_edit",
-        description="Replace a wiki page's contents and push. Refuses if the local wiki clone has uncommitted changes; pulls --ff-only first; commits as 'agent: <create|edit> <page>'. Pass body as a string; the wrapper writes the temp file.",
+        description="Replace a wiki page's ENTIRE contents and push. Use only to CREATE a new page or fully rewrite one — to change part of an existing page use wiki_replace instead, which can't drop untouched sections. Refuses an edit that deletes a large fraction of an existing page unless `allow_shrink` is true. Refuses if the clone is dirty; pulls --ff-only; commits as 'agent: <create|edit> <page>'. Pass body as a string; the wrapper writes the temp file.",
         inputSchema={
             "type": "object",
             "properties": {
                 "page": {"type": "string"},
                 "body": {"type": "string", "description": "new page body (markdown)"},
+                "allow_shrink": {"type": "boolean", "default": False,
+                                 "description": "permit a body that deletes a large fraction of the existing page (default: refuse — guards against regenerating from an incomplete copy)"},
             },
             "required": ["page", "body"],
             "additionalProperties": False,
@@ -841,8 +859,18 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
     if name == "wiki_show":
         return ["wiki", "show", args["page"]], tmp
     if name == "wiki_edit":
-        return ["wiki", "edit", args["page"],
-                "--body-file", bodyfile(args["body"])], tmp
+        argv = ["wiki", "edit", args["page"],
+                "--body-file", bodyfile(args["body"])]
+        if args.get("allow_shrink"):
+            argv.append("--allow-shrink")
+        return argv, tmp
+    if name == "wiki_replace":
+        argv = ["wiki", "replace", args["page"],
+                "--old-file", bodyfile(args["old_string"]),
+                "--new-file", bodyfile(args["new_string"])]
+        if args.get("replace_all"):
+            argv.append("--replace-all")
+        return argv, tmp
 
     if name == "weather":
         return ["weather", "--days", "7"], tmp

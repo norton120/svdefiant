@@ -2133,11 +2133,18 @@ def _wiki_push(d: Path, token: str) -> None:
         die(f"git push failed:\n{err}")
 
 
-def cmd_wiki_edit(args):
-    d = ensure_wiki()
+# A full-body wiki write that drops this fraction of an existing page (by net
+# line count) is almost always the agent regenerating from an incomplete copy
+# and silently nuking unrelated sections — not an intentional trim. Below
+# SHRINK_MIN_LINES the page is too small for the heuristic to mean anything.
+SHRINK_THRESHOLD = 0.35
+SHRINK_MIN_LINES = 20
 
-    # Fail fast if we won't be able to push, so we don't leave a local commit
-    # ahead of remote.
+
+def _wiki_open(d: Path) -> str:
+    """Shared prelude for mutating wiki verbs: verify we can push (fail before
+    making a local commit that would be stranded ahead of remote), require a
+    clean tree, fast-forward to remote. Returns the push token."""
     token = os.environ.get("GH_TOKEN") or os.environ.get("GITHUB_TOKEN")
     if not token:
         die("GH_TOKEN (or GITHUB_TOKEN) env var required to push wiki edits — "
@@ -2148,6 +2155,49 @@ def cmd_wiki_edit(args):
         die(f"wiki has uncommitted changes:\n{porcelain}resolve before editing")
 
     git_in(d, "pull", "--ff-only", "--quiet")
+    return token
+
+
+def _wiki_commit_push(d: Path, p: Path, token: str, verb: str) -> None:
+    """Shared tail: stage the one page, no-op if nothing changed, else commit
+    `agent: <verb> <stem>` and push."""
+    rel = str(p.relative_to(d))
+    git_in(d, "add", rel)
+    if not git_in(d, "diff", "--cached", "--name-only").stdout.strip():
+        print(f"no changes to {rel}")
+        return
+    git_in(d, "commit", "-m", f"agent: {verb} {p.stem}")
+    _wiki_push(d, token)
+    print(f"{verb}d {rel}")
+
+
+def _shrink_guard(page: str, old: str, new: str, allow_shrink: bool) -> None:
+    """Refuse a full-body replace that deletes a large fraction of an existing
+    page. Catches the dominant failure mode (cheap model rewrites a page it
+    only partially remembers); `--allow-shrink` is the explicit escape hatch
+    for a deliberate trim."""
+    if allow_shrink:
+        return
+    old_n = len(old.splitlines())
+    if old_n < SHRINK_MIN_LINES:
+        return
+    drop = old_n - len(new.splitlines())
+    if drop / old_n < SHRINK_THRESHOLD:
+        return
+    die(f"refusing destructive edit to {page}: new body is {drop} lines "
+        f"shorter than the current {old_n} ({drop / old_n:.0%} smaller, "
+        f"threshold {SHRINK_THRESHOLD:.0%}).\n"
+        f"this usually means the body was regenerated from an incomplete "
+        f"copy and unrelated sections were dropped. either run "
+        f"`defiant wiki show {page}`, merge your change into the full text, "
+        f"and retry — or use `defiant wiki replace` for a targeted edit "
+        f"that can't lose untouched sections. pass --allow-shrink only if "
+        f"the deletion is intended.")
+
+
+def cmd_wiki_edit(args):
+    d = ensure_wiki()
+    token = _wiki_open(d)
 
     body_src = Path(args.body_file)
     if not body_src.exists():
@@ -2158,20 +2208,48 @@ def cmd_wiki_edit(args):
 
     p = page_path(d, args.page)
     new = not p.exists()
+    if not new:
+        _shrink_guard(args.page, p.read_text(), body, args.allow_shrink)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(body)
 
-    rel = str(p.relative_to(d))
-    git_in(d, "add", rel)
-    diff = git_in(d, "diff", "--cached", "--name-only").stdout.strip()
-    if not diff:
-        print(f"no changes to {rel}")
-        return
+    _wiki_commit_push(d, p, token, "create" if new else "edit")
 
-    verb = "create" if new else "edit"
-    git_in(d, "commit", "-m", f"agent: {verb} {p.stem}")
-    _wiki_push(d, token)
-    print(f"{verb}d {rel}")
+
+def cmd_wiki_replace(args):
+    d = ensure_wiki()
+    token = _wiki_open(d)
+
+    p = page_path(d, args.page)
+    if not p.exists():
+        die(f"page not found: {p.relative_to(d)} — use `wiki edit` to create it")
+
+    old_src, new_src = Path(args.old_file), Path(args.new_file)
+    if not old_src.exists():
+        die(f"--old-file not found: {old_src}")
+    if not new_src.exists():
+        die(f"--new-file not found: {new_src}")
+    old_s, new_s = old_src.read_text(), new_src.read_text()
+    if old_s == new_s:
+        die("old_string and new_string are identical — nothing to replace")
+
+    text = p.read_text()
+    n = text.count(old_s)
+    if n == 0:
+        die("old_string not found in page — it must match the current text "
+            "exactly (whitespace included). Run `defiant wiki show "
+            f"{args.page}` to see the live content.")
+    if n > 1 and not args.replace_all:
+        die(f"old_string matches {n} places in {args.page} — add surrounding "
+            f"context to make it unique, or pass --replace-all to change all.")
+
+    updated = text.replace(old_s, new_s) if args.replace_all \
+        else text.replace(old_s, new_s, 1)
+    if not updated.endswith("\n"):
+        updated += "\n"
+    p.write_text(updated)
+
+    _wiki_commit_push(d, p, token, "edit")
 
 
 # --- image -----------------------------------------------------------------
@@ -2777,11 +2855,28 @@ def build_parser() -> argparse.ArgumentParser:
     wv_show.add_argument("page", help="page name (with or without .md)")
     wv_show.set_defaults(func=cmd_wiki_show)
 
-    wv_edit = wv.add_parser("edit", help="replace page contents, commit, push")
+    wv_edit = wv.add_parser("edit",
+                            help="replace whole page contents, commit, push")
     wv_edit.add_argument("page")
     wv_edit.add_argument("--body-file", required=True,
                          help="path to a file containing the new page body")
+    wv_edit.add_argument("--allow-shrink", action="store_true",
+                         help="permit a body that deletes a large fraction of "
+                              "the existing page (default: refuse)")
     wv_edit.set_defaults(func=cmd_wiki_edit)
+
+    wv_repl = wv.add_parser("replace",
+                            help="targeted find/replace within a page, commit, "
+                                 "push (preferred for editing existing pages)")
+    wv_repl.add_argument("page")
+    wv_repl.add_argument("--old-file", required=True,
+                         help="file with the exact text to find")
+    wv_repl.add_argument("--new-file", required=True,
+                         help="file with the replacement text")
+    wv_repl.add_argument("--replace-all", action="store_true",
+                         help="replace every occurrence (default: require a "
+                              "unique match)")
+    wv_repl.set_defaults(func=cmd_wiki_replace)
 
     # --- image ---
     image = nouns.add_parser("image", help="optimize + commit images to static/images/")
