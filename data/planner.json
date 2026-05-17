@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T23:28:30-04:00",
+  "generated_at": "2026-05-16T23:35:45-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -119,56 +119,9 @@
               "day": "2026-05-16"
             }
           ]
-        },
-        {
-          "system": "engine",
-          "issues": [
-            {
-              "number": 6,
-              "title": "Proper engine oil change (drain completely first)",
-              "url": "https://github.com/norton120/svdefiant/issues/6",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-16"
-            },
-            {
-              "number": 12,
-              "title": "Clean out Groco filter",
-              "url": "https://github.com/norton120/svdefiant/issues/12",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-16"
-            }
-          ]
         }
       ],
-      "task_count": 4
+      "task_count": 2
     },
     {
       "date": "2026-05-17",
@@ -200,6 +153,70 @@
         {
           "system": "engine",
           "issues": [
+            {
+              "number": 6,
+              "title": "Proper engine oil change (drain completely first)",
+              "url": "https://github.com/norton120/svdefiant/issues/6",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "engine"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-17"
+            },
+            {
+              "number": 12,
+              "title": "Clean out Groco filter",
+              "url": "https://github.com/norton120/svdefiant/issues/12",
+              "milestone": "Day Sails",
+              "priority": "p2",
+              "systems": [
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-17"
+            },
+            {
+              "number": 72,
+              "title": "Replace fuel filter",
+              "url": "https://github.com/norton120/svdefiant/issues/72",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "dry",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-17"
+            },
             {
               "number": 78,
               "title": "Flush coolant system with distilled water and add fresh coolant",
@@ -307,7 +324,7 @@
           ]
         }
       ],
-      "task_count": 4
+      "task_count": 7
     },
     {
       "date": "2026-05-18",
