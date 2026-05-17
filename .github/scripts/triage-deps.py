@@ -96,9 +96,11 @@ def fetch_inbox() -> list[dict]:
 
 
 def fetch_issues() -> list[dict]:
-    return json.loads(run([
+    data = json.loads(run([
         DEFIANT, "task", "list", "--limit", "300", "--with-body",
     ]))
+    # CLI wraps results: {"today", "count", "issues": [...]}
+    return data["issues"] if isinstance(data, dict) else data
 
 
 def decide(emails: list[dict], issues: list[dict]) -> dict:
