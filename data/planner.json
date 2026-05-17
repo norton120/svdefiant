@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T21:46:34-04:00",
+  "generated_at": "2026-05-16T23:28:30-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -173,14 +173,19 @@
     {
       "date": "2026-05-17",
       "label": "Tomorrow",
-      "events": [],
+      "events": [
+        {
+          "label": "Epoxy day: cockpit table + companionway rail (first thing AM \u2014 needs cure time before drilling)",
+          "blocks": false
+        }
+      ],
       "weather": {
-        "wind_kt_max": 13.1,
-        "gust_kt_max": 21.8,
+        "wind_kt_max": 12.9,
+        "gust_kt_max": 21.2,
         "wave_ft_max": 1.8,
         "temp_f": [
-          66,
-          83
+          67,
+          86
         ],
         "precip": false,
         "hazards": [],
@@ -188,8 +193,8 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "66\u201383\u00b0",
-        "wind_label": "13g22kt \u00b7 1.8ft"
+        "temp_label": "67\u201386\u00b0",
+        "wind_label": "13g21kt \u00b7 1.8ft"
       },
       "lanes": [
         {
@@ -245,30 +250,86 @@
               "day": "2026-05-17"
             }
           ]
+        },
+        {
+          "system": "hull",
+          "issues": [
+            {
+              "number": 71,
+              "title": "Repair cracked companionway door frame with copper edge wrap",
+              "url": "https://github.com/norton120/svdefiant/issues/71",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "hull",
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-17"
+            }
+          ]
+        },
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 3,
+              "title": "Repair & re-install cockpit table",
+              "url": "https://github.com/norton120/svdefiant/issues/3",
+              "milestone": "Solomans",
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-17"
+            }
+          ]
         }
       ],
-      "task_count": 2
+      "task_count": 4
     },
     {
       "date": "2026-05-18",
       "label": "Mon May 18",
       "events": [],
       "weather": {
-        "wind_kt_max": 14.2,
-        "gust_kt_max": 23.5,
+        "wind_kt_max": 18.6,
+        "gust_kt_max": 27.8,
         "wave_ft_max": 1.6,
         "temp_f": [
-          70,
-          89
+          71,
+          92
         ],
         "precip": false,
         "hazards": [],
         "alerts": [],
         "icons": [
-          "\u2600\ufe0f"
+          "\u2600\ufe0f",
+          "\ud83d\udca8"
         ],
-        "temp_label": "70\u201389\u00b0",
-        "wind_label": "14g24kt \u00b7 1.6ft"
+        "temp_label": "71\u201392\u00b0",
+        "wind_label": "19g28kt \u00b7 1.6ft"
       },
       "lanes": [],
       "task_count": 0
