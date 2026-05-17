@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-16T23:35:45-04:00",
+  "generated_at": "2026-05-17T02:15:25-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -52,7 +52,7 @@
     },
     {
       "date": "2026-05-16",
-      "label": "Today",
+      "label": "Sat May 16",
       "events": [],
       "weather": {
         "wind_kt_max": 14.7,
@@ -125,13 +125,8 @@
     },
     {
       "date": "2026-05-17",
-      "label": "Tomorrow",
-      "events": [
-        {
-          "label": "Epoxy day: cockpit table + companionway rail (first thing AM \u2014 needs cure time before drilling)",
-          "blocks": false
-        }
-      ],
+      "label": "Today",
+      "events": [],
       "weather": {
         "wind_kt_max": 12.9,
         "gust_kt_max": 21.2,
@@ -328,7 +323,7 @@
     },
     {
       "date": "2026-05-18",
-      "label": "Mon May 18",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 18.6,
@@ -468,6 +463,14 @@
         "temp_label": "59\u201373\u00b0",
         "wind_label": "12g25kt \u00b7 1.6ft"
       },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-24",
+      "label": "Sun May 24",
+      "events": [],
+      "weather": null,
       "lanes": [],
       "task_count": 0
     }
