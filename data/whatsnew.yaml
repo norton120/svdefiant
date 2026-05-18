@@ -63,3 +63,8 @@ entries:
     url: "/blog/little-things/"
     summary: "New blog post about tidying up the forward berth fan installation with before/after photos."
     source: "blog"
+  - date: "2026-05-18"
+    title: "Damn You Balmar"
+    url: "/blog/damn-you-balmar/"
+    summary: "A cautionary tale of product enshittification—when a trusted alternator brand loses quality and support."
+    source: "blog"
