@@ -126,7 +126,7 @@ For the next few months, I am going to press the current production system hard 
 
 I have a feeling a small, multi-source 4Kw generator running off propane will be the solution. I carry LP already for cooking, and it is available pretty much everywhere. If I can find one generating DC without an inverter, that's an even smaller footprint - and might be something I can install permanently. 
 
-{{< figure src="generator" caption="maybe pull the parts from one of these guys?" >}}
+{{< figure src="generator.jpg" caption="maybe pull the parts from one of these guys?" >}}
 
 ## My Takeaway
 
