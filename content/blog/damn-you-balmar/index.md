@@ -130,6 +130,6 @@ I have a feeling a small, multi-source 4Kw generator running off propane will be
 
 ## My Takeaway
 
-It is easy to Monday morning quarterback this one. Had I known that the swap back to stock was going to be so painless (even with the mangled pivot mount on the block), I never would have considered all the Balmar acrobatics. This could also have gone the opposite direction - Balmar also could have been the company they once were, and with quality products and quality support I might have decided to keep my engine as my backup generator. In the end I am much happier with a more simple power plant, easier to source replacement parts, and confidence in the equipment onboard. 
+It is easy to Monday morning quarterback this one. Had I known that the swap back to stock was going to be so painless (even with the mangled pivot mount on the block), I never would have considered all the Balmar acrobatics. This could also have gone the opposite direction - Balmar could have been the company they once were, and with quality products and quality support I might have decided to keep my engine as my backup generator. In the end I am much happier with a more simple power plant, easier to source replacement parts, and confidence in the equipment onboard. 
 
 {{< figure src="simple-stock.png" caption="all things are right with the motor again" >}}
