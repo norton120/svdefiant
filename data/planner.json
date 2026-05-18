@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-17T02:15:25-04:00",
+  "generated_at": "2026-05-17T20:43:59-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,62 +15,10 @@
   ],
   "days": [
     {
-      "date": "2026-05-15",
-      "label": "Fri May 15",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 62,
-              "title": "Re-run power in quarterberth so doors close",
-              "url": "https://github.com/norton120/svdefiant/issues/62",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "electrical",
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-15"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
-    {
       "date": "2026-05-16",
       "label": "Sat May 16",
       "events": [],
-      "weather": {
-        "wind_kt_max": 14.7,
-        "gust_kt_max": 18.9,
-        "wave_ft_max": 1.9,
-        "temp_f": [
-          59,
-          80
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "59\u201380\u00b0",
-        "wind_label": "15g19kt \u00b7 1.9ft"
-      },
+      "weather": null,
       "lanes": [
         {
           "system": "electrical",
@@ -126,14 +74,19 @@
     {
       "date": "2026-05-17",
       "label": "Today",
-      "events": [],
+      "events": [
+        {
+          "label": "Epoxy day: cockpit table + companionway rail (first thing AM \u2014 needs cure time before drilling)",
+          "blocks": false
+        }
+      ],
       "weather": {
-        "wind_kt_max": 12.9,
-        "gust_kt_max": 21.2,
-        "wave_ft_max": 1.8,
+        "wind_kt_max": 11.2,
+        "gust_kt_max": 18.1,
+        "wave_ft_max": 1.6,
         "temp_f": [
-          67,
-          86
+          65,
+          82
         ],
         "precip": false,
         "hazards": [],
@@ -141,8 +94,8 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "67\u201386\u00b0",
-        "wind_label": "13g21kt \u00b7 1.8ft"
+        "temp_label": "65\u201382\u00b0",
+        "wind_label": "11g18kt \u00b7 1.6ft"
       },
       "lanes": [
         {
@@ -256,9 +209,9 @@
                 "on-deck"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-17"
             }
           ]
@@ -311,9 +264,9 @@
                 "indoors"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-17"
             }
           ]
@@ -326,22 +279,21 @@
       "label": "Tomorrow",
       "events": [],
       "weather": {
-        "wind_kt_max": 18.6,
-        "gust_kt_max": 27.8,
-        "wave_ft_max": 1.6,
+        "wind_kt_max": 16.9,
+        "gust_kt_max": 29.0,
+        "wave_ft_max": 2.0,
         "temp_f": [
-          71,
-          92
+          68,
+          88
         ],
         "precip": false,
         "hazards": [],
         "alerts": [],
         "icons": [
-          "\u2600\ufe0f",
-          "\ud83d\udca8"
+          "\u2600\ufe0f"
         ],
-        "temp_label": "71\u201392\u00b0",
-        "wind_label": "19g28kt \u00b7 1.6ft"
+        "temp_label": "68\u201388\u00b0",
+        "wind_label": "17g29kt \u00b7 2.0ft"
       },
       "lanes": [],
       "task_count": 0
@@ -351,21 +303,21 @@
       "label": "Tue May 19",
       "events": [],
       "weather": {
-        "wind_kt_max": 14.4,
-        "gust_kt_max": 23.7,
+        "wind_kt_max": 13.0,
+        "gust_kt_max": 25.9,
         "wave_ft_max": 1.7,
         "temp_f": [
-          66,
-          84
+          71,
+          90
         ],
-        "precip": true,
+        "precip": false,
         "hazards": [],
         "alerts": [],
         "icons": [
-          "\ud83c\udf27\ufe0f"
+          "\u2600\ufe0f"
         ],
-        "temp_label": "66\u201384\u00b0",
-        "wind_label": "14g24kt \u00b7 1.7ft"
+        "temp_label": "71\u201390\u00b0",
+        "wind_label": "13g26kt \u00b7 1.7ft"
       },
       "lanes": [],
       "task_count": 0
@@ -375,21 +327,21 @@
       "label": "Wed May 20",
       "events": [],
       "weather": {
-        "wind_kt_max": 12.5,
-        "gust_kt_max": 24.5,
-        "wave_ft_max": 1.6,
+        "wind_kt_max": 12.7,
+        "gust_kt_max": 29.5,
+        "wave_ft_max": 1.7,
         "temp_f": [
-          68,
-          86
+          69,
+          87
         ],
-        "precip": true,
+        "precip": false,
         "hazards": [],
         "alerts": [],
         "icons": [
-          "\ud83c\udf27\ufe0f"
+          "\u2600\ufe0f"
         ],
-        "temp_label": "68\u201386\u00b0",
-        "wind_label": "12g24kt \u00b7 1.6ft"
+        "temp_label": "69\u201387\u00b0",
+        "wind_label": "13g30kt \u00b7 1.7ft"
       },
       "lanes": [],
       "task_count": 0
@@ -399,12 +351,12 @@
       "label": "Thu May 21",
       "events": [],
       "weather": {
-        "wind_kt_max": 13.6,
-        "gust_kt_max": 21.8,
-        "wave_ft_max": 1.8,
+        "wind_kt_max": 13.5,
+        "gust_kt_max": 17.5,
+        "wave_ft_max": 2.0,
         "temp_f": [
           58,
-          67
+          69
         ],
         "precip": true,
         "hazards": [],
@@ -412,8 +364,8 @@
         "icons": [
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "58\u201367\u00b0",
-        "wind_label": "14g22kt \u00b7 1.8ft"
+        "temp_label": "58\u201369\u00b0",
+        "wind_label": "14g18kt \u00b7 2.0ft"
       },
       "lanes": [],
       "task_count": 0
@@ -423,9 +375,9 @@
       "label": "Fri May 22",
       "events": [],
       "weather": {
-        "wind_kt_max": 14.8,
-        "gust_kt_max": 18.9,
-        "wave_ft_max": 2.0,
+        "wind_kt_max": 13.2,
+        "gust_kt_max": 17.5,
+        "wave_ft_max": 1.9,
         "temp_f": [
           57,
           59
@@ -437,7 +389,7 @@
           "\ud83c\udf27\ufe0f"
         ],
         "temp_label": "57\u201359\u00b0",
-        "wind_label": "15g19kt \u00b7 2.0ft"
+        "wind_label": "13g18kt \u00b7 1.9ft"
       },
       "lanes": [],
       "task_count": 0
@@ -447,8 +399,8 @@
       "label": "Sat May 23",
       "events": [],
       "weather": {
-        "wind_kt_max": 11.8,
-        "gust_kt_max": 25.3,
+        "wind_kt_max": 11.9,
+        "gust_kt_max": 28.4,
         "wave_ft_max": 1.6,
         "temp_f": [
           59,
@@ -461,7 +413,7 @@
           "\u2600\ufe0f"
         ],
         "temp_label": "59\u201373\u00b0",
-        "wind_label": "12g25kt \u00b7 1.6ft"
+        "wind_label": "12g28kt \u00b7 1.6ft"
       },
       "lanes": [],
       "task_count": 0
@@ -470,7 +422,23 @@
       "date": "2026-05-24",
       "label": "Sun May 24",
       "events": [],
-      "weather": null,
+      "weather": {
+        "wind_kt_max": 11.9,
+        "gust_kt_max": 24.1,
+        "wave_ft_max": 1.3,
+        "temp_f": [
+          61,
+          68
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "61\u201368\u00b0",
+        "wind_label": "12g24kt \u00b7 1.3ft"
+      },
       "lanes": [],
       "task_count": 0
     }
