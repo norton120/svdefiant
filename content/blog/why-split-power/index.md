@@ -42,7 +42,7 @@ My motor expects a lead acid battery. So does Mike at NAPA if I need parts. So d
 
 ### Reroute The EPS Coupling
 
-Keeping the systems distinct also gives me that ever-present __Star Trek_ plot device as an emergency fallback - divert power from a secondary system to save the day. The 100ah LiFePO4 battery that powers the sanitation system could, in a pinch, be used to start the engine. So could any of the other nine LiFePO4s in the house bank. If stranded with a dead starter and no other options, I could rip apart my toilet and use it to jump the motor - but this only works because they are distinct power grids. 
+Keeping the systems distinct also gives me that ever-present _Star Trek_ plot device as an emergency fallback - divert power from a secondary system to save the day. The 100ah LiFePO4 battery that powers the sanitation system could, in a pinch, be used to start the engine. So could any of the other nine LiFePO4s in the house bank. If stranded with a dead starter and no other options, I could rip apart my toilet and use it to jump the motor - but this only works because they are distinct power grids. 
 
 
 

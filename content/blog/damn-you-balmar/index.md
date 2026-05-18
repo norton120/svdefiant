@@ -15,7 +15,7 @@ _Defiant_ was already equipped with an oversized Balmar alternator when I took d
 
 But the setup was working. I filed it under "don't touch, get underway" and focused on bigger things. 
 
-About two weeks ago I had pulled open the engine compartment to do a coolant flush. The engine was not running, and I had only twisted open a coolant drain - nothing more. But I smelled smoke. I looked up to see the temperature sensor wire on the Balmar regulator was curling away from the unit... and on fire. I yanked it free and smothered it with a rag (in hindsight not super bright), then pulled all the battery terminals. This would be weird normally, but weirder in that __I wasn't running the engine and had not touched the electrical system_. My best guess is that there was a short in the wiring harness, and when I was routing the drain hose I jiggled it enough to turn a short into a fire. 
+About two weeks ago I had pulled open the engine compartment to do a coolant flush. The engine was not running, and I had only twisted open a coolant drain - nothing more. But I smelled smoke. I looked up to see the temperature sensor wire on the Balmar regulator was curling away from the unit... and on fire. I yanked it free and smothered it with a rag (in hindsight not super bright), then pulled all the battery terminals. This would be weird normally, but weirder in that _I wasn't running the engine and had not touched the electrical system_. My best guess is that there was a short in the wiring harness, and when I was routing the drain hose I jiggled it enough to turn a short into a fire. 
 
 >  OK, I guess the alternator needs to be dealt with now after all. 
 
