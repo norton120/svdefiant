@@ -794,12 +794,297 @@ SYSTEMMONITOR_ENTITIES_TO_ENABLE = [
 ]
 
 
+# Activities mirrored from create_power_analytics.py ACTIVITIES (slug, label).
+# Kept in sync by hand — both files are short and rarely change.
+_POWER_ACTIVITIES = [
+    ("kettle", "Electric Kettle"),
+    ("hot_shower", "Instant Hot Shower"),
+    ("microwave", "Microwave"),
+    ("induction", "Induction Cooktop"),
+    ("watermaker", "Watermaker"),
+    ("air_conditioning", "Air Conditioning"),
+]
+
+
+def cfg_power():
+    """Energy independence view. The numbers come from
+    create_power_analytics.py; this is purely their presentation.
+
+    Top-down: the one question that matters ("would I have made it off
+    shore today?"), then live flow, then the shunt-vs-BMS truth check,
+    then daily energy, forecast/runway, tagged activities, Pi estimate."""
+
+    # Per-activity learned-signature table (reads the accumulator helpers).
+    sig_rows = "".join(
+        f"| {label} "
+        f"| {{{{ states('input_number.activity_{slug}_samples') | int(0) }}}} "
+        f"| {{{{ states('input_number.activity_{slug}_avg_w') | float(0) | round(0) }}}} W "
+        f"| {{{{ states('input_number.activity_{slug}_avg_wh') | float(0) | round(0) }}}} Wh "
+        f"| {{% set t = states('input_datetime.activity_{slug}_last_seen') %}}"
+        f"{{% if t in ['unknown','unavailable',''] %}}—"
+        f"{{% else %}}{{{{ relative_time(strptime(t, '%Y-%m-%d %H:%M:%S')) }}}} ago"
+        f"{{% endif %}} |\n"
+        for slug, label in _POWER_ACTIVITIES
+    )
+
+    return {
+        "views": [
+            {
+                "title": "Power",
+                "icon": "mdi:lightning-bolt",
+                "type": "sections",
+                "max_columns": 3,
+                "sections": [
+                    # ---- The headline question --------------------------- #
+                    grid_section([
+                        heading("Off-grid today", "title",
+                                "mdi:transmission-tower-off"),
+                        md(
+                            "## {{ states('sensor.offgrid_verdict_today') }}\n"
+                            "Production (solar+wind) "
+                            "**{{ states('sensor.renewable_production_today') "
+                            "| float(0) | round(2) }} kWh**"
+                            " &nbsp;vs&nbsp; load "
+                            "**{{ states('sensor.house_load_today') "
+                            "| float(0) | round(2) }} kWh** "
+                            "_(DC + AC, shore power excluded)_\n\n"
+                            "{% set b = "
+                            "states('sensor.offgrid_balance_today') "
+                            "| float(0) %}"
+                            "{% if b >= 0 %}🟢 Battery would have **gained** "
+                            "{{ b | round(2) }} kWh on its own."
+                            "{% else %}🟥 Battery would have **drained** "
+                            "{{ (-b) | round(2) }} kWh — shore power "
+                            "covered the gap.{% endif %}\n\n"
+                            "{% if is_state('binary_sensor.solar_curtailed',"
+                            "'on') %}🔋 **Generation was battery-limited "
+                            "today** — bank full on shore, MPPTs throttled "
+                            "to float. The panels were capable of more; "
+                            "off-grid this deficit would be smaller (or a "
+                            "surplus). This isn't a weather or hardware "
+                            "shortfall.\n\n{% endif %}"
+                            "<small>Production = MPPT yield (full day). "
+                            "Load = integrated, counts from setup time until "
+                            "the first midnight — today's deficit is a "
+                            "floor, not the full picture.</small>"
+                        ),
+                    ]),
+                    # ---- Live flow --------------------------------------- #
+                    grid_section([
+                        heading("Flow now", "title", "mdi:transmission-tower"),
+                        lcars_multimeter(
+                            "sensor.renewable_production_power",
+                            "Production (W)", vmin=0, vmax=3000,
+                            columns="full", rows=4),
+                        lcars_multimeter(
+                            "sensor.house_load_power", "House load (W)",
+                            vmin=0, vmax=3000, columns="full", rows=4),
+                        gauge("sensor.net_offgrid_power", "Net off-grid (W)",
+                              vmin=-3000, vmax=3000,
+                              severity={"green": 0, "yellow": -1,
+                                        "red": -1500}),
+                        md(
+                            "Solar **{{ states('sensor.solar_power_now') "
+                            "| float(0) | round(0) }} W** &nbsp;·&nbsp; "
+                            "Wind **{{ states('sensor.wind_power') "
+                            "| float(0) | round(0) }} W**"
+                        ),
+                    ]),
+                    # ---- Shunt = truth, BMS = sanity --------------------- #
+                    grid_section([
+                        heading("Source of truth", "title", "mdi:scale-balance"),
+                        md(
+                            "The **1000 A house shunt** is authoritative. "
+                            "The nine BANK I/II/III packs are summed from "
+                            "their BMS as a cross-check.\n\n"
+                            "| | Power |\n|---|---|\n"
+                            "| 🟦 Shunt (truth) | "
+                            "{{ states('sensor.battery_net_power') }} W |\n"
+                            "| BMS sum (9 packs) | "
+                            "{{ states('sensor.bms_pack_power_total') }} W |\n"
+                            "| **Drift** | "
+                            "**{{ states('sensor.shunt_bms_power_drift') }} W** "
+                            "({{ states('sensor.shunt_bms_drift_pct') }}%) |\n"
+                            "| Packs reporting | "
+                            "{{ states('sensor.bms_packs_reporting') }} / 9 "
+                            "{% if is_state('binary_sensor."
+                            "bms_reporting_degraded','on') %}"
+                            "🟥 — drift is inflated by dropped packs"
+                            "{% else %}🟢{% endif %} |\n"
+                        ),
+                        {
+                            "type": "history-graph",
+                            "hours_to_show": 24,
+                            "title": "Shunt vs BMS (24h)",
+                            "entities": [
+                                {"entity": "sensor.battery_net_power",
+                                 "name": "Shunt"},
+                                {"entity": "sensor.bms_pack_power_total",
+                                 "name": "BMS sum"},
+                                {"entity": "sensor.shunt_bms_power_drift",
+                                 "name": "Drift"},
+                            ],
+                        },
+                    ]),
+                    # ---- Daily energy ------------------------------------ #
+                    grid_section([
+                        heading("Energy today", "title", "mdi:chart-bar"),
+                        {
+                            "type": "statistics-graph",
+                            "title": "Production vs load (kWh/day)",
+                            "chart_type": "bar",
+                            "period": "day",
+                            "days_to_show": 14,
+                            "stat_types": ["change"],
+                            "entities": [
+                                "sensor.renewable_production_today",
+                                "sensor.house_load_today",
+                            ],
+                        },
+                        md(
+                            "**Solar by array (controller yield_today):**\n\n"
+                            "| Array | Wh |\n|---|---|\n"
+                            "| Port bimini | {{ states('sensor."
+                            "port_bimini_yield_today') }} |\n"
+                            "| Stbd bimini | {{ states('sensor."
+                            "starboard_bimini_yield_today') }} |\n"
+                            "| Port davits | {{ states('sensor."
+                            "port_davits_yield_today') }} |\n"
+                            "| Stbd davits | {{ states('sensor."
+                            "starboard_davits_yield_today') }} |\n"
+                            "| **Solar total** | **{{ states('sensor."
+                            "solar_yield_today') | float(0) | round(0) }}** |\n"
+                            "| Wind today | {{ states('sensor.wind_today') "
+                            "| float(0) * 1000 | round(0) }} |\n\n"
+                            "{% set wc = states('sensor.windy_current') %}"
+                            "{% if wc in ['unavailable','unknown'] "
+                            "or wc | float(0) == 0 %}"
+                            "⚠️ Wind-gen shunt is reporting **voltage only** "
+                            "(current = {{ wc }}). Either the turbine made "
+                            "nothing or the shunt's current channel isn't "
+                            "wired/reporting — worth a physical check.\n\n"
+                            "{% endif %}"
+                            "_Solar comes straight from each MPPT's own "
+                            "midnight-resetting `yield_today`, so it is "
+                            "accurate for the whole day even on day 1. "
+                            "**House load** has no native daily counter, so "
+                            "it is integrated and only counts from when this "
+                            "was set up — until the first full midnight reset "
+                            "the verdict's deficit is understated, not the "
+                            "production side._"
+                        ),
+                    ]),
+                    # ---- Forecast + runway ------------------------------- #
+                    grid_section([
+                        heading("Forecast & runway", "title",
+                                "mdi:weather-partly-cloudy"),
+                        md(
+                            "Expected generation today "
+                            "**{{ states('sensor.generation_forecast_today') "
+                            "| float(0) | round(0) }} Wh** "
+                            "(remaining "
+                            "{{ states('sensor.generation_forecast_remaining') "
+                            "| float(0) | round(0) }} Wh)\n\n"
+                            "Battery time to empty "
+                            "**{% set t = "
+                            "states('sensor.battery_time_to_empty') %}"
+                            "{% if t in ['unknown','unavailable'] %}"
+                            "∞ (charging / idle)"
+                            "{% else %}{{ t }} h{% endif %}**\n\n"
+                            "_Heuristic: clear-day baseline "
+                            "({{ states('input_number."
+                            "defiant_clear_day_yield_wh') | int }} Wh) "
+                            "scaled by met.no cloud cover "
+                            "({{ state_attr('weather.forecast_home',"
+                            "'cloud_coverage') }}%). Tune the baseline "
+                            "after a sunny day._"
+                        ),
+                        {
+                            "type": "weather-forecast",
+                            "entity": "weather.forecast_home",
+                            "forecast_type": "daily",
+                            "show_forecast": True,
+                            "show_current": True,
+                        },
+                    ]),
+                    # ---- Tagged high-consumption activities -------------- #
+                    grid_section([
+                        heading("High-consumption activities", "title",
+                                "mdi:tag-multiple"),
+                        md(
+                            "Set the tag **before/while** doing something "
+                            "thirsty (kettle, hot shower…). When the load "
+                            "spike ends it's folded into that activity's "
+                            "running average below, and the tag resets."
+                        ),
+                        {"type": "entities", "entities": [
+                            {"entity": "input_select.defiant_activity_tag",
+                             "name": "Tag activity"},
+                            {"entity": "input_button.defiant_tag_activity_now",
+                             "name": "Mark a manual marker now"},
+                            {"entity": "input_number.defiant_high_load_threshold",
+                             "name": "Event threshold"},
+                            {"entity": "input_text.defiant_event_last_summary",
+                             "name": "Last event"},
+                        ]},
+                        md(
+                            "### Learned signatures\n"
+                            "| Activity | Samples | Avg peak | Avg energy "
+                            "| Last seen |\n"
+                            "|---|---|---|---|---|\n" + sig_rows
+                        ),
+                        {
+                            "type": "history-graph",
+                            "hours_to_show": 24,
+                            "title": "House load (24h) — spikes are events",
+                            "entities": ["sensor.house_load_power"],
+                        },
+                    ]),
+                    # ---- Per-Pi estimate --------------------------------- #
+                    grid_section([
+                        heading("Compute power (estimate)", "title",
+                                "mdi:raspberry-pi"),
+                        md(
+                            "⚠️ **Estimate only** — there is no per-Pi "
+                            "metering on the boat. Modelled as "
+                            "`idle_W + slope · CPU%` per host.\n\n"
+                            "| Host | Est. W |\n|---|---|\n"
+                            "| ironclaw | {{ states('sensor."
+                            "pi_power_estimate_ironclaw') }} |\n"
+                            "| boatflix | {{ states('sensor."
+                            "pi_power_estimate_boatflix') }} |\n"
+                            "| openplotter | {{ states('sensor."
+                            "pi_power_estimate_openplotter') }} |\n"
+                            "| homeassistant | {{ states('sensor."
+                            "pi_power_estimate_homeassistant') }} |\n"
+                            "| **Total** | **{{ states('sensor."
+                            "pi_power_estimate_total') }} W** |\n"
+                        ),
+                        {
+                            "type": "history-graph",
+                            "hours_to_show": 24,
+                            "title": "Estimated compute draw (24h)",
+                            "entities": [
+                                "sensor.pi_power_estimate_ironclaw",
+                                "sensor.pi_power_estimate_boatflix",
+                                "sensor.pi_power_estimate_openplotter",
+                                "sensor.pi_power_estimate_homeassistant",
+                            ],
+                        },
+                    ]),
+                ],
+            },
+        ],
+    }
+
+
 DASHBOARDS = [
     # (url_path, title, icon, config_fn). url_path=None targets the built-in
     # default Overview (the dashboard that opens when you visit /).
     (None, "Overview", "mdi:sail-boat", cfg_overview),
     ("ha-helm", "Helm", "mdi:steering", cfg_helm),
     ("ha-navigation", "Navigation", "mdi:compass-outline", cfg_navigation),
+    ("ha-power", "Power", "mdi:lightning-bolt", cfg_power),
     ("ha-systems", "Systems", "mdi:server-network", cfg_systems),
 ]
 # Old per-path Overview that should be removed if it's still around.
