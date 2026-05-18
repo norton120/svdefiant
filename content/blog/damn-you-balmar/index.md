@@ -61,6 +61,7 @@ Eventually it catches up. Once customer trust has been bled dry, margins vanish 
 collapses - the VC is long gone, and all they left is a brand everyone hates. 
 
 That is enshittification.
+
 ---
 
 </details>
