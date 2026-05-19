@@ -68,3 +68,8 @@ entries:
     url: "/blog/damn-you-balmar/"
     summary: "A cautionary tale of product enshittification—when a trusted alternator brand loses quality and support."
     source: "blog"
+  - date: "2026-05-19"
+    title: "More Resin"
+    url: "/blog/more-resin/"
+    summary: "How epoxy fixed the broken cockpit table and restored comfort to the Defiant."
+    source: "blog"
