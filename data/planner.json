@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-18T18:36:48-04:00",
+  "generated_at": "2026-05-19T02:31:27-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -17,12 +17,7 @@
     {
       "date": "2026-05-17",
       "label": "Sun May 17",
-      "events": [
-        {
-          "label": "Epoxy day: cockpit table + companionway rail (first thing AM \u2014 needs cure time before drilling)",
-          "blocks": false
-        }
-      ],
+      "events": [],
       "weather": null,
       "lanes": [
         {
@@ -112,7 +107,7 @@
     },
     {
       "date": "2026-05-18",
-      "label": "Today",
+      "label": "Mon May 18",
       "events": [],
       "weather": {
         "wind_kt_max": 15.7,
@@ -136,7 +131,7 @@
     },
     {
       "date": "2026-05-19",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 17.1,
@@ -285,7 +280,7 @@
     },
     {
       "date": "2026-05-20",
-      "label": "Wed May 20",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 16.5,
@@ -416,35 +411,9 @@
               "day": "2026-05-20"
             }
           ]
-        },
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 74,
-              "title": "Add sliding door rails and plexi doors to lazarette shelf",
-              "url": "https://github.com/norton120/svdefiant/issues/74",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-20"
-            }
-          ]
         }
       ],
-      "task_count": 6
+      "task_count": 5
     },
     {
       "date": "2026-05-21",
@@ -544,11 +513,32 @@
               "state": "OPEN",
               "done": false,
               "day": "2026-05-21"
+            },
+            {
+              "number": 74,
+              "title": "Add sliding door rails and plexi doors to lazarette shelf",
+              "url": "https://github.com/norton120/svdefiant/issues/74",
+              "milestone": "Day Sails",
+              "priority": "p1",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-21"
             }
           ]
         }
       ],
-      "task_count": 3
+      "task_count": 4
     },
     {
       "date": "2026-05-22",
@@ -672,6 +662,14 @@
         "temp_label": "60\u201364\u00b0",
         "wind_label": "10kt \u00b7 0.7ft"
       },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-26",
+      "label": "Tue May 26",
+      "events": [],
+      "weather": null,
       "lanes": [],
       "task_count": 0
     }
