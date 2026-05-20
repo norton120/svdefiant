@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-19T02:31:27-04:00",
+  "generated_at": "2026-05-20T00:08:00-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,188 +15,14 @@
   ],
   "days": [
     {
-      "date": "2026-05-17",
-      "label": "Sun May 17",
+      "date": "2026-05-19",
+      "label": "Tue May 19",
       "events": [],
       "weather": null,
       "lanes": [
         {
-          "system": "nav",
-          "issues": [
-            {
-              "number": 73,
-              "title": "Replace bow and stern running light mounts",
-              "url": "https://github.com/norton120/svdefiant/issues/73",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "nav",
-                "safety"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-17"
-            }
-          ]
-        },
-        {
-          "system": "hull",
-          "issues": [
-            {
-              "number": 71,
-              "title": "Repair cracked companionway door frame with copper edge wrap",
-              "url": "https://github.com/norton120/svdefiant/issues/71",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "hull",
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-17"
-            }
-          ]
-        },
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 3,
-              "title": "Repair & re-install cockpit table",
-              "url": "https://github.com/norton120/svdefiant/issues/3",
-              "milestone": "Solomans",
-              "priority": "p2",
-              "systems": [
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-17"
-            }
-          ]
-        }
-      ],
-      "task_count": 3
-    },
-    {
-      "date": "2026-05-18",
-      "label": "Mon May 18",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 15.7,
-        "gust_kt_max": 24.1,
-        "wave_ft_max": 1.7,
-        "temp_f": [
-          68,
-          89
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "68\u201389\u00b0",
-        "wind_label": "16g24kt \u00b7 1.7ft"
-      },
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-19",
-      "label": "Today",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 17.1,
-        "gust_kt_max": 24.3,
-        "wave_ft_max": 1.7,
-        "temp_f": [
-          72,
-          94
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "72\u201394\u00b0",
-        "wind_label": "17g24kt \u00b7 1.7ft"
-      },
-      "lanes": [
-        {
           "system": "electrical",
           "issues": [
-            {
-              "number": 57,
-              "title": "Mount electric kettle above galley counter",
-              "url": "https://github.com/norton120/svdefiant/issues/57",
-              "milestone": "Solomans",
-              "priority": "p3",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-19"
-            },
-            {
-              "number": 81,
-              "title": "Liquid tape DC Mains behind panel",
-              "url": "https://github.com/norton120/svdefiant/issues/81",
-              "milestone": "Solomans",
-              "priority": "p0",
-              "systems": [
-                "electrical",
-                "safety"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-19"
-            },
             {
               "number": 83,
               "title": "Install starter battery post and shunt",
@@ -214,9 +40,9 @@
                 "dockside-only"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-19"
             }
           ]
@@ -242,9 +68,9 @@
                 "on-deck"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-19"
             }
           ]
@@ -276,28 +102,29 @@
           ]
         }
       ],
-      "task_count": 5
+      "task_count": 3
     },
     {
       "date": "2026-05-20",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 16.5,
-        "gust_kt_max": 29.4,
-        "wave_ft_max": 1.7,
+        "wind_kt_max": 18.0,
+        "gust_kt_max": 26.2,
+        "wave_ft_max": 1.6,
         "temp_f": [
-          68,
-          90
+          72,
+          93
         ],
         "precip": false,
         "hazards": [],
         "alerts": [],
         "icons": [
-          "\u2600\ufe0f"
+          "\u2600\ufe0f",
+          "\ud83d\udca8"
         ],
-        "temp_label": "68\u201390\u00b0",
-        "wind_label": "16g29kt \u00b7 1.7ft"
+        "temp_label": "72\u201393\u00b0",
+        "wind_label": "18g26kt \u00b7 1.6ft"
       },
       "lanes": [
         {
@@ -307,7 +134,7 @@
               "number": 6,
               "title": "Proper engine oil change (drain completely first)",
               "url": "https://github.com/norton120/svdefiant/issues/6",
-              "milestone": "Day Sails",
+              "milestone": "Solomans",
               "priority": "p1",
               "systems": [
                 "engine"
@@ -319,16 +146,16 @@
                 "indoors"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-20"
             },
             {
               "number": 9,
               "title": "Replace engine coolant",
               "url": "https://github.com/norton120/svdefiant/issues/9",
-              "milestone": "Day Sails",
+              "milestone": null,
               "priority": "p1",
               "systems": [
                 "engine"
@@ -340,19 +167,72 @@
                 "indoors"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-05-20"
             },
             {
-              "number": 12,
-              "title": "Clean out Groco filter",
-              "url": "https://github.com/norton120/svdefiant/issues/12",
-              "milestone": "Day Sails",
-              "priority": "p2",
+              "number": 78,
+              "title": "Flush coolant system with distilled water and add fresh coolant",
+              "url": "https://github.com/norton120/svdefiant/issues/78",
+              "milestone": null,
+              "priority": "p1",
               "systems": [
                 "engine"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
+              "day": "2026-05-20"
+            }
+          ]
+        }
+      ],
+      "task_count": 3
+    },
+    {
+      "date": "2026-05-21",
+      "label": "Tomorrow",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 17.4,
+        "gust_kt_max": 22.9,
+        "wave_ft_max": 1.7,
+        "temp_f": [
+          61,
+          77
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "61\u201377\u00b0",
+        "wind_label": "17g23kt \u00b7 1.7ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 81,
+              "title": "Liquid tape DC Mains behind panel",
+              "url": "https://github.com/norton120/svdefiant/issues/81",
+              "milestone": "Solomans",
+              "priority": "p0",
+              "systems": [
+                "electrical",
+                "safety"
               ],
               "energy": "light",
               "weather": "any",
@@ -364,79 +244,10 @@
               "project_status": "Todo",
               "state": "OPEN",
               "done": false,
-              "day": "2026-05-20"
-            },
-            {
-              "number": 72,
-              "title": "Replace fuel filter",
-              "url": "https://github.com/norton120/svdefiant/issues/72",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-20"
-            },
-            {
-              "number": 78,
-              "title": "Flush coolant system with distilled water and add fresh coolant",
-              "url": "https://github.com/norton120/svdefiant/issues/78",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-20"
+              "day": "2026-05-21"
             }
           ]
-        }
-      ],
-      "task_count": 5
-    },
-    {
-      "date": "2026-05-21",
-      "label": "Thu May 21",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 16.1,
-        "gust_kt_max": 18.7,
-        "wave_ft_max": 1.9,
-        "temp_f": [
-          58,
-          67
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "58\u201367\u00b0",
-        "wind_label": "16g19kt \u00b7 1.9ft"
-      },
-      "lanes": [
+        },
         {
           "system": "plumbing",
           "issues": [
@@ -488,7 +299,187 @@
               "day": "2026-05-21"
             }
           ]
-        },
+        }
+      ],
+      "task_count": 3
+    },
+    {
+      "date": "2026-05-22",
+      "label": "Fri May 22",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 16.4,
+        "gust_kt_max": 21.4,
+        "wave_ft_max": 2.2,
+        "temp_f": [
+          59,
+          60
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "59\u201360\u00b0",
+        "wind_label": "16g21kt \u00b7 2.2ft"
+      },
+      "lanes": [
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 74,
+              "title": "Add sliding door rails and plexi doors to lazarette shelf",
+              "url": "https://github.com/norton120/svdefiant/issues/74",
+              "milestone": "Solomans",
+              "priority": "p1",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-22"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
+    {
+      "date": "2026-05-23",
+      "label": "Sat May 23",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 11.6,
+        "gust_kt_max": 14.8,
+        "wave_ft_max": 2.0,
+        "temp_f": [
+          59,
+          64
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "59\u201364\u00b0",
+        "wind_label": "12g15kt \u00b7 2.0ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 57,
+              "title": "Mount electric kettle above galley counter",
+              "url": "https://github.com/norton120/svdefiant/issues/57",
+              "milestone": "Solomans",
+              "priority": "p3",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-23"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
+    {
+      "date": "2026-05-24",
+      "label": "Sun May 24",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 9.0,
+        "gust_kt_max": 10.7,
+        "wave_ft_max": 0.9,
+        "temp_f": [
+          61,
+          65
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "61\u201365\u00b0",
+        "wind_label": "9kt \u00b7 0.9ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 59,
+              "title": "Move salon view screen pi to external location",
+              "url": "https://github.com/norton120/svdefiant/issues/59",
+              "milestone": "Solomans",
+              "priority": "p2",
+              "systems": [
+                "electrical",
+                "nav"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-24"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
+    {
+      "date": "2026-05-25",
+      "label": "Mon May 25",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 6.9,
+        "gust_kt_max": 8.4,
+        "wave_ft_max": 1.0,
+        "temp_f": [
+          63,
+          66
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "63\u201366\u00b0",
+        "wind_label": "7kt \u00b7 1.0ft"
+      },
+      "lanes": [
         {
           "system": "interior",
           "issues": [
@@ -512,81 +503,7 @@
               "project_status": "Todo",
               "state": "OPEN",
               "done": false,
-              "day": "2026-05-21"
-            },
-            {
-              "number": 74,
-              "title": "Add sliding door rails and plexi doors to lazarette shelf",
-              "url": "https://github.com/norton120/svdefiant/issues/74",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-21"
-            }
-          ]
-        }
-      ],
-      "task_count": 4
-    },
-    {
-      "date": "2026-05-22",
-      "label": "Fri May 22",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 15.0,
-        "gust_kt_max": 19.4,
-        "wave_ft_max": 1.8,
-        "temp_f": [
-          57,
-          59
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "57\u201359\u00b0",
-        "wind_label": "15g19kt \u00b7 1.8ft"
-      },
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 59,
-              "title": "Move salon view screen pi to external location",
-              "url": "https://github.com/norton120/svdefiant/issues/59",
-              "milestone": "Day Sails",
-              "priority": "p2",
-              "systems": [
-                "electrical",
-                "nav"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-22"
+              "day": "2026-05-25"
             }
           ]
         }
@@ -594,82 +511,50 @@
       "task_count": 1
     },
     {
-      "date": "2026-05-23",
-      "label": "Sat May 23",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 11.7,
-        "gust_kt_max": 14.2,
-        "wave_ft_max": 1.6,
-        "temp_f": [
-          58,
-          66
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "58\u201366\u00b0",
-        "wind_label": "12kt \u00b7 1.6ft"
-      },
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-24",
-      "label": "Sun May 24",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 12.1,
-        "gust_kt_max": 13.2,
-        "wave_ft_max": 0.9,
-        "temp_f": [
-          60,
-          65
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u26c5"
-        ],
-        "temp_label": "60\u201365\u00b0",
-        "wind_label": "12kt \u00b7 0.9ft"
-      },
-      "lanes": [],
-      "task_count": 0
-    },
-    {
-      "date": "2026-05-25",
-      "label": "Mon May 25",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 9.6,
-        "gust_kt_max": 12.1,
-        "wave_ft_max": 0.7,
-        "temp_f": [
-          60,
-          64
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "60\u201364\u00b0",
-        "wind_label": "10kt \u00b7 0.7ft"
-      },
-      "lanes": [],
-      "task_count": 0
-    },
-    {
       "date": "2026-05-26",
       "label": "Tue May 26",
       "events": [],
-      "weather": null,
+      "weather": {
+        "wind_kt_max": 5.7,
+        "gust_kt_max": 6.2,
+        "wave_ft_max": 0.7,
+        "temp_f": [
+          66,
+          71
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "66\u201371\u00b0",
+        "wind_label": "6kt \u00b7 0.7ft"
+      },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-27",
+      "label": "Wed May 27",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 8.0,
+        "gust_kt_max": 6.6,
+        "wave_ft_max": 1.0,
+        "temp_f": [
+          67,
+          78
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "67\u201378\u00b0",
+        "wind_label": "8kt \u00b7 1.0ft"
+      },
       "lanes": [],
       "task_count": 0
     }
