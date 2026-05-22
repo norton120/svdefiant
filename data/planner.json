@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-21T02:31:30-04:00",
+  "generated_at": "2026-05-22T02:30:50-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,96 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-05-19",
-      "label": "Tue May 19",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 83,
-              "title": "Install starter battery post and shunt",
-              "url": "https://github.com/norton120/svdefiant/issues/83",
-              "milestone": "Day Sails",
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-19"
-            }
-          ]
-        },
-        {
-          "system": "rigging",
-          "issues": [
-            {
-              "number": 80,
-              "title": "Put in new bolts for stanchions on bow pulpit",
-              "url": "https://github.com/norton120/svdefiant/issues/80",
-              "milestone": "Day Sails",
-              "priority": "p0",
-              "systems": [
-                "rigging",
-                "hull",
-                "safety"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-19"
-            }
-          ]
-        },
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 28,
-              "title": "3-phase filter on drinking tap",
-              "url": "https://github.com/norton120/svdefiant/issues/28",
-              "milestone": "Solomans",
-              "priority": "p2",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-19"
-            }
-          ]
-        }
-      ],
-      "task_count": 3
-    },
     {
       "date": "2026-05-20",
       "label": "Wed May 20",
@@ -201,7 +111,7 @@
     },
     {
       "date": "2026-05-21",
-      "label": "Today",
+      "label": "Thu May 21",
       "events": [],
       "weather": {
         "wind_kt_max": 17.4,
@@ -305,7 +215,7 @@
     },
     {
       "date": "2026-05-22",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 16.4,
@@ -356,7 +266,7 @@
     },
     {
       "date": "2026-05-23",
-      "label": "Sat May 23",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 11.6,
@@ -565,6 +475,302 @@
       "weather": null,
       "lanes": [],
       "task_count": 0
+    },
+    {
+      "date": "2026-05-29",
+      "label": "Fri May 29",
+      "events": [],
+      "weather": null,
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 24,
+              "title": "MPPT \u2192 Cerbo via quad",
+              "url": "https://github.com/norton120/svdefiant/issues/24",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "rigging",
+          "issues": [
+            {
+              "number": 15,
+              "title": "Replace dinghy grab rail lines",
+              "url": "https://github.com/norton120/svdefiant/issues/15",
+              "milestone": "St. Michaels",
+              "priority": "p3",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 19,
+              "title": "Replace davit cord with steel cable",
+              "url": "https://github.com/norton120/svdefiant/issues/19",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 22,
+              "title": "Sort dock lines from sheet bag",
+              "url": "https://github.com/norton120/svdefiant/issues/22",
+              "milestone": "St. Michaels",
+              "priority": "p3",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "couch",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 23,
+              "title": "Improve bimini solar mount lines",
+              "url": "https://github.com/norton120/svdefiant/issues/23",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "sails",
+          "issues": [
+            {
+              "number": 21,
+              "title": "Sew staysail webbing",
+              "url": "https://github.com/norton120/svdefiant/issues/21",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "sails"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "plumbing",
+          "issues": [
+            {
+              "number": 14,
+              "title": "Unclog cockpit scupper",
+              "url": "https://github.com/norton120/svdefiant/issues/14",
+              "milestone": "St. Michaels",
+              "priority": "p1",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 26,
+              "title": "Aerator in shower head",
+              "url": "https://github.com/norton120/svdefiant/issues/26",
+              "milestone": "St. Michaels",
+              "priority": "p3",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "couch",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "nav",
+          "issues": [
+            {
+              "number": 18,
+              "title": "Wire in B&G screens / radar",
+              "url": "https://github.com/norton120/svdefiant/issues/18",
+              "milestone": "St. Michaels",
+              "priority": "p1",
+              "systems": [
+                "nav"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "full-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 25,
+              "title": "Raymarine autopilot remote",
+              "url": "https://github.com/norton120/svdefiant/issues/25",
+              "milestone": "St. Michaels",
+              "priority": "p3",
+              "systems": [
+                "nav"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": true,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "ground-tackle",
+          "issues": [
+            {
+              "number": 27,
+              "title": "Anchor drop button at bow",
+              "url": "https://github.com/norton120/svdefiant/issues/27",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "ground-tackle"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "safety",
+          "issues": [
+            {
+              "number": 20,
+              "title": "Coast Guard Vessel Check",
+              "url": "https://github.com/norton120/svdefiant/issues/20",
+              "milestone": "St. Michaels",
+              "priority": "p1",
+              "systems": [
+                "safety"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        }
+      ],
+      "task_count": 12
     }
   ]
 }
