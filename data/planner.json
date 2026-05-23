@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T02:30:50-04:00",
+  "generated_at": "2026-05-23T02:13:48-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,101 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-05-20",
-      "label": "Wed May 20",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 18.0,
-        "gust_kt_max": 26.2,
-        "wave_ft_max": 1.6,
-        "temp_f": [
-          72,
-          93
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u2600\ufe0f",
-          "\ud83d\udca8"
-        ],
-        "temp_label": "72\u201393\u00b0",
-        "wind_label": "18g26kt \u00b7 1.6ft"
-      },
-      "lanes": [
-        {
-          "system": "engine",
-          "issues": [
-            {
-              "number": 6,
-              "title": "Proper engine oil change (drain completely first)",
-              "url": "https://github.com/norton120/svdefiant/issues/6",
-              "milestone": "Solomans",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-20"
-            },
-            {
-              "number": 9,
-              "title": "Replace engine coolant",
-              "url": "https://github.com/norton120/svdefiant/issues/9",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-20"
-            },
-            {
-              "number": 78,
-              "title": "Flush coolant system with distilled water and add fresh coolant",
-              "url": "https://github.com/norton120/svdefiant/issues/78",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-05-20"
-            }
-          ]
-        }
-      ],
-      "task_count": 3
-    },
     {
       "date": "2026-05-21",
       "label": "Thu May 21",
@@ -215,7 +120,7 @@
     },
     {
       "date": "2026-05-22",
-      "label": "Today",
+      "label": "Fri May 22",
       "events": [],
       "weather": {
         "wind_kt_max": 16.4,
@@ -266,7 +171,7 @@
     },
     {
       "date": "2026-05-23",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 11.6,
@@ -317,7 +222,7 @@
     },
     {
       "date": "2026-05-24",
-      "label": "Sun May 24",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 9.0,
@@ -771,6 +676,14 @@
         }
       ],
       "task_count": 12
+    },
+    {
+      "date": "2026-05-30",
+      "label": "Sat May 30",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
     }
   ]
 }
