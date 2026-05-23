@@ -1,6 +1,5 @@
 {
-  "generated_at": "2026-05-23T02:13:48-04:00",
-  "status": "paused ’ Cap'n in Philady",
+  "generated_at": "2026-05-23T13:45:48-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,5 +13,621 @@
     "safety",
     "other"
   ],
-  "days": []
+  "days": [
+    {
+      "date": "2026-05-22",
+      "label": "Fri May 22",
+      "events": [],
+      "weather": null,
+      "lanes": [
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 74,
+              "title": "Add sliding door rails and plexi doors to lazarette shelf",
+              "url": "https://github.com/norton120/svdefiant/issues/74",
+              "milestone": "Solomans",
+              "priority": "p1",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-22"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
+    {
+      "date": "2026-05-23",
+      "label": "Today",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 14.6,
+        "gust_kt_max": 21.2,
+        "wave_ft_max": 1.9,
+        "temp_f": [
+          57,
+          64
+        ],
+        "precip": true,
+        "hazards": [
+          "small_craft_advisory"
+        ],
+        "alerts": [
+          {
+            "token": "small_craft_advisory",
+            "event": "Small Craft Advisory",
+            "headline": "Small Craft Advisory issued May 23 at 10:15AM EDT until May 23 at 4:00PM EDT by NWS Wakefield VA",
+            "tooltip": "\u26f5",
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616516&lon=-76.290027"
+          }
+        ],
+        "icons": [
+          "\u2620\ufe0f",
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "57\u201364\u00b0",
+        "wind_label": "15g21kt \u00b7 1.9ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 57,
+              "title": "Mount electric kettle above galley counter",
+              "url": "https://github.com/norton120/svdefiant/issues/57",
+              "milestone": "Solomans",
+              "priority": "p3",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-23"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
+    {
+      "date": "2026-05-24",
+      "label": "Tomorrow",
+      "events": [
+        {
+          "label": "10am: plan review / reprioritize",
+          "blocks": true
+        }
+      ],
+      "weather": {
+        "wind_kt_max": 10.4,
+        "gust_kt_max": 16.5,
+        "wave_ft_max": 1.2,
+        "temp_f": [
+          64,
+          76
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "64\u201376\u00b0",
+        "wind_label": "10g16kt \u00b7 1.2ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 59,
+              "title": "Move salon view screen pi to external location",
+              "url": "https://github.com/norton120/svdefiant/issues/59",
+              "milestone": "Solomans",
+              "priority": "p2",
+              "systems": [
+                "electrical",
+                "nav"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-24"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
+    {
+      "date": "2026-05-25",
+      "label": "Mon May 25",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 12.0,
+        "gust_kt_max": 23.1,
+        "wave_ft_max": 0.8,
+        "temp_f": [
+          65,
+          74
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "65\u201374\u00b0",
+        "wind_label": "12g23kt \u00b7 0.8ft"
+      },
+      "lanes": [
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 41,
+              "title": "Galley shelf for compressor compartment",
+              "url": "https://github.com/norton120/svdefiant/issues/41",
+              "milestone": "Solomans",
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "underway-ok"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-25"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
+    {
+      "date": "2026-05-26",
+      "label": "Tue May 26",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 5.6,
+        "gust_kt_max": 5.8,
+        "wave_ft_max": 0.3,
+        "temp_f": [
+          65,
+          71
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "65\u201371\u00b0",
+        "wind_label": "6kt \u00b7 0.3ft"
+      },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-27",
+      "label": "Wed May 27",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 4.5,
+        "gust_kt_max": 7.2,
+        "wave_ft_max": 0.3,
+        "temp_f": [
+          67,
+          79
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "67\u201379\u00b0",
+        "wind_label": "4g7kt \u00b7 0.3ft"
+      },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-28",
+      "label": "Thu May 28",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 9.0,
+        "gust_kt_max": 10.1,
+        "wave_ft_max": 1.5,
+        "temp_f": [
+          64,
+          70
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "64\u201370\u00b0",
+        "wind_label": "9kt \u00b7 1.5ft"
+      },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-05-29",
+      "label": "Fri May 29",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 13.7,
+        "gust_kt_max": 15.6,
+        "wave_ft_max": 1.1,
+        "temp_f": [
+          57,
+          71
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "57\u201371\u00b0",
+        "wind_label": "14kt \u00b7 1.1ft"
+      },
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 24,
+              "title": "MPPT \u2192 Cerbo via quad",
+              "url": "https://github.com/norton120/svdefiant/issues/24",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "rigging",
+          "issues": [
+            {
+              "number": 15,
+              "title": "Replace dinghy grab rail lines",
+              "url": "https://github.com/norton120/svdefiant/issues/15",
+              "milestone": "St. Michaels",
+              "priority": "p3",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 19,
+              "title": "Replace davit cord with steel cable",
+              "url": "https://github.com/norton120/svdefiant/issues/19",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 22,
+              "title": "Sort dock lines from sheet bag",
+              "url": "https://github.com/norton120/svdefiant/issues/22",
+              "milestone": "St. Michaels",
+              "priority": "p3",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "couch",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 23,
+              "title": "Improve bimini solar mount lines",
+              "url": "https://github.com/norton120/svdefiant/issues/23",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "sails",
+          "issues": [
+            {
+              "number": 21,
+              "title": "Sew staysail webbing",
+              "url": "https://github.com/norton120/svdefiant/issues/21",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "sails"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "plumbing",
+          "issues": [
+            {
+              "number": 14,
+              "title": "Unclog cockpit scupper",
+              "url": "https://github.com/norton120/svdefiant/issues/14",
+              "milestone": "St. Michaels",
+              "priority": "p1",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 26,
+              "title": "Aerator in shower head",
+              "url": "https://github.com/norton120/svdefiant/issues/26",
+              "milestone": "St. Michaels",
+              "priority": "p3",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "couch",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "nav",
+          "issues": [
+            {
+              "number": 18,
+              "title": "Wire in B&G screens / radar",
+              "url": "https://github.com/norton120/svdefiant/issues/18",
+              "milestone": "St. Michaels",
+              "priority": "p1",
+              "systems": [
+                "nav"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "full-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            },
+            {
+              "number": 25,
+              "title": "Raymarine autopilot remote",
+              "url": "https://github.com/norton120/svdefiant/issues/25",
+              "milestone": "St. Michaels",
+              "priority": "p3",
+              "systems": [
+                "nav"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": true,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "ground-tackle",
+          "issues": [
+            {
+              "number": 27,
+              "title": "Anchor drop button at bow",
+              "url": "https://github.com/norton120/svdefiant/issues/27",
+              "milestone": "St. Michaels",
+              "priority": "p2",
+              "systems": [
+                "ground-tackle"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        },
+        {
+          "system": "safety",
+          "issues": [
+            {
+              "number": 20,
+              "title": "Coast Guard Vessel Check",
+              "url": "https://github.com/norton120/svdefiant/issues/20",
+              "milestone": "St. Michaels",
+              "priority": "p1",
+              "systems": [
+                "safety"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-05-29"
+            }
+          ]
+        }
+      ],
+      "task_count": 12
+    },
+    {
+      "date": "2026-05-30",
+      "label": "Sat May 30",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 12.9,
+        "gust_kt_max": 16.7,
+        "wave_ft_max": 1.0,
+        "temp_f": [
+          49,
+          64
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u26c5"
+        ],
+        "temp_label": "49\u201364\u00b0",
+        "wind_label": "13g17kt \u00b7 1.0ft"
+      },
+      "lanes": [],
+      "task_count": 0
+    }
+  ]
 }
