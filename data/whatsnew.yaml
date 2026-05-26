@@ -73,3 +73,8 @@ entries:
     url: "/blog/more-resin/"
     summary: "How epoxy fixed the broken cockpit table and restored comfort to the Defiant."
     source: "blog"
+  - date: "2026-05-26"
+    title: "Motor motors, sails sail"
+    url: "/blog/motor-motors-sails-sail/"
+    summary: "Defiant is finally sailing again after repairs and upgrades—and she's fast!"
+    source: "blog"
