@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-25T02:42:44-04:00",
+  "generated_at": "2026-05-26T02:30:26-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,68 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-05-23",
-      "label": "Sat May 23",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 14.6,
-        "gust_kt_max": 21.2,
-        "wave_ft_max": 1.9,
-        "temp_f": [
-          57,
-          64
-        ],
-        "precip": true,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued May 23 at 10:15AM EDT until May 23 at 4:00PM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.616516&lon=-76.290027"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "57\u201364\u00b0",
-        "wind_label": "15g21kt \u00b7 1.9ft"
-      },
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 57,
-              "title": "Mount electric kettle above galley counter",
-              "url": "https://github.com/norton120/svdefiant/issues/57",
-              "milestone": "Solomans",
-              "priority": "p3",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-23"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
     {
       "date": "2026-05-24",
       "label": "Sun May 24",
@@ -131,7 +69,7 @@
     },
     {
       "date": "2026-05-25",
-      "label": "Today",
+      "label": "Mon May 25",
       "events": [],
       "weather": {
         "wind_kt_max": 12.0,
@@ -183,7 +121,7 @@
     },
     {
       "date": "2026-05-26",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 5.6,
@@ -207,7 +145,7 @@
     },
     {
       "date": "2026-05-27",
-      "label": "Wed May 27",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 4.5,
@@ -600,6 +538,14 @@
     {
       "date": "2026-06-01",
       "label": "Mon Jun 1",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-02",
+      "label": "Tue Jun 2",
       "events": [],
       "weather": null,
       "lanes": [],
