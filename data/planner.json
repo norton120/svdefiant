@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-26T02:30:26-04:00",
+  "generated_at": "2026-05-27T02:39:04-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,59 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-05-24",
-      "label": "Sun May 24",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 10.4,
-        "gust_kt_max": 16.5,
-        "wave_ft_max": 1.2,
-        "temp_f": [
-          64,
-          76
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "64\u201376\u00b0",
-        "wind_label": "10g16kt \u00b7 1.2ft"
-      },
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 59,
-              "title": "Move salon view screen pi to external location",
-              "url": "https://github.com/norton120/svdefiant/issues/59",
-              "milestone": "Solomans",
-              "priority": "p2",
-              "systems": [
-                "electrical",
-                "nav"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-24"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
     {
       "date": "2026-05-25",
       "label": "Mon May 25",
@@ -121,7 +68,7 @@
     },
     {
       "date": "2026-05-26",
-      "label": "Today",
+      "label": "Tue May 26",
       "events": [],
       "weather": {
         "wind_kt_max": 5.6,
@@ -145,7 +92,7 @@
     },
     {
       "date": "2026-05-27",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 4.5,
@@ -169,7 +116,7 @@
     },
     {
       "date": "2026-05-28",
-      "label": "Thu May 28",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 9.0,
@@ -546,6 +493,14 @@
     {
       "date": "2026-06-02",
       "label": "Tue Jun 2",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-03",
+      "label": "Wed Jun 3",
       "events": [],
       "weather": null,
       "lanes": [],
