@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-27T02:39:04-04:00",
+  "generated_at": "2026-05-28T02:34:00-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,58 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-05-25",
-      "label": "Mon May 25",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 12.0,
-        "gust_kt_max": 23.1,
-        "wave_ft_max": 0.8,
-        "temp_f": [
-          65,
-          74
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "65\u201374\u00b0",
-        "wind_label": "12g23kt \u00b7 0.8ft"
-      },
-      "lanes": [
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 41,
-              "title": "Galley shelf for compressor compartment",
-              "url": "https://github.com/norton120/svdefiant/issues/41",
-              "milestone": "Solomans",
-              "priority": "p2",
-              "systems": [
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "underway-ok"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-25"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
     {
       "date": "2026-05-26",
       "label": "Tue May 26",
@@ -92,7 +40,7 @@
     },
     {
       "date": "2026-05-27",
-      "label": "Today",
+      "label": "Wed May 27",
       "events": [],
       "weather": {
         "wind_kt_max": 4.5,
@@ -116,7 +64,7 @@
     },
     {
       "date": "2026-05-28",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 9.0,
@@ -140,7 +88,7 @@
     },
     {
       "date": "2026-05-29",
-      "label": "Fri May 29",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 13.7,
@@ -501,6 +449,14 @@
     {
       "date": "2026-06-03",
       "label": "Wed Jun 3",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-04",
+      "label": "Thu Jun 4",
       "events": [],
       "weather": null,
       "lanes": [],
