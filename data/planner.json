@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-29T02:34:36-04:00",
+  "generated_at": "2026-05-30T02:15:37-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,30 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-05-27",
-      "label": "Wed May 27",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 4.5,
-        "gust_kt_max": 7.2,
-        "wave_ft_max": 0.3,
-        "temp_f": [
-          67,
-          79
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "67\u201379\u00b0",
-        "wind_label": "4g7kt \u00b7 0.3ft"
-      },
-      "lanes": [],
-      "task_count": 0
-    },
     {
       "date": "2026-05-28",
       "label": "Thu May 28",
@@ -64,7 +40,7 @@
     },
     {
       "date": "2026-05-29",
-      "label": "Today",
+      "label": "Fri May 29",
       "events": [],
       "weather": {
         "wind_kt_max": 13.7,
@@ -376,7 +352,7 @@
     },
     {
       "date": "2026-05-30",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 12.9,
@@ -400,7 +376,7 @@
     },
     {
       "date": "2026-05-31",
-      "label": "Sun May 31",
+      "label": "Tomorrow",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -441,6 +417,14 @@
     {
       "date": "2026-06-05",
       "label": "Fri Jun 5",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-06",
+      "label": "Sat Jun 6",
       "events": [],
       "weather": null,
       "lanes": [],
