@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-02T02:43:50-04:00",
+  "generated_at": "2026-06-03T02:45:29-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,123 +15,6 @@
   ],
   "days": [
     {
-      "date": "2026-05-31",
-      "label": "Sun May 31",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 84,
-              "title": "Find battery tender and resurrect three dead house batteries",
-              "url": "https://github.com/norton120/svdefiant/issues/84",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-31"
-            }
-          ]
-        },
-        {
-          "system": "engine",
-          "issues": [
-            {
-              "number": 86,
-              "title": "Pull fuel sender to order replacement",
-              "url": "https://github.com/norton120/svdefiant/issues/86",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": true,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-31"
-            },
-            {
-              "number": 87,
-              "title": "Find machine shop for wheel adapter and HVAC guy for icebox",
-              "url": "https://github.com/norton120/svdefiant/issues/87",
-              "milestone": null,
-              "priority": "p2",
-              "systems": [
-                "engine",
-                "interior"
-              ],
-              "energy": "couch",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-31"
-            }
-          ]
-        },
-        {
-          "system": "hull",
-          "issues": [
-            {
-              "number": 85,
-              "title": "Epoxy dinghy transom plate back on",
-              "url": "https://github.com/norton120/svdefiant/issues/85",
-              "milestone": null,
-              "priority": "p2",
-              "systems": [
-                "hull",
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-05-31"
-            }
-          ]
-        }
-      ],
-      "task_count": 4
-    },
-    {
       "date": "2026-06-01",
       "label": "Mon Jun 1",
       "events": [],
@@ -141,7 +24,7 @@
     },
     {
       "date": "2026-06-02",
-      "label": "Today",
+      "label": "Tue Jun 2",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -149,7 +32,7 @@
     },
     {
       "date": "2026-06-03",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -157,7 +40,7 @@
     },
     {
       "date": "2026-06-04",
-      "label": "Thu Jun 4",
+      "label": "Tomorrow",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -198,6 +81,14 @@
     {
       "date": "2026-06-09",
       "label": "Tue Jun 9",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-10",
+      "label": "Wed Jun 10",
       "events": [],
       "weather": null,
       "lanes": [],
