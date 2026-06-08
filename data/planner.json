@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-07T02:40:12-04:00",
+  "generated_at": "2026-06-07T22:21:04-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -51,24 +51,106 @@
       "label": "Tue Jun 9",
       "events": [],
       "weather": null,
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "engine",
+          "issues": [
+            {
+              "number": 93,
+              "title": "Call Soundown And Order Materials",
+              "url": "https://github.com/norton120/svdefiant/issues/93",
+              "milestone": null,
+              "priority": "p2",
+              "systems": [
+                "engine"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-09"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
     },
     {
       "date": "2026-06-10",
       "label": "Wed Jun 10",
       "events": [],
       "weather": null,
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "sails",
+          "issues": [
+            {
+              "number": 94,
+              "title": "Install Staysail Furler",
+              "url": "https://github.com/norton120/svdefiant/issues/94",
+              "milestone": null,
+              "priority": "p1",
+              "systems": [
+                "sails"
+              ],
+              "energy": "heavy",
+              "weather": "dry",
+              "time": "full-day",
+              "locations": [
+                "on-deck",
+                "aloft"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-10"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
     },
     {
       "date": "2026-06-11",
       "label": "Thu Jun 11",
       "events": [],
       "weather": null,
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "sails",
+          "issues": [
+            {
+              "number": 95,
+              "title": "Lubricate Jib Furler",
+              "url": "https://github.com/norton120/svdefiant/issues/95",
+              "milestone": null,
+              "priority": "p1",
+              "systems": [
+                "sails"
+              ],
+              "energy": "light",
+              "weather": "dry",
+              "time": "lt-1hr",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-11"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
     },
     {
       "date": "2026-06-12",
