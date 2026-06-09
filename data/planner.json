@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-08T02:44:08-04:00",
+  "generated_at": "2026-06-09T02:30:37-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,14 +15,6 @@
   ],
   "days": [
     {
-      "date": "2026-06-06",
-      "label": "Sat Jun 6",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
       "date": "2026-06-07",
       "label": "Sun Jun 7",
       "events": [],
@@ -32,7 +24,7 @@
     },
     {
       "date": "2026-06-08",
-      "label": "Today",
+      "label": "Mon Jun 8",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -40,7 +32,7 @@
     },
     {
       "date": "2026-06-09",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": null,
       "lanes": [
@@ -63,9 +55,9 @@
                 "indoors"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-06-09"
             }
           ]
@@ -75,7 +67,7 @@
     },
     {
       "date": "2026-06-10",
-      "label": "Wed Jun 10",
+      "label": "Tomorrow",
       "events": [],
       "weather": null,
       "lanes": [
@@ -99,7 +91,7 @@
                 "aloft"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
+              "project_status": "In Progress",
               "state": "OPEN",
               "done": false,
               "day": "2026-06-10"
@@ -171,6 +163,14 @@
     {
       "date": "2026-06-15",
       "label": "Mon Jun 15",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-16",
+      "label": "Tue Jun 16",
       "events": [],
       "weather": null,
       "lanes": [],
