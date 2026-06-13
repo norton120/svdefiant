@@ -428,11 +428,11 @@ TOOLS: list[Tool] = [
         description=(
             "Add an Amazon product URL to a named virtual cart. The cart is just "
             "an ASIN list on disk — the agent never touches Amazon. When the user "
-            "is ready, cart_get_url emits a click-to-checkout URL that populates "
-            "their real Amazon cart for normal review/checkout. The server fetches "
-            "the product page once for title/price. Same-ASIN re-add increments "
-            "quantity. Cap is 40 unique items per cart; new carts are auto-created "
-            "on first add."
+            "is ready, cart_get_url returns a review-page link (plus per-item "
+            "product links) so they can look the list over and add items to their "
+            "real Amazon cart. The server fetches the product page once for "
+            "title/price. Same-ASIN re-add increments quantity. Cap is 40 unique "
+            "items per cart; new carts are auto-created on first add."
         ),
         inputSchema={
             "type": "object",
@@ -499,7 +499,7 @@ TOOLS: list[Tool] = [
     ),
     Tool(
         name="cart_get_url",
-        description="Emit the Amazon add-to-cart URL for a cart. When the user clicks (logged in to Amazon), the items appear in their real cart for normal review/checkout. Idempotent and non-destructive — the cart on disk is untouched, so you can re-emit the URL anytime.",
+        description="Get the review link for a cart. Returns page_url (the cart's page on the work-log server — tailnet-only, open on a phone), a summary (unique_count, total_qty, total_price), and per-item Amazon /dp/ links. Amazon no longer supports shareable one-click carts, so the user reviews on the page and taps each product to add it to their real cart. Read-only and idempotent — re-emit anytime. Send the user the page_url with a one-line summary (e.g. \"3 items, $142 — <page_url>\").",
         inputSchema={
             "type": "object",
             "properties": {"cart": {"type": "string", "default": "stubb"}},

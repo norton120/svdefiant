@@ -12,7 +12,7 @@ Subcommands:
   wiki     local wiki search + edit (auto-clones on first use)
   weather  marine weather + tides (auto when underway)
   calendar day-level events the agent should respect when scheduling
-  cart     virtual Amazon cart (ASINs on disk; emit add-to-cart URL on demand)
+  cart     parts shopping list (ASINs on disk; review on the work-log cart page)
   photo    Ente photo inbox (album sync'd by ente CLI; list/archive)
 
 Cache, ack, calendar, and wiki files live under DEFIANT_HOME (default: ~/.defiant).
@@ -1216,16 +1216,21 @@ def cmd_calendar_list(args):
 
 
 # --- cart ------------------------------------------------------------------
-# Virtual Amazon cart: agent adds/removes ASINs over multiple turns; the
-# `url` verb emits an add-to-cart URL the human clicks (while logged in to
-# Amazon) to populate their real cart for review/checkout. We never touch
-# Amazon directly — no creds, no session, no Playwright. The 40-item cap
-# keeps the assembled URL well inside Amazon's tested limits.
+# Virtual parts cart: agent adds/removes ASINs over multiple turns; the `url`
+# verb emits a link to the review page (work-log server, tailnet-only) plus
+# per-item /dp/ links the human taps to add each item to their real Amazon
+# cart. Amazon killed shareable add-to-cart URLs, so there's no one-click
+# hand-off anymore — the page is the review surface. We never touch Amazon
+# directly — no creds, no session, no Playwright. The 40-item cap is a sanity
+# bound on cart size.
 
 CART_DB = DEFIANT_HOME / "carts.db"
 CART_MAX_ITEMS = 40
 CART_DEFAULT_NAME = "stubb"
-AMAZON_CART_BASE = "https://www.amazon.com/gp/aws/cart/add.html"
+# Base URL of the work-log server's cart review page (Tailscale-fronted).
+CART_PAGE_BASE = os.environ.get(
+    "CART_PAGE_BASE", "https://ironclaw.tail18dc03.ts.net:8443"
+).rstrip("/")
 AMAZON_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 13_0) "
              "AppleWebKit/605.1.15 (KHTML, like Gecko) "
              "Version/16.0 Safari/605.1.15")
@@ -1350,7 +1355,7 @@ def cmd_cart_add(args):
         ).fetchone()[0]
         if unique >= CART_MAX_ITEMS:
             die(f"cart {cart!r} at cap ({CART_MAX_ITEMS} unique items); "
-                f"check out via 'cart url' or free a slot via 'cart remove'")
+                f"review via 'cart url' or free a slot via 'cart remove'")
 
     title = args.title
     price_str = args.price
@@ -1486,19 +1491,28 @@ def cmd_cart_get_url(args):
     db = _cart_db()
     cart = args.cart or CART_DEFAULT_NAME
     rows = db.execute(
-        "SELECT asin, qty FROM cart_items WHERE cart=? ORDER BY added_at",
+        "SELECT asin, qty, title, price_str FROM cart_items "
+        "WHERE cart=? ORDER BY added_at",
         (cart,),
     ).fetchall()
     if not rows:
         die(f"cart {cart!r} is empty")
-    if len(rows) > CART_MAX_ITEMS:
-        die(f"cart {cart!r} has {len(rows)} items, exceeds cap of {CART_MAX_ITEMS}")
-    qs = []
-    for i, (asin, qty) in enumerate(rows, start=1):
-        qs.append(f"ASIN.{i}={asin}")
-        qs.append(f"Quantity.{i}={qty}")
-    url = f"{AMAZON_CART_BASE}?{'&'.join(qs)}"
-    _emit_json({"cart": cart, "url": url, **_cart_summary(db, cart)})
+    # Amazon no longer supports shareable one-click add-to-cart URLs, so we
+    # hand back the review-page link (the page reads carts.db live — nothing to
+    # publish) plus per-item /dp/ links the human taps to add each to their
+    # real cart.
+    items = [
+        {"asin": asin, "qty": qty, "title": title, "price": price_str,
+         "url": f"https://www.amazon.com/dp/{asin}"}
+        for (asin, qty, title, price_str) in rows
+    ]
+    page_url = f"{CART_PAGE_BASE}/cart/{cart}"
+    _emit_json({
+        "cart": cart,
+        "page_url": page_url,
+        "items": items,
+        **_cart_summary(db, cart),
+    })
 
 
 # --- planner ---------------------------------------------------------------
@@ -2810,7 +2824,7 @@ def build_parser() -> argparse.ArgumentParser:
     crv_clear.add_argument("--cart", default=None)
     crv_clear.set_defaults(func=cmd_cart_clear)
 
-    crv_url = crv.add_parser("url", help="emit Amazon add-to-cart URL for a cart")
+    crv_url = crv.add_parser("url", help="emit the cart review-page link + item summary")
     crv_url.add_argument("--cart", default=None)
     crv_url.set_defaults(func=cmd_cart_get_url)
 
