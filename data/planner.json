@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-12T02:43:54-04:00",
+  "generated_at": "2026-06-13T02:34:00-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,42 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-06-10",
-      "label": "Wed Jun 10",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "sails",
-          "issues": [
-            {
-              "number": 94,
-              "title": "Install Staysail Furler",
-              "url": "https://github.com/norton120/svdefiant/issues/94",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "sails"
-              ],
-              "energy": "heavy",
-              "weather": "dry",
-              "time": "full-day",
-              "locations": [
-                "on-deck",
-                "aloft"
-              ],
-              "blocked_parts": false,
-              "project_status": "In Progress",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-10"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
     {
       "date": "2026-06-11",
       "label": "Thu Jun 11",
@@ -87,7 +51,7 @@
     },
     {
       "date": "2026-06-12",
-      "label": "Today",
+      "label": "Fri Jun 12",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -95,7 +59,7 @@
     },
     {
       "date": "2026-06-13",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -103,7 +67,7 @@
     },
     {
       "date": "2026-06-14",
-      "label": "Sun Jun 14",
+      "label": "Tomorrow",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -144,6 +108,14 @@
     {
       "date": "2026-06-19",
       "label": "Fri Jun 19",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-20",
+      "label": "Sat Jun 20",
       "events": [],
       "weather": null,
       "lanes": [],
