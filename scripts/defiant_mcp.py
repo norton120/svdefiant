@@ -430,9 +430,13 @@ TOOLS: list[Tool] = [
             "an ASIN list on disk — the agent never touches Amazon. When the user "
             "is ready, cart_get_url returns a review-page link (plus per-item "
             "product links) so they can look the list over and add items to their "
-            "real Amazon cart. The server fetches the product page once for "
-            "title/price. Same-ASIN re-add increments quantity. Cap is 40 unique "
-            "items per cart; new carts are auto-created on first add."
+            "real Amazon cart. The server fetches the product page first to "
+            "verify the item and read its buybox price: if the page is dead / "
+            "out of stock / has no buy button, the add is REJECTED with an error "
+            "(pick a currently-buyable product); if only a price range is found "
+            "(a variant/parent listing) it adds but returns a 'warning' to "
+            "confirm the exact item. Same-ASIN re-add increments quantity. Cap is "
+            "40 unique items per cart; new carts are auto-created on first add."
         ),
         inputSchema={
             "type": "object",

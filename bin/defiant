@@ -1237,8 +1237,29 @@ AMAZON_UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 13_0) "
 
 ASIN_RE = re.compile(r"(?:/dp/|/gp/product/|/gp/aw/d/|[?&]asin=)([A-Z0-9]{10})", re.I)
 TITLE_RE = re.compile(r'<span\s+id="productTitle"[^>]*>\s*(.*?)\s*</span>', re.DOTALL | re.I)
-PRICE_RE = re.compile(r'<span class="a-offscreen">([^<]+)</span>')
+OFFSCREEN_RE = re.compile(r'<span class="a-offscreen">([^<]+)</span>')
 PRICE_CENTS_RE = re.compile(r"\$?\s*([\d,]+)\.(\d{2})")
+# A price *range* ("$18.99 - $25.99") means a variant/parent listing — the
+# scraped number isn't necessarily the item the agent meant. Flag, don't trust.
+PRICE_RANGE_RE = re.compile(r"\$[\d,]+\.\d{2}\s*[-–—]\s*\$[\d,]+\.\d{2}")
+# Buybox / current-price containers, most-specific first. We read the price
+# from inside one of these rather than the first a-offscreen on the page —
+# that first span is often a sponsored item, list/strikethrough, or a related
+# product, which is how a cart ends up showing 1/3 the real price.
+CORE_PRICE_ANCHORS = (
+    'corePriceDisplay_desktop_feature_div',
+    'corePrice_feature_div',
+    'corePrice_desktop',
+    'apex_offerDisplay_desktop',
+    'priceblock_ourprice',
+    'priceblock_dealprice',
+    'qualifiedBuybox',
+    'buybox',
+)
+# Definitive "you can't buy this" signals.
+OOS_RE = re.compile(r'id="outOfStock"|>\s*Currently unavailable\.?\s*<', re.I)
+BUYABLE_RE = re.compile(r'id="(?:add-to-cart|buy-now)-button"|name="submit\.add-to-cart"')
+ROBOT_RE = re.compile(r"Robot Check|validateCaptcha|api-services-support@amazon", re.I)
 
 
 def _cart_db() -> sqlite3.Connection:
@@ -1290,10 +1311,33 @@ def _parse_price_cents(s: str) -> int | None:
     return None
 
 
-def _fetch_product(asin: str) -> tuple[str | None, str | None, int | None]:
-    """Best-effort title + price scrape. Returns (title, price_str, price_cents).
-    Any element None on failure — agent typically already saw these while
-    browsing, so enrichment is just a nicety for cart_list summaries."""
+def _extract_buybox_price(html: str) -> tuple[str | None, int | None, bool]:
+    """Price from inside a buybox/current-price container, not the first
+    a-offscreen on the page. Returns (price_str, price_cents, is_range)."""
+    for anchor in CORE_PRICE_ANCHORS:
+        idx = html.find(anchor)
+        if idx == -1:
+            continue
+        window = html[idx:idx + 3000]
+        if m := PRICE_RANGE_RE.search(window):
+            return m.group(0), _parse_price_cents(m.group(0)), True
+        for raw in OFFSCREEN_RE.findall(window):
+            cents = _parse_price_cents(raw)
+            if cents is not None:
+                return raw.strip(), cents, False
+    return None, None, False
+
+
+def _fetch_product(asin: str) -> dict:
+    """Fetch + assess a product page. Returns:
+      status: 'ok' (buyable, priced) | 'unavailable' (definitively can't buy) |
+              'unknown' (fetch failed / bot-walled — can't tell, stay permissive)
+      reason, title, price_str, price_cents, price_is_range
+    The 'unavailable' verdict is conservative: only a 404/410, an explicit
+    out-of-stock marker, or (no buy button AND no buybox price) trips it, so a
+    page that merely parses oddly isn't falsely rejected."""
+    blank = {"title": None, "price_str": None, "price_cents": None,
+             "price_is_range": False}
     try:
         req = urllib.request.Request(
             f"https://www.amazon.com/dp/{asin}",
@@ -1301,15 +1345,32 @@ def _fetch_product(asin: str) -> tuple[str | None, str | None, int | None]:
         )
         with urllib.request.urlopen(req, timeout=10) as resp:
             html = resp.read(1_000_000).decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as e:
+        if e.code in (404, 410):
+            return {"status": "unavailable",
+                    "reason": f"product page not found (HTTP {e.code})", **blank}
+        return {"status": "unknown", "reason": f"HTTP {e.code}", **blank}
     except (urllib.error.URLError, TimeoutError, ValueError):
-        return None, None, None
+        return {"status": "unknown", "reason": "fetch failed", **blank}
+
+    if ROBOT_RE.search(html[:5000]):
+        return {"status": "unknown", "reason": "blocked (robot check)", **blank}
+
     title = None
     if m := TITLE_RE.search(html):
         title = re.sub(r"\s+", " ", m.group(1)).strip()[:200] or None
-    price_str = None
-    if m := PRICE_RE.search(html):
-        price_str = m.group(1).strip() or None
-    return title, price_str, _parse_price_cents(price_str or "")
+    price_str, price_cents, is_range = _extract_buybox_price(html)
+    buyable = bool(BUYABLE_RE.search(html))
+
+    if OOS_RE.search(html) or (not buyable and price_cents is None):
+        return {"status": "unavailable",
+                "reason": "out of stock / no buy option",
+                "title": title, "price_str": None, "price_cents": None,
+                "price_is_range": False}
+
+    return {"status": "ok", "reason": None, "title": title,
+            "price_str": price_str, "price_cents": price_cents,
+            "price_is_range": is_range}
 
 
 def _cart_summary(db: sqlite3.Connection, name: str) -> dict:
@@ -1360,11 +1421,22 @@ def cmd_cart_add(args):
     title = args.title
     price_str = args.price
     price_cents = _parse_price_cents(price_str or "")
-    if (not title or not price_str) and not args.no_enrich:
-        t, p, pc = _fetch_product(asin)
-        title = title or t
+    price_note = None
+    # Verify the item is actually buyable before it can enter the cart. A
+    # confirmed-dead ASIN (404, out of stock, no buy button) is rejected so the
+    # agent must pick a live product; a fetch we can't complete (blocked/error)
+    # stays permissive so it doesn't reject everything. --no-enrich bypasses.
+    if not args.no_enrich:
+        info = _fetch_product(asin)
+        if info["status"] == "unavailable":
+            die(f"{asin} appears unavailable ({info['reason']}) — pick a "
+                f"currently-buyable product, or pass --no-enrich to add anyway.")
+        title = title or info["title"]
         if not price_str:
-            price_str, price_cents = p, pc
+            price_str, price_cents = info["price_str"], info["price_cents"]
+        if info["price_is_range"]:
+            price_note = ("price is a range — looks like a variant/parent "
+                          "listing; confirm the exact item before trusting it")
 
     now = now_iso()
     if existing:
@@ -1394,7 +1466,7 @@ def cmd_cart_add(args):
         "SELECT qty FROM cart_items WHERE cart=? AND asin=?", (cart, asin)
     ).fetchone()[0]
     summary = _cart_summary(db, cart)
-    _emit_json({
+    out = {
         "cart": cart,
         "asin": asin,
         "title": title,
@@ -1403,7 +1475,10 @@ def cmd_cart_add(args):
         "unique_count": summary["unique_count"],
         "total_qty": summary["total_qty"],
         "total_price": summary["total_price"],
-    })
+    }
+    if price_note:
+        out["warning"] = price_note
+    _emit_json(out)
 
 
 def cmd_cart_remove(args):
