@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-13T02:34:00-04:00",
+  "generated_at": "2026-06-14T02:43:25-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,41 +15,6 @@
   ],
   "days": [
     {
-      "date": "2026-06-11",
-      "label": "Thu Jun 11",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "sails",
-          "issues": [
-            {
-              "number": 95,
-              "title": "Lubricate Jib Furler",
-              "url": "https://github.com/norton120/svdefiant/issues/95",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "sails"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-11"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
-    {
       "date": "2026-06-12",
       "label": "Fri Jun 12",
       "events": [],
@@ -59,6 +24,97 @@
     },
     {
       "date": "2026-06-13",
+      "label": "Sat Jun 13",
+      "events": [],
+      "weather": null,
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 102,
+              "title": "Install DC-DC charger from starter battery to house bank",
+              "url": "https://github.com/norton120/svdefiant/issues/102",
+              "milestone": null,
+              "priority": "p1",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-13"
+            }
+          ]
+        },
+        {
+          "system": "sails",
+          "issues": [
+            {
+              "number": 94,
+              "title": "Install Staysail Furler",
+              "url": "https://github.com/norton120/svdefiant/issues/94",
+              "milestone": null,
+              "priority": "p1",
+              "systems": [
+                "sails"
+              ],
+              "energy": "heavy",
+              "weather": "dry",
+              "time": "full-day",
+              "locations": [
+                "on-deck",
+                "aloft"
+              ],
+              "blocked_parts": false,
+              "project_status": "In Progress",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-13"
+            }
+          ]
+        },
+        {
+          "system": "plumbing",
+          "issues": [
+            {
+              "number": 99,
+              "title": "Install replacement salt pump",
+              "url": "https://github.com/norton120/svdefiant/issues/99",
+              "milestone": null,
+              "priority": "p1",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-13"
+            }
+          ]
+        }
+      ],
+      "task_count": 3
+    },
+    {
+      "date": "2026-06-14",
       "label": "Today",
       "events": [],
       "weather": null,
@@ -66,16 +122,8 @@
       "task_count": 0
     },
     {
-      "date": "2026-06-14",
-      "label": "Tomorrow",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
       "date": "2026-06-15",
-      "label": "Mon Jun 15",
+      "label": "Tomorrow",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -116,6 +164,14 @@
     {
       "date": "2026-06-20",
       "label": "Sat Jun 20",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-21",
+      "label": "Sun Jun 21",
       "events": [],
       "weather": null,
       "lanes": [],
