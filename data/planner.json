@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-15T23:20:43-04:00",
+  "generated_at": "2026-06-15T23:24:34-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -67,8 +67,64 @@
         "temp_label": "65\u201377\u00b0",
         "wind_label": "12g18kt \u00b7 1.2ft"
       },
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "plumbing",
+          "issues": [
+            {
+              "number": 70,
+              "title": "Icebox refrigeration conversion (R134a)",
+              "url": "https://github.com/norton120/svdefiant/issues/70",
+              "milestone": null,
+              "priority": "p1",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-16"
+            }
+          ]
+        },
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 103,
+              "title": "Clear out storage unit",
+              "url": "https://github.com/norton120/svdefiant/issues/103",
+              "milestone": null,
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "heavy",
+              "weather": "any",
+              "time": "full-day",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-16"
+            }
+          ]
+        }
+      ],
+      "task_count": 2
     },
     {
       "date": "2026-06-17",
