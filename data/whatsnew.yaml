@@ -78,3 +78,8 @@ entries:
     url: "/blog/motor-motors-sails-sail/"
     summary: "Defiant is finally sailing again after repairs and upgrades—and she's fast!"
     source: "blog"
+  - date: "2026-06-17"
+    title: "Soundown"
+    url: "https://github.com/norton120/svdefiant/wiki/Soundown"
+    summary: "New wiki page about Soundown now available."
+    source: "wiki"
