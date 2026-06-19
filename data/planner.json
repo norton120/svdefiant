@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-18T02:45:15-04:00",
+  "generated_at": "2026-06-19T02:50:49-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,43 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-06-16",
-      "label": "Tue Jun 16",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 70,
-              "title": "Icebox refrigeration conversion (R134a)",
-              "url": "https://github.com/norton120/svdefiant/issues/70",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-16"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
     {
       "date": "2026-06-17",
       "label": "Wed Jun 17",
@@ -138,7 +101,7 @@
     },
     {
       "date": "2026-06-18",
-      "label": "Today",
+      "label": "Thu Jun 18",
       "events": [],
       "weather": {
         "wind_kt_max": 16.2,
@@ -190,7 +153,7 @@
     },
     {
       "date": "2026-06-19",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 13.7,
@@ -214,7 +177,7 @@
     },
     {
       "date": "2026-06-20",
-      "label": "Sat Jun 20",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 10.2,
@@ -335,6 +298,14 @@
     {
       "date": "2026-06-25",
       "label": "Thu Jun 25",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-26",
+      "label": "Fri Jun 26",
       "events": [],
       "weather": null,
       "lanes": [],
