@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-20T00:44:50-04:00",
+  "generated_at": "2026-06-20T02:39:12-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,6 +14,42 @@
     "other"
   ],
   "days": [
+    {
+      "date": "2026-06-18",
+      "label": "Thu Jun 18",
+      "events": [],
+      "weather": null,
+      "lanes": [
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 104,
+              "title": "Pick up and mount folding bike",
+              "url": "https://github.com/norton120/svdefiant/issues/104",
+              "milestone": null,
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
+              "day": "2026-06-18"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
+    },
     {
       "date": "2026-06-19",
       "label": "Fri Jun 19",
