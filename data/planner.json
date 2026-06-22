@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21T02:45:22-04:00",
+  "generated_at": "2026-06-21T22:01:47-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -48,32 +48,10 @@
           "system": "plumbing",
           "issues": [
             {
-              "number": 109,
-              "title": "Fill propane \u2014 big tank and small grill tanks",
-              "url": "https://github.com/norton120/svdefiant/issues/109",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "plumbing",
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-20"
-            },
-            {
               "number": 114,
               "title": "Chain pooper overboard closed for CG inspection",
               "url": "https://github.com/norton120/svdefiant/issues/114",
-              "milestone": "Leave Windmill",
+              "milestone": "Annapolis",
               "priority": "p0",
               "systems": [
                 "plumbing"
@@ -93,36 +71,9 @@
               "day": "2026-06-20"
             }
           ]
-        },
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 118,
-              "title": "Varnish Last Pass",
-              "url": "https://github.com/norton120/svdefiant/issues/118",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "full-day",
-              "locations": [
-                "indoors",
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-20"
-            }
-          ]
         }
       ],
-      "task_count": 3
+      "task_count": 1
     },
     {
       "date": "2026-06-21",
@@ -147,34 +98,6 @@
       },
       "lanes": [
         {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 102,
-              "title": "Install DC-DC charger from starter battery to house bank",
-              "url": "https://github.com/norton120/svdefiant/issues/102",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": true,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-21"
-            }
-          ]
-        },
-        {
           "system": "rigging",
           "issues": [
             {
@@ -193,9 +116,9 @@
                 "on-deck"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-06-21"
             }
           ]
@@ -207,7 +130,7 @@
               "number": 95,
               "title": "Lubricate Jib Furler",
               "url": "https://github.com/norton120/svdefiant/issues/95",
-              "milestone": "Leave Windmill",
+              "milestone": "Annapolis",
               "priority": "p1",
               "systems": [
                 "sails"
@@ -255,88 +178,13 @@
           ]
         },
         {
-          "system": "engine",
-          "issues": [
-            {
-              "number": 72,
-              "title": "Replace fuel filters",
-              "url": "https://github.com/norton120/svdefiant/issues/72",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-21"
-            },
-            {
-              "number": 96,
-              "title": "Motor Checklist",
-              "url": "https://github.com/norton120/svdefiant/issues/96",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-21"
-            }
-          ]
-        },
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 92,
-              "title": "Secure desk chair",
-              "url": "https://github.com/norton120/svdefiant/issues/92",
-              "milestone": "Leave Windmill",
-              "priority": "p2",
-              "systems": [
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-21"
-            }
-          ]
-        },
-        {
           "system": "safety",
           "issues": [
             {
               "number": 90,
               "title": "Register dinghy",
               "url": "https://github.com/norton120/svdefiant/issues/90",
-              "milestone": "Leave Windmill",
+              "milestone": "Annapolis",
               "priority": "p1",
               "systems": [
                 "safety"
@@ -356,7 +204,7 @@
           ]
         }
       ],
-      "task_count": 8
+      "task_count": 4
     },
     {
       "date": "2026-06-22",
@@ -381,6 +229,33 @@
       },
       "lanes": [
         {
+          "system": "sails",
+          "issues": [
+            {
+              "number": 107,
+              "title": "Pick up staysail from Evolution and install",
+              "url": "https://github.com/norton120/svdefiant/issues/107",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "sails"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "on-deck",
+                "aloft"
+              ],
+              "blocked_parts": true,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            }
+          ]
+        },
+        {
           "system": "plumbing",
           "issues": [
             {
@@ -398,6 +273,33 @@
               "time": "lt-1hr",
               "locations": [
                 "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            }
+          ]
+        },
+        {
+          "system": "engine",
+          "issues": [
+            {
+              "number": 96,
+              "title": "Motor Checklist",
+              "url": "https://github.com/norton120/svdefiant/issues/96",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "dry",
+              "time": "lt-1hr",
+              "locations": [
+                "on-deck",
+                "dockside-only"
               ],
               "blocked_parts": false,
               "project_status": "Todo",
@@ -427,7 +329,29 @@
                 "dockside-only"
               ],
               "blocked_parts": false,
-              "project_status": "Todo",
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
+              "day": "2026-06-22"
+            },
+            {
+              "number": 118,
+              "title": "Varnish Last Pass",
+              "url": "https://github.com/norton120/svdefiant/issues/118",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "full-day",
+              "locations": [
+                "indoors",
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "In Progress",
               "state": "OPEN",
               "done": false,
               "day": "2026-06-22"
@@ -435,7 +359,7 @@
           ]
         }
       ],
-      "task_count": 2
+      "task_count": 5
     },
     {
       "date": "2026-06-23",
@@ -483,33 +407,35 @@
               "state": "OPEN",
               "done": false,
               "day": "2026-06-23"
-            }
-          ]
-        },
-        {
-          "system": "plumbing",
-          "issues": [
+            },
             {
-              "number": 14,
-              "title": "Unclog cockpit scupper",
-              "url": "https://github.com/norton120/svdefiant/issues/14",
+              "number": 102,
+              "title": "Install DC-DC charger from starter battery to house bank",
+              "url": "https://github.com/norton120/svdefiant/issues/102",
               "milestone": "Leave Windmill",
               "priority": "p1",
               "systems": [
-                "plumbing"
+                "electrical"
               ],
               "energy": "moderate",
-              "weather": "dry",
+              "weather": "any",
               "time": "half-day",
               "locations": [
-                "on-deck"
+                "indoors",
+                "on-deck",
+                "dockside-only"
               ],
               "blocked_parts": false,
               "project_status": "Todo",
               "state": "OPEN",
               "done": false,
               "day": "2026-06-23"
-            },
+            }
+          ]
+        },
+        {
+          "system": "plumbing",
+          "issues": [
             {
               "number": 26,
               "title": "Aerator in shower head",
@@ -527,6 +453,28 @@
               ],
               "blocked_parts": false,
               "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-23"
+            },
+            {
+              "number": 109,
+              "title": "Fill propane \u2014 big tank",
+              "url": "https://github.com/norton120/svdefiant/issues/109",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "plumbing",
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "In Progress",
               "state": "OPEN",
               "done": false,
               "day": "2026-06-23"
@@ -556,6 +504,28 @@
               "state": "OPEN",
               "done": false,
               "day": "2026-06-23"
+            },
+            {
+              "number": 72,
+              "title": "Replace fuel filters",
+              "url": "https://github.com/norton120/svdefiant/issues/72",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "dry",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-23"
             }
           ]
         },
@@ -566,7 +536,7 @@
               "number": 20,
               "title": "Coast Guard Vessel Check",
               "url": "https://github.com/norton120/svdefiant/issues/20",
-              "milestone": "Leave Windmill",
+              "milestone": "Annapolis",
               "priority": "p1",
               "systems": [
                 "safety"
@@ -587,7 +557,7 @@
               "number": 44,
               "title": "Move truck to long-term spot",
               "url": "https://github.com/norton120/svdefiant/issues/44",
-              "milestone": "Leave Windmill",
+              "milestone": "Annapolis",
               "priority": "p2",
               "systems": [
                 "safety"
@@ -607,7 +577,7 @@
           ]
         }
       ],
-      "task_count": 6
+      "task_count": 8
     },
     {
       "date": "2026-06-24",
@@ -630,8 +600,61 @@
         "temp_label": "63\u201379\u00b0",
         "wind_label": "9g16kt \u00b7 1.8ft"
       },
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "plumbing",
+          "issues": [
+            {
+              "number": 14,
+              "title": "Unclog cockpit scupper",
+              "url": "https://github.com/norton120/svdefiant/issues/14",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-24"
+            }
+          ]
+        },
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 92,
+              "title": "Secure desk chair",
+              "url": "https://github.com/norton120/svdefiant/issues/92",
+              "milestone": "Leave Windmill",
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-24"
+            }
+          ]
+        }
+      ],
+      "task_count": 2
     },
     {
       "date": "2026-06-25",
@@ -654,8 +677,35 @@
         "temp_label": "70\u201380\u00b0",
         "wind_label": "12g18kt \u00b7 1.8ft"
       },
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "rigging",
+          "issues": [
+            {
+              "number": 110,
+              "title": "Add fairlead blocks for staysail and sheets",
+              "url": "https://github.com/norton120/svdefiant/issues/110",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": true,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-25"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
     },
     {
       "date": "2026-06-26",
