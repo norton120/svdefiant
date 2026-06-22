@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21T22:01:47-04:00",
+  "generated_at": "2026-06-21T22:35:04-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,34 +15,10 @@
   ],
   "days": [
     {
-      "date": "2026-06-19",
-      "label": "Fri Jun 19",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
       "date": "2026-06-20",
       "label": "Sat Jun 20",
       "events": [],
-      "weather": {
-        "wind_kt_max": 12.6,
-        "gust_kt_max": 17.1,
-        "wave_ft_max": 0.9,
-        "temp_f": [
-          65,
-          86
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "65\u201386\u00b0",
-        "wind_label": "13g17kt \u00b7 0.9ft"
-      },
+      "weather": null,
       "lanes": [
         {
           "system": "plumbing",
@@ -80,12 +56,12 @@
       "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 13.1,
-        "gust_kt_max": 22.9,
+        "wind_kt_max": 8.6,
+        "gust_kt_max": 12.4,
         "wave_ft_max": 1.0,
         "temp_f": [
-          72,
-          85
+          67,
+          83
         ],
         "precip": false,
         "hazards": [],
@@ -93,8 +69,8 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "72\u201385\u00b0",
-        "wind_label": "13g23kt \u00b7 1.0ft"
+        "temp_label": "67\u201383\u00b0",
+        "wind_label": "9g12kt \u00b7 1.0ft"
       },
       "lanes": [
         {
@@ -211,23 +187,111 @@
       "label": "Tomorrow",
       "events": [],
       "weather": {
-        "wind_kt_max": 16.8,
-        "gust_kt_max": 30.3,
-        "wave_ft_max": 2.0,
+        "wind_kt_max": 23.5,
+        "gust_kt_max": 32.5,
+        "wave_ft_max": 2.1,
         "temp_f": [
           74,
-          90
+          86
         ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
+        "precip": false,
+        "hazards": [
+          "small_craft_advisory"
+        ],
+        "alerts": [
+          {
+            "token": "small_craft_advisory",
+            "event": "Small Craft Advisory",
+            "headline": "Small Craft Advisory issued June 21 at 10:00PM EDT until June 23 at 1:00AM EDT by NWS Wakefield VA",
+            "tooltip": "\u26f5",
+            "url": "https://forecast.weather.gov/MapClick.php?lat=37.61659&lon=-76.290043"
+          }
+        ],
         "icons": [
-          "\ud83c\udf27\ufe0f"
+          "\u2620\ufe0f",
+          "\u2600\ufe0f",
+          "\ud83d\udca8"
         ],
-        "temp_label": "74\u201390\u00b0",
-        "wind_label": "17g30kt \u00b7 2.0ft"
+        "temp_label": "74\u201386\u00b0",
+        "wind_label": "24g32kt \u00b7 2.1ft"
       },
       "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 81,
+              "title": "Liquid tape DC Mains behind panel",
+              "url": "https://github.com/norton120/svdefiant/issues/81",
+              "milestone": "Leave Windmill",
+              "priority": "p0",
+              "systems": [
+                "electrical",
+                "safety"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            },
+            {
+              "number": 102,
+              "title": "Install DC-DC charger from starter battery to house bank",
+              "url": "https://github.com/norton120/svdefiant/issues/102",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            }
+          ]
+        },
+        {
+          "system": "rigging",
+          "issues": [
+            {
+              "number": 110,
+              "title": "Add fairlead blocks for staysail and sheets",
+              "url": "https://github.com/norton120/svdefiant/issues/110",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": true,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            }
+          ]
+        },
         {
           "system": "sails",
           "issues": [
@@ -259,6 +323,70 @@
           "system": "plumbing",
           "issues": [
             {
+              "number": 14,
+              "title": "Unclog cockpit scupper",
+              "url": "https://github.com/norton120/svdefiant/issues/14",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "moderate",
+              "weather": "dry",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            },
+            {
+              "number": 26,
+              "title": "Aerator in shower head",
+              "url": "https://github.com/norton120/svdefiant/issues/26",
+              "milestone": "Leave Windmill",
+              "priority": "p3",
+              "systems": [
+                "plumbing"
+              ],
+              "energy": "couch",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            },
+            {
+              "number": 109,
+              "title": "Fill propane \u2014 big tank",
+              "url": "https://github.com/norton120/svdefiant/issues/109",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "plumbing",
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "In Progress",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            },
+            {
               "number": 113,
               "title": "Fix icebox conversion",
               "url": "https://github.com/norton120/svdefiant/issues/113",
@@ -286,6 +414,49 @@
           "system": "engine",
           "issues": [
             {
+              "number": 12,
+              "title": "Clean out Groco filter",
+              "url": "https://github.com/norton120/svdefiant/issues/12",
+              "milestone": "Leave Windmill",
+              "priority": "p2",
+              "systems": [
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            },
+            {
+              "number": 72,
+              "title": "Replace fuel filters",
+              "url": "https://github.com/norton120/svdefiant/issues/72",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "dry",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            },
+            {
               "number": 96,
               "title": "Motor Checklist",
               "url": "https://github.com/norton120/svdefiant/issues/96",
@@ -312,6 +483,27 @@
         {
           "system": "interior",
           "issues": [
+            {
+              "number": 92,
+              "title": "Secure desk chair",
+              "url": "https://github.com/norton120/svdefiant/issues/92",
+              "milestone": "Leave Windmill",
+              "priority": "p2",
+              "systems": [
+                "interior"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            },
             {
               "number": 117,
               "title": "Mount Nameboards On Bow",
@@ -357,21 +549,47 @@
               "day": "2026-06-22"
             }
           ]
+        },
+        {
+          "system": "ground-tackle",
+          "issues": [
+            {
+              "number": 31,
+              "title": "2nd anchor roller",
+              "url": "https://github.com/norton120/svdefiant/issues/31",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "ground-tackle"
+              ],
+              "energy": "heavy",
+              "weather": "dry",
+              "time": "full-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": true,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-22"
+            }
+          ]
         }
       ],
-      "task_count": 5
+      "task_count": 15
     },
     {
       "date": "2026-06-23",
       "label": "Tue Jun 23",
       "events": [],
       "weather": {
-        "wind_kt_max": 16.1,
-        "gust_kt_max": 21.6,
-        "wave_ft_max": 1.6,
+        "wind_kt_max": 17.9,
+        "gust_kt_max": 25.3,
+        "wave_ft_max": 1.8,
         "temp_f": [
-          70,
-          81
+          66,
+          89
         ],
         "precip": true,
         "hazards": [],
@@ -379,156 +597,10 @@
         "icons": [
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "70\u201381\u00b0",
-        "wind_label": "16g22kt \u00b7 1.6ft"
+        "temp_label": "66\u201389\u00b0",
+        "wind_label": "18g25kt \u00b7 1.8ft"
       },
       "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 81,
-              "title": "Liquid tape DC Mains behind panel",
-              "url": "https://github.com/norton120/svdefiant/issues/81",
-              "milestone": "Leave Windmill",
-              "priority": "p0",
-              "systems": [
-                "electrical",
-                "safety"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-23"
-            },
-            {
-              "number": 102,
-              "title": "Install DC-DC charger from starter battery to house bank",
-              "url": "https://github.com/norton120/svdefiant/issues/102",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-23"
-            }
-          ]
-        },
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 26,
-              "title": "Aerator in shower head",
-              "url": "https://github.com/norton120/svdefiant/issues/26",
-              "milestone": "Leave Windmill",
-              "priority": "p3",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "couch",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-23"
-            },
-            {
-              "number": 109,
-              "title": "Fill propane \u2014 big tank",
-              "url": "https://github.com/norton120/svdefiant/issues/109",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "plumbing",
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "In Progress",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-23"
-            }
-          ]
-        },
-        {
-          "system": "engine",
-          "issues": [
-            {
-              "number": 12,
-              "title": "Clean out Groco filter",
-              "url": "https://github.com/norton120/svdefiant/issues/12",
-              "milestone": "Leave Windmill",
-              "priority": "p2",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-23"
-            },
-            {
-              "number": 72,
-              "title": "Replace fuel filters",
-              "url": "https://github.com/norton120/svdefiant/issues/72",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-23"
-            }
-          ]
-        },
         {
           "system": "safety",
           "issues": [
@@ -577,18 +649,18 @@
           ]
         }
       ],
-      "task_count": 8
+      "task_count": 2
     },
     {
       "date": "2026-06-24",
       "label": "Wed Jun 24",
       "events": [],
       "weather": {
-        "wind_kt_max": 9.2,
-        "gust_kt_max": 15.9,
-        "wave_ft_max": 1.8,
+        "wind_kt_max": 9.8,
+        "gust_kt_max": 18.3,
+        "wave_ft_max": 1.3,
         "temp_f": [
-          63,
+          64,
           79
         ],
         "precip": false,
@@ -597,127 +669,23 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "63\u201379\u00b0",
-        "wind_label": "9g16kt \u00b7 1.8ft"
+        "temp_label": "64\u201379\u00b0",
+        "wind_label": "10g18kt \u00b7 1.3ft"
       },
-      "lanes": [
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 14,
-              "title": "Unclog cockpit scupper",
-              "url": "https://github.com/norton120/svdefiant/issues/14",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-24"
-            }
-          ]
-        },
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 92,
-              "title": "Secure desk chair",
-              "url": "https://github.com/norton120/svdefiant/issues/92",
-              "milestone": "Leave Windmill",
-              "priority": "p2",
-              "systems": [
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-24"
-            }
-          ]
-        }
-      ],
-      "task_count": 2
+      "lanes": [],
+      "task_count": 0
     },
     {
       "date": "2026-06-25",
       "label": "Thu Jun 25",
       "events": [],
       "weather": {
-        "wind_kt_max": 12.2,
-        "gust_kt_max": 18.5,
-        "wave_ft_max": 1.8,
+        "wind_kt_max": 16.0,
+        "gust_kt_max": 28.2,
+        "wave_ft_max": 2.1,
         "temp_f": [
-          70,
-          80
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "70\u201380\u00b0",
-        "wind_label": "12g18kt \u00b7 1.8ft"
-      },
-      "lanes": [
-        {
-          "system": "rigging",
-          "issues": [
-            {
-              "number": 110,
-              "title": "Add fairlead blocks for staysail and sheets",
-              "url": "https://github.com/norton120/svdefiant/issues/110",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": true,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-25"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
-    {
-      "date": "2026-06-26",
-      "label": "Fri Jun 26",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 9.7,
-        "gust_kt_max": 15.6,
-        "wave_ft_max": 0.5,
-        "temp_f": [
-          67,
-          82
+          68,
+          81
         ],
         "precip": false,
         "hazards": [],
@@ -725,8 +693,32 @@
         "icons": [
           "\u2600\ufe0f"
         ],
-        "temp_label": "67\u201382\u00b0",
-        "wind_label": "10g16kt \u00b7 0.5ft"
+        "temp_label": "68\u201381\u00b0",
+        "wind_label": "16g28kt \u00b7 2.1ft"
+      },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-26",
+      "label": "Fri Jun 26",
+      "events": [],
+      "weather": {
+        "wind_kt_max": 15.2,
+        "gust_kt_max": 29.2,
+        "wave_ft_max": 1.9,
+        "temp_f": [
+          74,
+          90
+        ],
+        "precip": true,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\ud83c\udf27\ufe0f"
+        ],
+        "temp_label": "74\u201390\u00b0",
+        "wind_label": "15g29kt \u00b7 1.9ft"
       },
       "lanes": [],
       "task_count": 0
@@ -736,12 +728,12 @@
       "label": "Sat Jun 27",
       "events": [],
       "weather": {
-        "wind_kt_max": 9.2,
-        "gust_kt_max": 11.3,
-        "wave_ft_max": 0.5,
+        "wind_kt_max": 6.6,
+        "gust_kt_max": 12.6,
+        "wave_ft_max": 1.0,
         "temp_f": [
-          70,
-          78
+          72,
+          83
         ],
         "precip": true,
         "hazards": [],
@@ -749,8 +741,8 @@
         "icons": [
           "\ud83c\udf27\ufe0f"
         ],
-        "temp_label": "70\u201378\u00b0",
-        "wind_label": "9kt \u00b7 0.5ft"
+        "temp_label": "72\u201383\u00b0",
+        "wind_label": "7g13kt \u00b7 1.0ft"
       },
       "lanes": [],
       "task_count": 0
@@ -759,7 +751,23 @@
       "date": "2026-06-28",
       "label": "Sun Jun 28",
       "events": [],
-      "weather": null,
+      "weather": {
+        "wind_kt_max": 9.4,
+        "gust_kt_max": 14.6,
+        "wave_ft_max": 1.0,
+        "temp_f": [
+          75,
+          84
+        ],
+        "precip": false,
+        "hazards": [],
+        "alerts": [],
+        "icons": [
+          "\u2600\ufe0f"
+        ],
+        "temp_label": "75\u201384\u00b0",
+        "wind_label": "9g15kt \u00b7 1.0ft"
+      },
       "lanes": [],
       "task_count": 0
     }
