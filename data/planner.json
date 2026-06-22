@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21T23:06:48-04:00",
+  "generated_at": "2026-06-22T02:58:44-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -24,7 +24,7 @@
     },
     {
       "date": "2026-06-21",
-      "label": "Today",
+      "label": "Sun Jun 21",
       "events": [],
       "weather": {
         "wind_kt_max": 8.4,
@@ -75,7 +75,7 @@
     },
     {
       "date": "2026-06-22",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 23.5,
@@ -318,7 +318,7 @@
               "locations": [
                 "on-deck"
               ],
-              "blocked_parts": true,
+              "blocked_parts": false,
               "project_status": "Todo",
               "state": "OPEN",
               "done": false,
@@ -331,7 +331,7 @@
     },
     {
       "date": "2026-06-23",
-      "label": "Tue Jun 23",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 17.9,
@@ -652,6 +652,14 @@
         "temp_label": "75\u201384\u00b0",
         "wind_label": "9g15kt \u00b7 1.0ft"
       },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-29",
+      "label": "Mon Jun 29",
+      "events": [],
+      "weather": null,
       "lanes": [],
       "task_count": 0
     }
