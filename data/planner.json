@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21T22:35:04-04:00",
+  "generated_at": "2026-06-21T23:01:44-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -19,45 +19,16 @@
       "label": "Sat Jun 20",
       "events": [],
       "weather": null,
-      "lanes": [
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 114,
-              "title": "Chain pooper overboard closed for CG inspection",
-              "url": "https://github.com/norton120/svdefiant/issues/114",
-              "milestone": "Annapolis",
-              "priority": "p0",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-20"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
+      "lanes": [],
+      "task_count": 0
     },
     {
       "date": "2026-06-21",
       "label": "Today",
       "events": [],
       "weather": {
-        "wind_kt_max": 8.6,
-        "gust_kt_max": 12.4,
+        "wind_kt_max": 8.4,
+        "gust_kt_max": 11.1,
         "wave_ft_max": 1.0,
         "temp_f": [
           67,
@@ -70,7 +41,7 @@
           "\u2600\ufe0f"
         ],
         "temp_label": "67\u201383\u00b0",
-        "wind_label": "9g12kt \u00b7 1.0ft"
+        "wind_label": "8g11kt \u00b7 1.0ft"
       },
       "lanes": [
         {
@@ -95,60 +66,6 @@
               "project_status": "Done",
               "state": "CLOSED",
               "done": true,
-              "day": "2026-06-21"
-            }
-          ]
-        },
-        {
-          "system": "sails",
-          "issues": [
-            {
-              "number": 95,
-              "title": "Lubricate Jib Furler",
-              "url": "https://github.com/norton120/svdefiant/issues/95",
-              "milestone": "Annapolis",
-              "priority": "p1",
-              "systems": [
-                "sails"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-21"
-            }
-          ]
-        },
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 112,
-              "title": "Install new electrode plate for electropooper",
-              "url": "https://github.com/norton120/svdefiant/issues/112",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "plumbing",
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
               "day": "2026-06-21"
             }
           ]
@@ -180,7 +97,7 @@
           ]
         }
       ],
-      "task_count": 4
+      "task_count": 2
     },
     {
       "date": "2026-06-22",
@@ -191,7 +108,7 @@
         "gust_kt_max": 32.5,
         "wave_ft_max": 2.1,
         "temp_f": [
-          74,
+          73,
           86
         ],
         "precip": false,
@@ -212,86 +129,10 @@
           "\u2600\ufe0f",
           "\ud83d\udca8"
         ],
-        "temp_label": "74\u201386\u00b0",
+        "temp_label": "73\u201386\u00b0",
         "wind_label": "24g32kt \u00b7 2.1ft"
       },
       "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 81,
-              "title": "Liquid tape DC Mains behind panel",
-              "url": "https://github.com/norton120/svdefiant/issues/81",
-              "milestone": "Leave Windmill",
-              "priority": "p0",
-              "systems": [
-                "electrical",
-                "safety"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            },
-            {
-              "number": 102,
-              "title": "Install DC-DC charger from starter battery to house bank",
-              "url": "https://github.com/norton120/svdefiant/issues/102",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            }
-          ]
-        },
-        {
-          "system": "rigging",
-          "issues": [
-            {
-              "number": 110,
-              "title": "Add fairlead blocks for staysail and sheets",
-              "url": "https://github.com/norton120/svdefiant/issues/110",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": true,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            }
-          ]
-        },
         {
           "system": "sails",
           "issues": [
@@ -577,7 +418,7 @@
           ]
         }
       ],
-      "task_count": 15
+      "task_count": 12
     },
     {
       "date": "2026-06-23",
@@ -601,6 +442,34 @@
         "wind_label": "18g25kt \u00b7 1.8ft"
       },
       "lanes": [
+        {
+          "system": "plumbing",
+          "issues": [
+            {
+              "number": 112,
+              "title": "Install new electrode plate for electropooper",
+              "url": "https://github.com/norton120/svdefiant/issues/112",
+              "milestone": null,
+              "priority": "p1",
+              "systems": [
+                "plumbing",
+                "interior"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-23"
+            }
+          ]
+        },
         {
           "system": "safety",
           "issues": [
@@ -649,7 +518,7 @@
           ]
         }
       ],
-      "task_count": 2
+      "task_count": 3
     },
     {
       "date": "2026-06-24",
@@ -672,8 +541,59 @@
         "temp_label": "64\u201379\u00b0",
         "wind_label": "10g18kt \u00b7 1.3ft"
       },
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "electrical",
+          "issues": [
+            {
+              "number": 81,
+              "title": "Liquid tape DC Mains behind panel",
+              "url": "https://github.com/norton120/svdefiant/issues/81",
+              "milestone": "Leave Windmill",
+              "priority": "p0",
+              "systems": [
+                "electrical",
+                "safety"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-24"
+            },
+            {
+              "number": 102,
+              "title": "Install DC-DC charger from starter battery to house bank",
+              "url": "https://github.com/norton120/svdefiant/issues/102",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "electrical"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors",
+                "on-deck",
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-24"
+            }
+          ]
+        }
+      ],
+      "task_count": 2
     },
     {
       "date": "2026-06-25",
@@ -696,8 +616,35 @@
         "temp_label": "68\u201381\u00b0",
         "wind_label": "16g28kt \u00b7 2.1ft"
       },
-      "lanes": [],
-      "task_count": 0
+      "lanes": [
+        {
+          "system": "rigging",
+          "issues": [
+            {
+              "number": 110,
+              "title": "Add fairlead blocks for staysail and sheets",
+              "url": "https://github.com/norton120/svdefiant/issues/110",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "rigging"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "on-deck"
+              ],
+              "blocked_parts": true,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-25"
+            }
+          ]
+        }
+      ],
+      "task_count": 1
     },
     {
       "date": "2026-06-26",
