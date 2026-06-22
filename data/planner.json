@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-21T23:01:44-04:00",
+  "generated_at": "2026-06-21T23:06:48-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -69,35 +69,9 @@
               "day": "2026-06-21"
             }
           ]
-        },
-        {
-          "system": "safety",
-          "issues": [
-            {
-              "number": 90,
-              "title": "Register dinghy",
-              "url": "https://github.com/norton120/svdefiant/issues/90",
-              "milestone": "Annapolis",
-              "priority": "p1",
-              "systems": [
-                "safety"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-21"
-            }
-          ]
         }
       ],
-      "task_count": 2
+      "task_count": 1
     },
     {
       "date": "2026-06-22",
@@ -206,28 +180,6 @@
               "day": "2026-06-22"
             },
             {
-              "number": 109,
-              "title": "Fill propane \u2014 big tank",
-              "url": "https://github.com/norton120/svdefiant/issues/109",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "plumbing",
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "In Progress",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            },
-            {
               "number": 113,
               "title": "Fix icebox conversion",
               "url": "https://github.com/norton120/svdefiant/issues/113",
@@ -254,49 +206,6 @@
         {
           "system": "engine",
           "issues": [
-            {
-              "number": 12,
-              "title": "Clean out Groco filter",
-              "url": "https://github.com/norton120/svdefiant/issues/12",
-              "milestone": "Leave Windmill",
-              "priority": "p2",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            },
-            {
-              "number": 72,
-              "title": "Replace fuel filters",
-              "url": "https://github.com/norton120/svdefiant/issues/72",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            },
             {
               "number": 96,
               "title": "Motor Checklist",
@@ -418,7 +327,7 @@
           ]
         }
       ],
-      "task_count": 12
+      "task_count": 9
     },
     {
       "date": "2026-06-23",
@@ -471,22 +380,22 @@
           ]
         },
         {
-          "system": "safety",
+          "system": "engine",
           "issues": [
             {
-              "number": 20,
-              "title": "Coast Guard Vessel Check",
-              "url": "https://github.com/norton120/svdefiant/issues/20",
-              "milestone": "Annapolis",
-              "priority": "p1",
+              "number": 12,
+              "title": "Clean out Groco filter",
+              "url": "https://github.com/norton120/svdefiant/issues/12",
+              "milestone": "Leave Windmill",
+              "priority": "p2",
               "systems": [
-                "safety"
+                "engine"
               ],
               "energy": "light",
               "weather": "any",
-              "time": "half-day",
+              "time": "lt-1hr",
               "locations": [
-                "dockside-only"
+                "indoors"
               ],
               "blocked_parts": false,
               "project_status": "Todo",
@@ -495,18 +404,19 @@
               "day": "2026-06-23"
             },
             {
-              "number": 44,
-              "title": "Move truck to long-term spot",
-              "url": "https://github.com/norton120/svdefiant/issues/44",
-              "milestone": "Annapolis",
-              "priority": "p2",
+              "number": 72,
+              "title": "Replace fuel filters",
+              "url": "https://github.com/norton120/svdefiant/issues/72",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
               "systems": [
-                "safety"
+                "engine"
               ],
               "energy": "light",
-              "weather": "any",
+              "weather": "dry",
               "time": "lt-1hr",
               "locations": [
+                "indoors",
                 "dockside-only"
               ],
               "blocked_parts": false,
@@ -591,9 +501,36 @@
               "day": "2026-06-24"
             }
           ]
+        },
+        {
+          "system": "plumbing",
+          "issues": [
+            {
+              "number": 109,
+              "title": "Fill propane \u2014 big tank",
+              "url": "https://github.com/norton120/svdefiant/issues/109",
+              "milestone": "Leave Windmill",
+              "priority": "p1",
+              "systems": [
+                "plumbing",
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "dockside-only"
+              ],
+              "blocked_parts": false,
+              "project_status": "In Progress",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-06-24"
+            }
+          ]
         }
       ],
-      "task_count": 2
+      "task_count": 3
     },
     {
       "date": "2026-06-25",
