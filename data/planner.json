@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-22T12:31:58-04:00",
+  "generated_at": "2026-06-23T02:30:43-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -51,7 +51,7 @@
     },
     {
       "date": "2026-06-22",
-      "label": "Today",
+      "label": "Mon Jun 22",
       "events": [],
       "weather": {
         "wind_kt_max": 19.8,
@@ -279,7 +279,7 @@
     },
     {
       "date": "2026-06-23",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 18.0,
@@ -380,7 +380,7 @@
     },
     {
       "date": "2026-06-24",
-      "label": "Wed Jun 24",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 13.4,
@@ -442,7 +442,7 @@
                 "on-deck",
                 "dockside-only"
               ],
-              "blocked_parts": true,
+              "blocked_parts": false,
               "project_status": "Todo",
               "state": "OPEN",
               "done": false,
@@ -573,7 +573,7 @@
                 "aloft"
               ],
               "blocked_parts": true,
-              "project_status": "Todo",
+              "project_status": "In Progress",
               "state": "OPEN",
               "done": false,
               "day": "2026-06-26"
@@ -652,6 +652,14 @@
         "temp_label": "74\u201384\u00b0",
         "wind_label": "12g21kt \u00b7 0.9ft"
       },
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-06-30",
+      "label": "Tue Jun 30",
+      "events": [],
+      "weather": null,
       "lanes": [],
       "task_count": 0
     }
