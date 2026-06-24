@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-23T02:30:43-04:00",
+  "generated_at": "2026-06-24T02:28:42-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,41 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-06-21",
-      "label": "Sun Jun 21",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "rigging",
-          "issues": [
-            {
-              "number": 91,
-              "title": "Move jib sheets inside lifelines",
-              "url": "https://github.com/norton120/svdefiant/issues/91",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-06-21"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
     {
       "date": "2026-06-22",
       "label": "Mon Jun 22",
@@ -279,7 +244,7 @@
     },
     {
       "date": "2026-06-23",
-      "label": "Today",
+      "label": "Tue Jun 23",
       "events": [],
       "weather": {
         "wind_kt_max": 18.0,
@@ -380,7 +345,7 @@
     },
     {
       "date": "2026-06-24",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 13.4,
@@ -482,7 +447,7 @@
     },
     {
       "date": "2026-06-25",
-      "label": "Thu Jun 25",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 16.4,
@@ -658,6 +623,14 @@
     {
       "date": "2026-06-30",
       "label": "Tue Jun 30",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-07-01",
+      "label": "Wed Jul 1",
       "events": [],
       "weather": null,
       "lanes": [],
