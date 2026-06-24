@@ -83,3 +83,8 @@ entries:
     url: "https://github.com/norton120/svdefiant/wiki/Soundown"
     summary: "New wiki page about Soundown now available."
     source: "wiki"
+  - date: "2026-06-24"
+    title: "The Dunning-Kruger Sailing, Year Two"
+    url: "/blog/dunning-kruger/"
+    summary: "Major expansion of a sailing learning reflection with new sections on power vs sail culture, sea state, and life lessons from two years aboard."
+    source: "blog"
