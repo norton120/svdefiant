@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-24T02:28:42-04:00",
+  "generated_at": "2026-06-25T02:30:24-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,234 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-06-22",
-      "label": "Mon Jun 22",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 19.8,
-        "gust_kt_max": 25.7,
-        "wave_ft_max": 2.3,
-        "temp_f": [
-          74,
-          89
-        ],
-        "precip": true,
-        "hazards": [
-          "small_craft_advisory"
-        ],
-        "alerts": [
-          {
-            "token": "small_craft_advisory",
-            "event": "Small Craft Advisory",
-            "headline": "Small Craft Advisory issued June 22 at 11:39AM EDT until June 23 at 1:00AM EDT by NWS Wakefield VA",
-            "tooltip": "\u26f5",
-            "url": "https://forecast.weather.gov/MapClick.php?lat=37.61659&lon=-76.290043"
-          }
-        ],
-        "icons": [
-          "\u2620\ufe0f",
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "74\u201389\u00b0",
-        "wind_label": "20g26kt \u00b7 2.3ft"
-      },
-      "lanes": [
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 14,
-              "title": "Unclog cockpit scupper",
-              "url": "https://github.com/norton120/svdefiant/issues/14",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            },
-            {
-              "number": 26,
-              "title": "Aerator in shower head",
-              "url": "https://github.com/norton120/svdefiant/issues/26",
-              "milestone": "Leave Windmill",
-              "priority": "p3",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "couch",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            },
-            {
-              "number": 113,
-              "title": "Fix icebox conversion",
-              "url": "https://github.com/norton120/svdefiant/issues/113",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "plumbing",
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            }
-          ]
-        },
-        {
-          "system": "engine",
-          "issues": [
-            {
-              "number": 96,
-              "title": "Motor Checklist",
-              "url": "https://github.com/norton120/svdefiant/issues/96",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            }
-          ]
-        },
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 92,
-              "title": "Secure desk chair",
-              "url": "https://github.com/norton120/svdefiant/issues/92",
-              "milestone": "Leave Windmill",
-              "priority": "p2",
-              "systems": [
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            },
-            {
-              "number": 117,
-              "title": "Mount Nameboards On Bow",
-              "url": "https://github.com/norton120/svdefiant/issues/117",
-              "milestone": "Leave Windmill",
-              "priority": "p3",
-              "systems": [
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "full-day",
-              "locations": [
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-06-22"
-            },
-            {
-              "number": 118,
-              "title": "Varnish Last Pass",
-              "url": "https://github.com/norton120/svdefiant/issues/118",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "interior"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "full-day",
-              "locations": [
-                "indoors",
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "In Progress",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            }
-          ]
-        },
-        {
-          "system": "ground-tackle",
-          "issues": [
-            {
-              "number": 31,
-              "title": "2nd anchor roller",
-              "url": "https://github.com/norton120/svdefiant/issues/31",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "ground-tackle"
-              ],
-              "energy": "heavy",
-              "weather": "dry",
-              "time": "full-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-22"
-            }
-          ]
-        }
-      ],
-      "task_count": 8
-    },
     {
       "date": "2026-06-23",
       "label": "Tue Jun 23",
@@ -345,7 +117,7 @@
     },
     {
       "date": "2026-06-24",
-      "label": "Today",
+      "label": "Wed Jun 24",
       "events": [],
       "weather": {
         "wind_kt_max": 13.4,
@@ -447,7 +219,7 @@
     },
     {
       "date": "2026-06-25",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 16.4,
@@ -498,7 +270,7 @@
     },
     {
       "date": "2026-06-26",
-      "label": "Fri Jun 26",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 16.8,
@@ -631,6 +403,14 @@
     {
       "date": "2026-07-01",
       "label": "Wed Jul 1",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-07-02",
+      "label": "Thu Jul 2",
       "events": [],
       "weather": null,
       "lanes": [],
