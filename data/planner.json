@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-25T02:30:24-04:00",
+  "generated_at": "2026-06-26T02:31:34-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,107 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-06-23",
-      "label": "Tue Jun 23",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 18.0,
-        "gust_kt_max": 26.8,
-        "wave_ft_max": 1.7,
-        "temp_f": [
-          71,
-          86
-        ],
-        "precip": true,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\ud83c\udf27\ufe0f"
-        ],
-        "temp_label": "71\u201386\u00b0",
-        "wind_label": "18g27kt \u00b7 1.7ft"
-      },
-      "lanes": [
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 112,
-              "title": "Install new electrode plate for electropooper",
-              "url": "https://github.com/norton120/svdefiant/issues/112",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "plumbing",
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-23"
-            }
-          ]
-        },
-        {
-          "system": "engine",
-          "issues": [
-            {
-              "number": 12,
-              "title": "Clean out Groco filter",
-              "url": "https://github.com/norton120/svdefiant/issues/12",
-              "milestone": "Leave Windmill",
-              "priority": "p2",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-23"
-            },
-            {
-              "number": 72,
-              "title": "Replace fuel filters",
-              "url": "https://github.com/norton120/svdefiant/issues/72",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-23"
-            }
-          ]
-        }
-      ],
-      "task_count": 3
-    },
     {
       "date": "2026-06-24",
       "label": "Wed Jun 24",
@@ -219,7 +118,7 @@
     },
     {
       "date": "2026-06-25",
-      "label": "Today",
+      "label": "Thu Jun 25",
       "events": [],
       "weather": {
         "wind_kt_max": 16.4,
@@ -270,7 +169,7 @@
     },
     {
       "date": "2026-06-26",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 16.8,
@@ -322,7 +221,7 @@
     },
     {
       "date": "2026-06-27",
-      "label": "Sat Jun 27",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 9.8,
@@ -411,6 +310,14 @@
     {
       "date": "2026-07-02",
       "label": "Thu Jul 2",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-07-03",
+      "label": "Fri Jul 3",
       "events": [],
       "weather": null,
       "lanes": [],
