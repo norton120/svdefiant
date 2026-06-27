@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-26T02:31:34-04:00",
+  "generated_at": "2026-06-27T02:17:31-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,108 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-06-24",
-      "label": "Wed Jun 24",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 13.4,
-        "gust_kt_max": 21.6,
-        "wave_ft_max": 1.3,
-        "temp_f": [
-          66,
-          80
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "66\u201380\u00b0",
-        "wind_label": "13g22kt \u00b7 1.3ft"
-      },
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 81,
-              "title": "Liquid tape DC Mains behind panel",
-              "url": "https://github.com/norton120/svdefiant/issues/81",
-              "milestone": "Leave Windmill",
-              "priority": "p0",
-              "systems": [
-                "electrical",
-                "safety"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-24"
-            },
-            {
-              "number": 102,
-              "title": "Install DC-DC charger from starter battery to house bank",
-              "url": "https://github.com/norton120/svdefiant/issues/102",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors",
-                "on-deck",
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-24"
-            }
-          ]
-        },
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 109,
-              "title": "Fill propane \u2014 big tank",
-              "url": "https://github.com/norton120/svdefiant/issues/109",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "plumbing",
-                "engine"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "In Progress",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-24"
-            }
-          ]
-        }
-      ],
-      "task_count": 3
-    },
     {
       "date": "2026-06-25",
       "label": "Thu Jun 25",
@@ -169,7 +67,7 @@
     },
     {
       "date": "2026-06-26",
-      "label": "Today",
+      "label": "Fri Jun 26",
       "events": [],
       "weather": {
         "wind_kt_max": 16.8,
@@ -221,7 +119,7 @@
     },
     {
       "date": "2026-06-27",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 9.8,
@@ -245,7 +143,7 @@
     },
     {
       "date": "2026-06-28",
-      "label": "Sun Jun 28",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 8.3,
@@ -318,6 +216,14 @@
     {
       "date": "2026-07-03",
       "label": "Fri Jul 3",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-07-04",
+      "label": "Sat Jul 4",
       "events": [],
       "weather": null,
       "lanes": [],
