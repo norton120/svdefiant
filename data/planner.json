@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-27T02:17:31-04:00",
+  "generated_at": "2026-06-28T02:36:45-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,57 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-06-25",
-      "label": "Thu Jun 25",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 16.4,
-        "gust_kt_max": 26.2,
-        "wave_ft_max": 2.2,
-        "temp_f": [
-          68,
-          80
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "68\u201380\u00b0",
-        "wind_label": "16g26kt \u00b7 2.2ft"
-      },
-      "lanes": [
-        {
-          "system": "rigging",
-          "issues": [
-            {
-              "number": 110,
-              "title": "Add fairlead blocks for staysail and sheets",
-              "url": "https://github.com/norton120/svdefiant/issues/110",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": true,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-06-25"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
     {
       "date": "2026-06-26",
       "label": "Fri Jun 26",
@@ -107,9 +56,9 @@
                 "aloft"
               ],
               "blocked_parts": true,
-              "project_status": "In Progress",
-              "state": "OPEN",
-              "done": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
               "day": "2026-06-26"
             }
           ]
@@ -119,7 +68,7 @@
     },
     {
       "date": "2026-06-27",
-      "label": "Today",
+      "label": "Sat Jun 27",
       "events": [],
       "weather": {
         "wind_kt_max": 9.8,
@@ -143,7 +92,7 @@
     },
     {
       "date": "2026-06-28",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 8.3,
@@ -167,7 +116,7 @@
     },
     {
       "date": "2026-06-29",
-      "label": "Mon Jun 29",
+      "label": "Tomorrow",
       "events": [],
       "weather": {
         "wind_kt_max": 11.9,
@@ -224,6 +173,14 @@
     {
       "date": "2026-07-04",
       "label": "Sat Jul 4",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-07-05",
+      "label": "Sun Jul 5",
       "events": [],
       "weather": null,
       "lanes": [],
