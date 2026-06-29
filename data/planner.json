@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-28T02:36:45-04:00",
+  "generated_at": "2026-06-29T02:44:16-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -14,58 +14,6 @@
     "other"
   ],
   "days": [
-    {
-      "date": "2026-06-26",
-      "label": "Fri Jun 26",
-      "events": [],
-      "weather": {
-        "wind_kt_max": 16.8,
-        "gust_kt_max": 28.0,
-        "wave_ft_max": 2.1,
-        "temp_f": [
-          72,
-          88
-        ],
-        "precip": false,
-        "hazards": [],
-        "alerts": [],
-        "icons": [
-          "\u2600\ufe0f"
-        ],
-        "temp_label": "72\u201388\u00b0",
-        "wind_label": "17g28kt \u00b7 2.1ft"
-      },
-      "lanes": [
-        {
-          "system": "sails",
-          "issues": [
-            {
-              "number": 107,
-              "title": "Pick up staysail from Evolution and install",
-              "url": "https://github.com/norton120/svdefiant/issues/107",
-              "milestone": "Leave Windmill",
-              "priority": "p1",
-              "systems": [
-                "sails"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "on-deck",
-                "aloft"
-              ],
-              "blocked_parts": true,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-06-26"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
     {
       "date": "2026-06-27",
       "label": "Sat Jun 27",
@@ -92,7 +40,7 @@
     },
     {
       "date": "2026-06-28",
-      "label": "Today",
+      "label": "Sun Jun 28",
       "events": [],
       "weather": {
         "wind_kt_max": 8.3,
@@ -116,7 +64,7 @@
     },
     {
       "date": "2026-06-29",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": {
         "wind_kt_max": 11.9,
@@ -140,7 +88,7 @@
     },
     {
       "date": "2026-06-30",
-      "label": "Tue Jun 30",
+      "label": "Tomorrow",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -181,6 +129,14 @@
     {
       "date": "2026-07-05",
       "label": "Sun Jul 5",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-07-06",
+      "label": "Mon Jul 6",
       "events": [],
       "weather": null,
       "lanes": [],
