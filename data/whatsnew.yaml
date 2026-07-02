@@ -88,3 +88,8 @@ entries:
     url: "/blog/dunning-kruger/"
     summary: "Major expansion of a sailing learning reflection with new sections on power vs sail culture, sea state, and life lessons from two years aboard."
     source: "blog"
+  - date: "2026-07-02"
+    title: "Out Of Gas"
+    url: "/blog/out-of-gas/"
+    summary: "A candid recount of everything that went wrong in June—sanitation disasters, refrigeration nightmares, and a staysail that didn't fit."
+    source: "blog"
