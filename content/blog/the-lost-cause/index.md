@@ -17,7 +17,7 @@ In April '24, my life had come to a sort of crossroads. After two years my start
 
 I have been a HENRY my entire working life. I am in the top 4% income earners in the country, yet am perpetually unable to break through into financial independence. Existing this way requires you to believe in a trajectory, to trust that the system that will process your many sacrifices and output prosperity. In my 20's that faith was in the US housing market, which earned me first my highest (unadjusted!) lifetime net worth, and then a bankruptcy shortly after. My 30's revolved around startup equity and the ever-elusive "big exit" - which eluded me all the way to my early 40's. At 41 I doubled down, founding a tech startup myself; two more years of hundred-hour weeks like so many logs on the fire before that ran out of runway. 
 
-Throughout it all, I held _sacrifice_ sacred as the key to inevitable success. Insane hours, ravenous ambition, neglect of my family and relationships until they fell apart. I quit drinking at 25 because I was worried I might miss an off-hours deal. I commuted four hours to work to arrive two hours early and learn code written in a language I didn't know. I spent my weekends working, getting my master's degree, building my own startup, while my friends were at football games and raising children. Time and again I had lain offerings at the alter of financial independence; but the Gods of hustle culture still refused to make it rain. In April '24, my well of faith had finally run dry. Reality had collapsed on the twenty-year myth - that I was following the redemption arc of my own hero's journey.  
+Throughout it all, I held _sacrifice_ sacred as the key to inevitable success. Insane hours, ravenous ambition, neglect of my family and relationships until they fell apart. I quit drinking at 25 because I was worried I might miss an off-hours deal. I commuted four hours to work to arrive two hours early and learn code written in a language I didn't know. I spent my weekends working, getting my master's degree, building my own startup, while my friends were at football games and raising children. Time and again I had lain offerings at the alter of financial independence; but the Gods of hustle culture still refused to make it rain. By April of 2024, my well of faith had finally run dry.  
 
 
 
@@ -80,3 +80,11 @@ Western civilization has no shortage of hero archetypes. For the defeated, howev
 > ~ _Quentin Tarantino and Roger Avary, Pulp Fiction_
 
 Looking back, I think a big part of the "why" was because so many people talk about doing it, and so few do. This was still a big part of my self image; tarnished by failures and grasping for something to 
+
+
+
+
+
+Wth the retirement crowd, there are times it can be difficult not to harbor some resentment. If I'm being rational that feeling is not just unwarranted, it is _unAmerican_; one of our greatest triumphs is a system that, across time and space, is equally unfair to us all. Those now enjoying golden sunset years on the water happen to have created their wealth during a period in time noted for wealth creation, and good for them. But I am often reminded of a technology company I once worked for, founded by an inventor who would now be in his late 80s. For two years I struggled to spec the company's products into jobs, only to have the deals collapse last minute due to what felt like sabotage. After the company went out of business, I learned that the string of failed deals and the eventual collapse of the company were all evidence in massive patent infringement lawsuits filed by the founder - the company was worth much more to him as a failure than it was as a success, and it was too bad that those of us employed would toil on deals that would never close, commissions that would never be paid. Too often I find myself thinking about how much of that sunset prosperity was made possible by extracting wealth from the generations that followed. 
+
+
