@@ -98,3 +98,8 @@ entries:
     url: "/blog/dunning-kruger/"
     summary: "Substantial rewrite about sailing expertise horizons, with a major new section split out on power vs sail culture differences."
     source: "blog"
+  - date: "2026-07-07"
+    title: "Motivation"
+    url: "/blog/the-lost-cause/"
+    summary: "Deep dive into why I left everything behind for life aboard a sailboat—a raw exploration of ambition, failure, and identity."
+    source: "blog"
