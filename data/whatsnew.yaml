@@ -93,3 +93,8 @@ entries:
     url: "/blog/out-of-gas/"
     summary: "A candid recount of everything that went wrong in June—sanitation disasters, refrigeration nightmares, and a staysail that didn't fit."
     source: "blog"
+  - date: "2026-07-13"
+    title: "Motivations"
+    url: "/blog/motivations/"
+    summary: "A thoughtful reflection on why I started this sailing journey and how reality has matched up two years in."
+    source: "blog"
