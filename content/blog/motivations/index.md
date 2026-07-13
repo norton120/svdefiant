@@ -37,6 +37,9 @@ So, am I independently wealthy yet, two years in? No. Am I well on my way, with 
 
 ## ✅ Hardship
 
+> _“To dare is to lose one's footing momentarily. Not to dare is to lose oneself.”_  
+> ~ Soren Kierkegaard, _An Eternity for Repenting_
+
 ### What I Believed
 
 The first days of this recent land visit felt decadent. Normal people take normal showers every day without considering where the water comes from. They flush toilets without checking the treatment tank amperage, and think nothing of leaving a phone charger plugged in between uses. The most banal urban existence brims with luxury when compared to life aboard. But by day four monotony had set in, and I remembered. The copy-of-a-copy feeling, every day effectively the same dull-edged routine. The same walks to the same coffee shops, the same morning runs. The same *Milgram's familiar strangers*, the same view from your desk or the same other coffee shop, the same whiskey at the same barstools down the same streets, the same spot on the couch - and then it is tomorrow and now a copy-of-a-copy-of-a-copy. 
