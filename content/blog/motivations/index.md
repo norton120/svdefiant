@@ -6,6 +6,7 @@ summary: "A reflection on why I came out here in the first place"
 date: 2026-07-09
 
 draft: false
+cardImage: "why.png"
 
 ---
 
