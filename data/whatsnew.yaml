@@ -98,3 +98,8 @@ entries:
     url: "/blog/motivations/"
     summary: "A thoughtful reflection on why I started this sailing journey and how reality has matched up two years in."
     source: "blog"
+  - date: "2026-07-19"
+    title: "The Head"
+    url: "https://github.com/norton120/svdefiant/wiki/The-Head"
+    summary: "Substantial new information added about the boat's head compartment and systems."
+    source: "wiki"
