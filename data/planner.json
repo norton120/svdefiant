@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-19T03:32:16-04:00",
+  "generated_at": "2026-07-20T04:14:16-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,402 +15,6 @@
   ],
   "days": [
     {
-      "date": "2026-07-17",
-      "label": "Fri Jul 17",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "electrical",
-          "issues": [
-            {
-              "number": 35,
-              "title": "Build & connect fuel tank sensor module",
-              "url": "https://github.com/norton120/svdefiant/issues/35",
-              "milestone": null,
-              "priority": "p2",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "full-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 37,
-              "title": "Clean up mains wire in lazarette",
-              "url": "https://github.com/norton120/svdefiant/issues/37",
-              "milestone": null,
-              "priority": "p2",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 39,
-              "title": "Install shore power disconnect",
-              "url": "https://github.com/norton120/svdefiant/issues/39",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 42,
-              "title": "Wire in B&G fuse block",
-              "url": "https://github.com/norton120/svdefiant/issues/42",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "electrical"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            }
-          ]
-        },
-        {
-          "system": "rigging",
-          "issues": [
-            {
-              "number": 32,
-              "title": "Service pedestal cables",
-              "url": "https://github.com/norton120/svdefiant/issues/32",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 36,
-              "title": "Run-back clutches & rollers (main + reef lines)",
-              "url": "https://github.com/norton120/svdefiant/issues/36",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "heavy",
-              "weather": "dry",
-              "time": "full-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 47,
-              "title": "Replace staysail running rigging",
-              "url": "https://github.com/norton120/svdefiant/issues/47",
-              "milestone": null,
-              "priority": "p1",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 48,
-              "title": "Replace main running rigging (solid color)",
-              "url": "https://github.com/norton120/svdefiant/issues/48",
-              "milestone": null,
-              "priority": "p2",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "moderate",
-              "weather": "dry",
-              "time": "half-day",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 49,
-              "title": "Replace downhaul line",
-              "url": "https://github.com/norton120/svdefiant/issues/49",
-              "milestone": null,
-              "priority": "p2",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 50,
-              "title": "Replace jib furling line",
-              "url": "https://github.com/norton120/svdefiant/issues/50",
-              "milestone": "Annapolis",
-              "priority": "p2",
-              "systems": [
-                "rigging"
-              ],
-              "energy": "light",
-              "weather": "dry",
-              "time": "lt-1hr",
-              "locations": [
-                "on-deck"
-              ],
-              "blocked_parts": true,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-07-17"
-            }
-          ]
-        },
-        {
-          "system": "sails",
-          "issues": [
-            {
-              "number": 34,
-              "title": "Dinghy cover / chaps",
-              "url": "https://github.com/norton120/svdefiant/issues/34",
-              "milestone": null,
-              "priority": "p3",
-              "systems": [
-                "sails"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "multi-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 38,
-              "title": "Sew staysail cover",
-              "url": "https://github.com/norton120/svdefiant/issues/38",
-              "milestone": "Annapolis",
-              "priority": "p2",
-              "systems": [
-                "sails"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "multi-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 40,
-              "title": "Sacrificial cover for staysail",
-              "url": "https://github.com/norton120/svdefiant/issues/40",
-              "milestone": "Annapolis",
-              "priority": "p2",
-              "systems": [
-                "sails"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "full-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-07-17"
-            }
-          ]
-        },
-        {
-          "system": "plumbing",
-          "issues": [
-            {
-              "number": 46,
-              "title": "Pull old water tank",
-              "url": "https://github.com/norton120/svdefiant/issues/46",
-              "milestone": null,
-              "priority": "p2",
-              "systems": [
-                "plumbing"
-              ],
-              "energy": "heavy",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            }
-          ]
-        },
-        {
-          "system": "interior",
-          "issues": [
-            {
-              "number": 33,
-              "title": "Machine shop: wheel adapter, stove burners, stove pivots",
-              "url": "https://github.com/norton120/svdefiant/issues/33",
-              "milestone": null,
-              "priority": "p2",
-              "systems": [
-                "interior"
-              ],
-              "energy": "light",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-07-17"
-            }
-          ]
-        },
-        {
-          "system": "safety",
-          "issues": [
-            {
-              "number": 43,
-              "title": "Cancel storage unit",
-              "url": "https://github.com/norton120/svdefiant/issues/43",
-              "milestone": "Annapolis",
-              "priority": "p2",
-              "systems": [
-                "safety"
-              ],
-              "energy": "couch",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-07-17"
-            },
-            {
-              "number": 45,
-              "title": "Sell old solar panels + battery",
-              "url": "https://github.com/norton120/svdefiant/issues/45",
-              "milestone": "Annapolis",
-              "priority": "p3",
-              "systems": [
-                "safety"
-              ],
-              "energy": "couch",
-              "weather": "any",
-              "time": "lt-1hr",
-              "locations": [
-                "dockside-only"
-              ],
-              "blocked_parts": false,
-              "project_status": "Done",
-              "state": "CLOSED",
-              "done": true,
-              "day": "2026-07-17"
-            }
-          ]
-        }
-      ],
-      "task_count": 17
-    },
-    {
       "date": "2026-07-18",
       "label": "Sat Jul 18",
       "events": [],
@@ -420,7 +24,7 @@
     },
     {
       "date": "2026-07-19",
-      "label": "Today",
+      "label": "Sun Jul 19",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -428,7 +32,7 @@
     },
     {
       "date": "2026-07-20",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -436,7 +40,7 @@
     },
     {
       "date": "2026-07-21",
-      "label": "Tue Jul 21",
+      "label": "Tomorrow",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -477,6 +81,14 @@
     {
       "date": "2026-07-26",
       "label": "Sun Jul 26",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-07-27",
+      "label": "Mon Jul 27",
       "events": [],
       "weather": null,
       "lanes": [],
