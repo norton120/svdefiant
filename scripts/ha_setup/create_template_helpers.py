@@ -19,12 +19,12 @@ import httpx
 HA_HOST = os.environ.get("HA_HOST", "homeassistant.local:8123")
 BASE = f"http://{HA_HOST}/api"
 
-# Defiant fuel tank: US-standard sender, 240 Ω empty → 33 Ω full (linear).
-# pct = clamp((240 - R) / (240 - 33) * 100, 0, 100)
+# The ESP32 (defiant-analogs) now broadcasts fuel level directly as a 0-1
+# ratio; just scale to a percentage and clamp for safety.
 FUEL_LEVEL_TEMPLATE = (
-    "{% set r = states('sensor.defiant_analogs_fuel_sender_resistance') | float(none) %}"
+    "{% set r = states('sensor.engine_bay_defiant_analogs_fuel_level') | float(none) %}"
     "{% if r is none %}unknown"
-    "{% else %}{{ [0, [100, ((240 - r) / 207 * 100)] | min] | max | round(1) }}"
+    "{% else %}{{ [0, [100, r * 100] | min] | max | round(1) }}"
     "{% endif %}"
 )
 
