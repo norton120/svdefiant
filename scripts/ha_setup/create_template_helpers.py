@@ -28,12 +28,30 @@ FUEL_LEVEL_TEMPLATE = (
     "{% endif %}"
 )
 
+# Propane tank: ProCheck Universal 705D reports level in inches; tank holds
+# ~10in full.
+PROPANE_LEVEL_TEMPLATE = (
+    "{% set r = states('sensor.pro_check_universal_705d_tank_level') | float(none) %}"
+    "{% if r is none %}unknown"
+    "{% else %}{{ [0, [100, r / 10 * 100] | min] | max | round(1) }}"
+    "{% endif %}"
+)
+
 TEMPLATE_HELPERS = [
     {
         "template_type": "sensor",
         "config": {
             "name": "Defiant Fuel Level",
             "state": FUEL_LEVEL_TEMPLATE,
+            "unit_of_measurement": "%",
+            "state_class": "measurement",
+        },
+    },
+    {
+        "template_type": "sensor",
+        "config": {
+            "name": "Propane Tank Level",
+            "state": PROPANE_LEVEL_TEMPLATE,
             "unit_of_measurement": "%",
             "state_class": "measurement",
         },

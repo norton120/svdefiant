@@ -483,7 +483,7 @@ def cfg_overview():
                                 {"entity": "sensor.lithium_core_battery", "name": "SOC"},
                                 {"entity": "sensor.solar_power_now", "name": "Solar"},
                                 {"entity": "sensor.defiant_fuel_level", "name": "Diesel"},
-                                {"entity": "sensor.propane_tank_percentage", "name": "Propane"},
+                                {"entity": "sensor.propane_tank_level", "name": "Propane"},
                             ],
                         },
                     ], column_span=3),
