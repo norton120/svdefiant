@@ -103,3 +103,8 @@ entries:
     url: "https://github.com/norton120/svdefiant/wiki/The-Head"
     summary: "Substantial new information added about the boat's head compartment and systems."
     source: "wiki"
+  - date: "2026-07-26"
+    title: "Escape from Seahaven Island"
+    url: "/blog/escape/"
+    summary: "The Defiant finally breaks free from an endless refit and sets sail at last."
+    source: "blog"
