@@ -7,21 +7,16 @@
 
 Each defiant verb is exposed as a discrete MCP tool with a strict JSON schema.
 Handlers shell out to ../bin/defiant; all credentials come from this process's
-env (injected by ironclaw at spawn via `ironclaw mcp add … --env KEY=VAL`),
-so the agent never sees raw tokens.
+env, so the caller never sees raw tokens.
 
-Register on ironclaw with:
-
-    ironclaw mcp add defiant --transport stdio \\
-      --command uv --arg run --arg --script \\
-      --arg /home/ironclaw/app/svdefiant/scripts/defiant_mcp.py \\
-      --env GH_TOKEN=… \\
-      --env AWS_ACCESS_KEY_ID=… \\
-      --env AWS_SECRET_ACCESS_KEY=… \\
-      --env AWS_DEFAULT_REGION=us-east-1 \\
-      --env HOME_ASSISTANT_ACCESS_TOKEN=… \\
-      --env NEARAI_API_KEY=…              # required by image_analyze \\
-      --env DEFIANT_VISION_MODEL=…        # optional; default Qwen/Qwen3-VL-30B-A3B-Instruct
+Spawned as a stdio subprocess (`uv run --script defiant_mcp.py`) by whatever
+MCP client wants these tools — currently the boat agent in `personal/agent`
+(see that repo's `src/agent/mcp.py`), which mounts this repo read-only and
+allowlists only the wiki_* tools, passing just GH_TOKEN. A client wanting the
+full tool surface (inbox_*, image_*, etc.) needs to pass the relevant env:
+GH_TOKEN, AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY/AWS_DEFAULT_REGION (inbox_*
+/ SES), HOME_ASSISTANT_ACCESS_TOKEN, NEARAI_API_KEY + optional
+DEFIANT_VISION_MODEL (image_analyze).
 
 image_add / image_analyze take a `stem` (inbox filename without extension);
 the server resolves ~/.defiant/photos/inbox/<stem>.<ext> internally
@@ -897,10 +892,11 @@ def _build_argv(name: str, args: dict) -> tuple[list[str], list[Path]]:
 
 def _child_env() -> dict[str, str]:
     """Build env for the bin/defiant subprocess. The CLI's shebang is
-    `#!/usr/bin/env -S uv run --script`, so `uv` must be on PATH. systemd
-    --user spawns ironclaw with a minimal PATH that often omits ~/.local/bin
-    (the default uv install location); inject it defensively so the inner
-    subprocess can resolve uv regardless of how this MCP server was launched.
+    `#!/usr/bin/env -S uv run --script`, so `uv` must be on PATH. Whatever
+    spawns this server (systemd, a container process manager, etc.) may have
+    a minimal PATH that omits ~/.local/bin (the default uv install location);
+    inject it defensively so the inner subprocess can resolve uv regardless
+    of how this MCP server was launched.
     """
     env = os.environ.copy()
     extra = [str(Path.home() / ".local" / "bin"), "/usr/local/bin"]

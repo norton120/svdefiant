@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# svdefiant-deploy.sh — pull main, restart ironclaw on MCP changes.
+# svdefiant-deploy.sh — pull main, restart the boat agent on MCP changes.
 #
-# Run periodically by a systemd --user timer on ironclaw. Install once:
+# Run periodically by a systemd --user timer on ironclaw.local. Install once:
 #
 #   cat > ~/.config/systemd/user/svdefiant-deploy.service <<'EOF'
 #   [Unit]
-#   Description=svdefiant: pull main + restart ironclaw on MCP changes
+#   Description=svdefiant: pull main + restart the agent on MCP changes
 #   [Service]
 #   Type=oneshot
-#   ExecStart=%h/app/svdefiant/scripts/svdefiant-deploy.sh
+#   ExecStart=%h/Repos/svdefiant/scripts/svdefiant-deploy.sh
 #   EOF
 #
 #   cat > ~/.config/systemd/user/svdefiant-deploy.timer <<'EOF'
@@ -30,9 +30,9 @@
 
 set -euo pipefail
 
-REPO="${SVDEFIANT_REPO:-$HOME/app/svdefiant}"
+REPO="${SVDEFIANT_REPO:-$HOME/Repos/svdefiant}"
 WATCH="scripts/defiant_mcp.py"
-UNIT="${SVDEFIANT_UNIT:-ironclaw.service}"
+AGENT_DIR="${AGENT_DIR:-$HOME/Repos/personal/agent}"
 
 cd "$REPO"
 
@@ -75,5 +75,5 @@ if [[ "$before" == "$after" ]]; then
   exit 0
 fi
 
-echo "deploy: $WATCH changed ($before → $after); restarting $UNIT"
-systemctl --user restart "$UNIT"
+echo "deploy: $WATCH changed ($before → $after); restarting agent container"
+(cd "$AGENT_DIR" && docker compose restart agent)
