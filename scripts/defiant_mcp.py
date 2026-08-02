@@ -1,7 +1,7 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.11"
-# dependencies = ["mcp>=1.0"]
+# dependencies = ["mcp>=1.0,<2.0"]
 # ///
 """defiant-mcp — stdio MCP server wrapping the `defiant` CLI.
 
