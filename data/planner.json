@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-30T06:26:25-04:00",
+  "generated_at": "2026-08-31T07:31:45-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,41 +15,6 @@
   ],
   "days": [
     {
-      "date": "2026-08-28",
-      "label": "Fri Aug 28",
-      "events": [],
-      "weather": null,
-      "lanes": [
-        {
-          "system": "nav",
-          "issues": [
-            {
-              "number": 130,
-              "title": "Add Git repository import methods to the control plane",
-              "url": "https://github.com/norton120/svdefiant/issues/130",
-              "milestone": null,
-              "priority": "p0",
-              "systems": [
-                "nav"
-              ],
-              "energy": "moderate",
-              "weather": "any",
-              "time": "half-day",
-              "locations": [
-                "indoors"
-              ],
-              "blocked_parts": false,
-              "project_status": "Todo",
-              "state": "OPEN",
-              "done": false,
-              "day": "2026-08-28"
-            }
-          ]
-        }
-      ],
-      "task_count": 1
-    },
-    {
       "date": "2026-08-29",
       "label": "Sat Aug 29",
       "events": [],
@@ -59,7 +24,7 @@
     },
     {
       "date": "2026-08-30",
-      "label": "Today",
+      "label": "Sun Aug 30",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -67,7 +32,7 @@
     },
     {
       "date": "2026-08-31",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -75,7 +40,7 @@
     },
     {
       "date": "2026-09-01",
-      "label": "Tue Sep 1",
+      "label": "Tomorrow",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -116,6 +81,14 @@
     {
       "date": "2026-09-06",
       "label": "Sun Sep 6",
+      "events": [],
+      "weather": null,
+      "lanes": [],
+      "task_count": 0
+    },
+    {
+      "date": "2026-09-07",
+      "label": "Mon Sep 7",
       "events": [],
       "weather": null,
       "lanes": [],
