@@ -1,0 +1,50 @@
+{
+  "id": "defiant_reverse_geocode_location_name",
+  "alias": "Defiant: refresh location name from Signal K position",
+  "description": "Hourly (sailboats don't move fast enough to need more often): reverse-geocodes the live Signal K GPS fix and updates input_text.defiant_location_name. Prefers a nearby marina/yacht club name (rest_command.defiant_reverse_geocode_search, a bounded Nominatim POI search) and falls back to neighbourhood/city (rest_command.defiant_reverse_geocode_fallback, a plain reverse lookup) when nothing marina-like is nearby, e.g. at anchor. Independent of automation.defiant_signalk_set_system_location, which keeps the actual lat/long (and therefore weather.forecast_home) live on every GPS update -- this automation only refreshes the human-readable label.",
+  "trigger": [
+    {
+      "platform": "time_pattern",
+      "hours": "/1"
+    }
+  ],
+  "condition": [
+    {
+      "condition": "template",
+      "value_template": "{{ states('sensor.defiant_signal_k_defiant_latitude') not in ['unknown', 'unavailable', ''] and states('sensor.defiant_signal_k_defiant_longitude') not in ['unknown', 'unavailable', ''] }}"
+    }
+  ],
+  "action": [
+    {
+      "service": "rest_command.defiant_reverse_geocode_search",
+      "data": {
+        "latitude": "{{ states('sensor.defiant_signal_k_defiant_latitude') | float }}",
+        "longitude": "{{ states('sensor.defiant_signal_k_defiant_longitude') | float }}"
+      },
+      "response_variable": "geo_search"
+    },
+    {
+      "service": "rest_command.defiant_reverse_geocode_fallback",
+      "data": {
+        "latitude": "{{ states('sensor.defiant_signal_k_defiant_latitude') | float }}",
+        "longitude": "{{ states('sensor.defiant_signal_k_defiant_longitude') | float }}"
+      },
+      "response_variable": "geo_fallback"
+    },
+    {
+      "variables": {
+        "location_name": "{% set search = geo_search.content %}{% set named = (search | rejectattr('name', 'equalto', '') | list) if search is iterable else [] %}{% if named | count > 0 %}{{ named[0].get('name') }}{% else %}{% set fb = geo_fallback.content %}{% set addr = fb.get('address', {}) %}{% set locality = addr.get('neighbourhood') or addr.get('hamlet') or addr.get('suburb') or addr.get('village') or fb.get('name') %}{% set city = addr.get('city') or addr.get('town') %}{% if locality and city %}{{ locality }}, {{ city }}{% elif city %}{{ city }}{% elif locality %}{{ locality }}{% else %}{{ fb.get('display_name', 'Unknown') }}{% endif %}{% endif %}"
+      }
+    },
+    {
+      "service": "input_text.set_value",
+      "target": {
+        "entity_id": "input_text.defiant_location_name"
+      },
+      "data": {
+        "value": "{{ location_name }}"
+      }
+    }
+  ],
+  "mode": "single"
+}

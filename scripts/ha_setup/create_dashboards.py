@@ -454,7 +454,18 @@ def cfg_overview():
 
                     # ---------------- Forecast (decision input) ----------------
                     grid_section([
-                        heading("Weather at Windmill Point", "subtitle"),
+                        # The "heading" card takes static text, and Defiant
+                        # moves — so this is a templated markdown line instead,
+                        # reading input_text.defiant_location_name (kept
+                        # current by the coordinate skill / manual updates)
+                        # rather than a name baked in at dashboard-build time.
+                        md(
+                            "### Weather"
+                            "{% set loc = states('input_text.defiant_location_name') %}"
+                            "{% if loc not in ['unknown', 'unavailable', ''] %}"
+                            " at {{ loc }}"
+                            "{% endif %}"
+                        ),
                         {
                             "type": "weather-forecast",
                             "entity": "weather.forecast_home",
@@ -484,6 +495,93 @@ def cfg_overview():
                                 {"entity": "sensor.solar_power_now", "name": "Solar"},
                                 {"entity": "sensor.defiant_fuel_level", "name": "Diesel"},
                                 {"entity": "sensor.propane_tank_level", "name": "Propane"},
+                            ],
+                        },
+                    ], column_span=3),
+
+                    # ---------------- Energy today: load vs. sources ----------------
+                    # One bar for consumption (house_load_today), one stacked bar
+                    # for production broken down by source, solar/wind/engine in
+                    # that order. All series normalized to Wh: house_load_today
+                    # and wind_today are kWh (x1000); solar_production_today and
+                    # the engine utility_meter are Wh/kWh respectively but each
+                    # carries a wrong/missing unit_of_measurement upstream, so
+                    # they get an explicit `unit: "Wh"` override instead.
+                    grid_section([
+                        heading("Energy Today", "subtitle"),
+                        {
+                            "type": "custom:apexcharts-card",
+                            "section_mode": True,
+                            "header": {
+                                "show": True,
+                                "title": "House load vs. production (Wh)",
+                                "show_states": True,
+                                "colorize_states": True,
+                            },
+                            "graph_span": "1d",
+                            "span": {"start": "day"},
+                            "stacked": True,
+                            "apex_config": {
+                                "chart": {"stacked": True},
+                                "plotOptions": {"bar": {"columnWidth": "45%"}},
+                                # Both bars are a single "today so far" snapshot,
+                                # not a trend — ApexCharts still auto-pads a
+                                # datetime x-axis with tick labels spanning days
+                                # beyond the actual data when there's only one
+                                # point per series, which reads as flat wrong.
+                                # Hide the axis rather than fight that padding.
+                                "xaxis": {"labels": {"show": False},
+                                          "axisTicks": {"show": False}},
+                            },
+                            "series": [
+                                {
+                                    "entity": "sensor.house_load_today",
+                                    "name": "House Load",
+                                    "type": "column",
+                                    "color": "#e07a5f",
+                                    "unit": "Wh",
+                                    "transform": "return x * 1000;",
+                                    "group_by": {"func": "last", "duration": "1d"},
+                                },
+                                {
+                                    # sensor.solar_yield_today (the GX device's
+                                    # own aggregate) goes stale mid-day — stuck
+                                    # since ~10:24am while the 4 MPPT chargers
+                                    # kept accumulating. solar_production_today
+                                    # sums those 4 chargers directly and tracks
+                                    # live; its unit_of_measurement says "kW"
+                                    # but the value is actually Wh (mislabeled
+                                    # upstream), hence the unit override below
+                                    # instead of a x1000 transform.
+                                    "entity": "sensor.solar_production_today",
+                                    "name": "Solar",
+                                    "type": "column",
+                                    "stack_group": "production",
+                                    "color": "#f2cc8f",
+                                    "unit": "Wh",
+                                    "group_by": {"func": "last", "duration": "1d"},
+                                },
+                                {
+                                    "entity": "sensor.wind_today",
+                                    "name": "Wind",
+                                    "type": "column",
+                                    "stack_group": "production",
+                                    "color": "#81b29a",
+                                    "unit": "Wh",
+                                    "transform": "return x * 1000;",
+                                    "group_by": {"func": "last", "duration": "1d"},
+                                },
+                                {
+                                    "entity": "sensor.lazarette_engine_to_house_bank_"
+                                              "engine_charge_today",
+                                    "name": "Engine to House Bank",
+                                    "type": "column",
+                                    "stack_group": "production",
+                                    "color": "#3d405b",
+                                    "unit": "Wh",
+                                    "transform": "return x * 1000;",
+                                    "group_by": {"func": "last", "duration": "1d"},
+                                },
                             ],
                         },
                     ], column_span=3),
@@ -1139,6 +1237,18 @@ async def main():
                 print(f"  + enabled {eid}")
             else:
                 print(f"  ! enable failed for {eid}: {r}")
+
+        # apexcharts-card (used by the Overview "Energy Today" chart) is
+        # installed via HACS, which registers its own /hacsfiles/... resource
+        # automatically — this just confirms that happened rather than
+        # guessing the hacstag URL ourselves.
+        resources = (await call({"type": "lovelace/resources/list"})).get("result", [])
+        if any("apexcharts-card" in r.get("url", "") for r in resources):
+            print("  = apexcharts-card resource registered")
+        else:
+            print("  ! apexcharts-card resource not found — install it via "
+                  "HACS (Settings > HACS > search 'apexcharts-card' > "
+                  "Download) before the Overview Energy Today chart will render")
 
         existing = (await call({"type": "lovelace/dashboards/list"})).get("result", [])
         existing_paths = {d["url_path"]: d for d in existing}

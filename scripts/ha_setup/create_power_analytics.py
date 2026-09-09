@@ -107,6 +107,9 @@ DC_LOAD = "sensor.gx_device_dc_consumption"             # W, DC system loads
 AC_LOAD = "sensor.gx_device_consumption_power_l1"       # W, AC loads
 WEATHER = "weather.forecast_home"                       # met.no, has cloud_coverage
 
+ENGINE_CHARGE_POWER = "sensor.engine_to_house_bank_dc_output_power"  # W, DC-DC
+                                                                       # charger output; unavailable when the engine's off
+
 # Per-Pi CPU-load sensors -> power estimate model (idle_w, slope W per %CPU).
 PI_MODELS = [
     ("ironclaw",     "sensor.ironclaw_cpu_load",                 3.0, 0.045),
@@ -350,16 +353,26 @@ TEMPLATE_SENSORS = [
 # Solar energy is taken from the MPPT yield_today counters (see the
 # "Renewable Production Today" template), so the only thing we integrate for
 # production is wind (no native daily wind counter exists). House load has no
-# native daily counter either, so it is integrated too.
+# native daily counter either, so it is integrated too. Same story for the
+# engine-to-house-bank DC-DC charger: it only exposes instantaneous W, no
+# daily counter, so it gets the same integral -> daily utility_meter treatment.
 INTEGRATION_HELPERS = [
     # title, source sensor (W) -> kWh
     ("Wind Energy", "sensor.wind_power"),
     ("House Load Energy", "sensor.house_load_power"),
+    ("Engine Charge Energy", ENGINE_CHARGE_POWER),
 ]
 UTILITY_METERS = [
     # title, source kWh sensor
     ("Wind Today", "sensor.wind_energy"),
     ("House Load Today", "sensor.house_load_energy"),
+    # Both the integration and utility_meter entity_ids get prefixed with
+    # their source device's name ("Lazarette Engine to House Bank"), unlike
+    # Wind/House Load Energy which integrate template sensors with no device
+    # — so this ends up as sensor.lazarette_engine_to_house_bank_*, not
+    # sensor.engine_charge_*.
+    ("Engine Charge Today",
+     "sensor.lazarette_engine_to_house_bank_engine_charge_energy"),
 ]
 
 
