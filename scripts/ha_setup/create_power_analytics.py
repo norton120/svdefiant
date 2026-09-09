@@ -82,6 +82,7 @@ SHUNT_POWER = f"{SHUNT}_power"                  # signed W, <0 = discharge
 SHUNT_SOC = f"{SHUNT}_charge"                   # %
 SHUNT_CAPACITY = f"{SHUNT}_capacity"            # Ah
 SHUNT_DC_CURRENT = f"{SHUNT}_dc_bus_current"    # signed A, <0 = discharge
+SHUNT_VOLTAGE = f"{SHUNT}_dc_bus_voltage"       # V
 
 # The nine house packs (BANK I/II/III A/B/C). ELECTROPOOPER (xdzn_001_fbd5)
 # is intentionally NOT here — separate bank, own MPPT.
@@ -253,6 +254,27 @@ TTE_TPL = (
     "{% else %}{{ ((soc / 100 * cap) / (a | abs)) | round(1) }}{% endif %}"
 )
 
+# Power runway (h): same idea as TTE, but instead of the instantaneous
+# current, uses the 3-day time-weighted average of load vs. production
+# (see STATISTICS_HELPERS) so a single cloud or a single big draw doesn't
+# swing the estimate — "at the rate we've actually been running this week,
+# how long does today's charge last." unknown while net is <= 0 (averaging
+# net gain/break-even over 3 days).
+RUNWAY_TPL = (
+    "{% set load = states('sensor.house_load_power_3d_avg') | float(none) %}"
+    "{% set prod = states('sensor.renewable_production_power_3d_avg') "
+    "| float(none) %}"
+    "{% set soc = states('" + SHUNT_SOC + "') | float(none) %}"
+    "{% set cap = states('" + SHUNT_CAPACITY + "') | float(none) %}"
+    "{% set volt = states('" + SHUNT_VOLTAGE + "') | float(none) %}"
+    "{% if load is none or prod is none or soc is none or cap is none "
+    "or volt is none %}unknown"
+    "{% else %}{% set net = load - prod %}"
+    "{% if net <= 0 %}unknown"
+    "{% else %}{{ ((soc / 100 * cap * volt) / net) | round(1) }}{% endif %}"
+    "{% endif %}"
+)
+
 PI_TOTAL_TPL = (
     "{{ (" + " + ".join(
         f"(states('sensor.pi_power_estimate_{h}') | float(0))"
@@ -330,6 +352,9 @@ TEMPLATE_SENSORS = [
     ("Battery Time To Empty", "sensor", {
         "state": TTE_TPL,
         "unit_of_measurement": "h", "device_class": "duration"}),
+    ("Power Runway 3d Avg", "sensor", {
+        "state": RUNWAY_TPL,
+        "unit_of_measurement": "h", "device_class": "duration"}),
     # --- 5. per-Pi estimate ----------------------------------------------- #
     *[
         (f"Pi Power Estimate {host}", "sensor", {
@@ -373,6 +398,20 @@ UTILITY_METERS = [
     # sensor.engine_charge_*.
     ("Engine Charge Today",
      "sensor.lazarette_engine_to_house_bank_engine_charge_energy"),
+]
+
+# --------------------------------------------------------------------------- #
+# 3: rolling-window statistics helpers (config-flow, multi-step).             #
+# --------------------------------------------------------------------------- #
+
+# Time-weighted (average_linear) rolling mean over the trailing 3 days, for
+# the "Power Runway 3d Avg" template above. sampling_size is set far higher
+# than 3 days of updates could plausibly reach so max_age is the only thing
+# that actually bounds the window.
+STATISTICS_HELPERS = [
+    # title, source sensor (W)
+    ("House Load Power 3d Avg", "sensor.house_load_power"),
+    ("Renewable Production Power 3d Avg", "sensor.renewable_production_power"),
 ]
 
 
@@ -752,6 +791,58 @@ async def provision_input_helpers(token):
                   else f"  ! create failed {expected}: {res}")
 
 
+def provision_statistics_helpers(client):
+    """Statistics helpers are a 3-step config flow (name+entity, then
+    characteristic, then the rest), unlike the single-step flows
+    provision_flow_helpers() handles — hence the bespoke driver."""
+    entries = client.get(
+        f"{REST_BASE}/config/config_entries/entry?domain=statistics").json()
+    by_title = {e.get("title"): e for e in entries if isinstance(e, dict)}
+    existing = set(by_title)
+    for title, source in STATISTICS_HELPERS:
+        if title in existing and (
+                title not in RECREATE and "ALL" not in RECREATE):
+            print(f"  = statistics {title!r} already exists")
+            continue
+        if title in existing:
+            client.request(
+                "DELETE",
+                f"{REST_BASE}/config/config_entries/entry/"
+                f"{by_title[title]['entry_id']}")
+            print(f"  ~ statistics {title!r} deleted for recreate")
+        init = client.post(
+            f"{REST_BASE}/config/config_entries/flow",
+            json={"handler": "statistics",
+                  "show_advanced_options": False}).json()
+        flow_id = init.get("flow_id")
+        if not flow_id:
+            print(f"  ! statistics flow init failed for {title!r}: {init}")
+            continue
+        step2 = client.post(
+            f"{REST_BASE}/config/config_entries/flow/{flow_id}",
+            json={"name": title, "entity_id": source}).json()
+        step3 = client.post(
+            f"{REST_BASE}/config/config_entries/flow/{flow_id}",
+            json={"state_characteristic": "average_linear"}).json()
+        if step3.get("type") != "form":
+            print(f"  ! statistics options step failed for {title!r}: "
+                  f"{step3}")
+            continue
+        res = client.post(
+            f"{REST_BASE}/config/config_entries/flow/{flow_id}",
+            json={
+                "sampling_size": 200000,
+                "max_age": {"hours": 72, "minutes": 0, "seconds": 0},
+                "keep_last_sample": True,
+                "percentile": 50,
+                "precision": 1,
+            }).json()
+        if res.get("type") == "create_entry":
+            print(f"  + created statistics {title!r}")
+        else:
+            print(f"  ! create failed for statistics {title!r}: {res}")
+
+
 def provision_automations(client):
     for auto_id, body in build_automations():
         body = {"id": auto_id, **body}
@@ -766,7 +857,11 @@ def main():
     token = load_token()
     headers = {"Authorization": f"Bearer {token}",
                "Content-Type": "application/json"}
-    with httpx.Client(headers=headers, timeout=20.0) as client:
+    # statistics helpers on a fast-updating source (house_load_power ticks
+    # every ~2-3s) can take 20-30s to set up the first time, since it has to
+    # read the full 3-day history to seed the average — a plain 20s timeout
+    # here isn't enough.
+    with httpx.Client(headers=headers, timeout=60.0) as client:
         print("input_* helpers (tagging, thresholds, accumulators):")
         asyncio.run(provision_input_helpers(token))
 
@@ -781,6 +876,9 @@ def main():
         print("\ndaily utility meters:")
         provision_flow_helpers(client, "utility_meter", UTILITY_METERS,
                                um_payload)
+
+        print("\n3-day rolling-average statistics helpers:")
+        provision_statistics_helpers(client)
 
         print("\nautomations (event detect + signature learning):")
         provision_automations(client)
