@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-23T05:52:29-04:00",
+  "generated_at": "2026-09-24T05:53:24-04:00",
   "lane_order": [
     "electrical",
     "rigging",
@@ -15,14 +15,6 @@
   ],
   "days": [
     {
-      "date": "2026-09-21",
-      "label": "Mon Sep 21",
-      "events": [],
-      "weather": null,
-      "lanes": [],
-      "task_count": 0
-    },
-    {
       "date": "2026-09-22",
       "label": "Tue Sep 22",
       "events": [],
@@ -32,7 +24,7 @@
     },
     {
       "date": "2026-09-23",
-      "label": "Today",
+      "label": "Wed Sep 23",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -40,7 +32,7 @@
     },
     {
       "date": "2026-09-24",
-      "label": "Tomorrow",
+      "label": "Today",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -48,7 +40,7 @@
     },
     {
       "date": "2026-09-25",
-      "label": "Fri Sep 25",
+      "label": "Tomorrow",
       "events": [],
       "weather": null,
       "lanes": [],
@@ -93,6 +85,156 @@
       "weather": null,
       "lanes": [],
       "task_count": 0
+    },
+    {
+      "date": "2026-10-01",
+      "label": "Thu Oct 1",
+      "events": [],
+      "weather": null,
+      "lanes": [
+        {
+          "system": "sails",
+          "issues": [
+            {
+              "number": 51,
+              "title": "Sew lee cloths",
+              "url": "https://github.com/norton120/svdefiant/issues/51",
+              "milestone": null,
+              "priority": "p2",
+              "systems": [
+                "sails"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "multi-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-10-01"
+            },
+            {
+              "number": 52,
+              "title": "Sew Bash patches on his gear",
+              "url": "https://github.com/norton120/svdefiant/issues/52",
+              "milestone": null,
+              "priority": "p3",
+              "systems": [
+                "sails"
+              ],
+              "energy": "couch",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-10-01"
+            }
+          ]
+        },
+        {
+          "system": "engine",
+          "issues": [
+            {
+              "number": 53,
+              "title": "Repair screws on dinghy motor",
+              "url": "https://github.com/norton120/svdefiant/issues/53",
+              "milestone": null,
+              "priority": "p2",
+              "systems": [
+                "engine"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "lt-1hr",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-10-01"
+            }
+          ]
+        },
+        {
+          "system": "interior",
+          "issues": [
+            {
+              "number": 54,
+              "title": "Bug screens for ports & door",
+              "url": "https://github.com/norton120/svdefiant/issues/54",
+              "milestone": null,
+              "priority": "p3",
+              "systems": [
+                "interior"
+              ],
+              "energy": "moderate",
+              "weather": "any",
+              "time": "full-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-10-01"
+            },
+            {
+              "number": 55,
+              "title": "Empty & clean drawers above forward locker",
+              "url": "https://github.com/norton120/svdefiant/issues/55",
+              "milestone": null,
+              "priority": "p3",
+              "systems": [
+                "interior"
+              ],
+              "energy": "light",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Todo",
+              "state": "OPEN",
+              "done": false,
+              "day": "2026-10-01"
+            },
+            {
+              "number": 56,
+              "title": "Mop wood with Murphy's soap",
+              "url": "https://github.com/norton120/svdefiant/issues/56",
+              "milestone": null,
+              "priority": "p3",
+              "systems": [
+                "interior"
+              ],
+              "energy": "couch",
+              "weather": "any",
+              "time": "half-day",
+              "locations": [
+                "indoors"
+              ],
+              "blocked_parts": false,
+              "project_status": "Done",
+              "state": "CLOSED",
+              "done": true,
+              "day": "2026-10-01"
+            }
+          ]
+        }
+      ],
+      "task_count": 6
     }
   ]
 }
