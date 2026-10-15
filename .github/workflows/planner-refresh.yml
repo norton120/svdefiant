@@ -3,7 +3,7 @@ name: planner-refresh
 # Republish data/planner.json once a day so the "Today" / "Tomorrow" labels
 # roll over with the calendar even when nobody runs the coordinate skill.
 # Weather is preserved from the prior planner.json since the runner has no
-# Home Assistant access for live forecasts.
+# access to the boat LAN for live forecasts.
 
 on:
   schedule:

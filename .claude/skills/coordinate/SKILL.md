@@ -1,6 +1,6 @@
 ---
 name: coordinate
-description: Continuously re-coordinates the S/V Defiant work map (issues × Target dates × milestones) against the rolling window of weather, boat state, and parts blockers. Pulls boat location/mode from Home Assistant via `defiant state`, marine weather from `defiant weather`, the current scheduled work via `defiant task list --in-window`, the slipped pile via `--overdue`, and the candidate bench via `defiant task list --schedulable --unscheduled --with-body`. Proposes and applies adjustments — bump dates, pull from bench, clear stale dates — then republishes the planner. Runs every time the picture needs an update; not a sprint ceremony. Use when the user asks to "replan", "coordinate", "rework the plan", "what should I do this week", or after weather/parts/state changes.
+description: Continuously re-coordinates the S/V Defiant work map (issues × Target dates × milestones) against the rolling window of weather, boat state, and parts blockers. Pulls boat location/mode via `defiant state` (Home Assistant is retired, so this is currently the local state cache only), marine weather from `defiant weather`, the current scheduled work via `defiant task list --in-window`, the slipped pile via `--overdue`, and the candidate bench via `defiant task list --schedulable --unscheduled --with-body`. Proposes and applies adjustments — bump dates, pull from bench, clear stale dates — then republishes the planner. Runs every time the picture needs an update; not a sprint ceremony. Use when the user asks to "replan", "coordinate", "rework the plan", "what should I do this week", or after weather/parts/state changes.
 ---
 
 # Coordinate
@@ -26,21 +26,21 @@ Every subsequent decision (which items are overdue, which day is "today", which 
 
 ## Always confirm location and ask about capacity
 
-The boat moves and HA may be stale. Run:
+The boat moves and the stored state may be stale. **Home Assistant was retired on 2026-10-14.** Until `defiant state` is re-pointed at Signal K on openplotter.local, it can only read and write the local fallback cache (`~/.defiant/state-cache.toml`). Lat/lon are no longer auto-fed. Run:
 
 ```
 defiant state get location
 defiant state stale --max 3d
 ```
 
-- If `state stale` exits 0 (fresh): confirm with the user — "HA says we're at <name>. Still right?"
-- If it exits nonzero (stale): ask where the boat actually is, then update HA so other tools stay in sync:
+- If `state stale` exits 0 (fresh): confirm with the user — "State says we're at <name>. Still right?"
+- If it exits nonzero (stale): ask where the boat actually is, then record it so other tools stay in sync:
   ```
   defiant state set location.name "<name>"
   defiant state set location.lat <lat>
   defiant state set location.lon <lon>
   ```
-  (Lat/lon are auto-fed by SignalK every ~60s, so manual lat/lon writes only stick if SK is offline. The CLI will warn.)
+  (Before HA was retired, a Signal K → HA automation auto-fed lat/lon every ~60s. That feed is gone, so set lat/lon by hand.)
 
 Then ask the user:
 

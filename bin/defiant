@@ -7,6 +7,7 @@
 
 Subcommands:
   state    boat state (location, mode) — Home Assistant canonical, ~/.defiant/state-cache.toml fallback
+           (HA retired 2026-10-14: only the cache works until this is re-pointed at Signal K)
   inbox    SES inbound mail (read + ack so the same email isn't reprocessed)
   task     GitHub issues + Project v2
   wiki     local wiki search + edit (auto-clones on first use)
