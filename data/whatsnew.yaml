@@ -108,3 +108,8 @@ entries:
     url: "/blog/escape/"
     summary: "The Defiant finally breaks free from an endless refit and sets sail at last."
     source: "blog"
+  - date: "2026-10-15"
+    title: "Vessel Management System Updated"
+    url: "https://github.com/norton120/svdefiant/wiki/Vessel-Management-System"
+    summary: "Migrated from Home Assistant to Signal K and OpenPlotter as the data hub."
+    source: "wiki"
