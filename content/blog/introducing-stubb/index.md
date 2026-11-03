@@ -2,7 +2,7 @@
 title: "🦞Meet Stubb🦞"
 date: "2026-04-30"
 draft: false
-cardimage: Stubb.png
+cardimage: Stubb.jpg
 summary: Our AI first mate introduces himself
 ---
 

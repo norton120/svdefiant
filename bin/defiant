@@ -6,8 +6,7 @@
 """defiant — operational CLI for the S/V Defiant agent stack.
 
 Subcommands:
-  state    boat state (location, mode) — Home Assistant canonical, ~/.defiant/state-cache.toml fallback
-           (HA retired 2026-10-14: only the cache works until this is re-pointed at Signal K)
+  state    boat state (location, mode), stored in ~/.defiant/state-cache.toml
   inbox    SES inbound mail (read + ack so the same email isn't reprocessed)
   task     GitHub issues + Project v2
   wiki     local wiki search + edit (auto-clones on first use)
@@ -17,8 +16,6 @@ Subcommands:
   photo    Ente photo inbox (album sync'd by ente CLI; list/archive)
 
 Cache, ack, calendar, and wiki files live under DEFIANT_HOME (default: ~/.defiant).
-HA endpoint: HA_URL env (default http://homeassistant.local:8123),
-HA token: HOME_ASSISTANT_ACCESS_TOKEN env (or .env in repo root).
 """
 from __future__ import annotations
 
@@ -55,38 +52,8 @@ PHOTO_EXTS = PHOTO_IMAGE_EXTS + PHOTO_VIDEO_EXTS
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INBOX_SCRIPT = REPO_ROOT / "scripts" / "inbox.py"
 
-HA_URL = os.environ.get("HA_URL", "http://homeassistant.local:8123").rstrip("/")
-HA_TOKEN_ENV = "HOME_ASSISTANT_ACCESS_TOKEN"
-HA_TIMEOUT = float(os.environ.get("HA_TIMEOUT", "5"))
 
 MODE_VALUES = ("underway", "anchored", "moored", "docked", "hauled-out")
-
-# Dotted state keys → HA entity. Sections (location, mode, underway) stay
-# the same shape the CLI used to expose; the TOML is just no longer the
-# source of truth.
-STATE_ENTITIES: dict[str, str] = {
-    "location.name": "input_text.defiant_location_name",
-    "location.lat":  "input_number.defiant_latitude",
-    "location.lon":  "input_number.defiant_longitude",
-    "mode.status":   "input_select.defiant_mode",
-    "underway.destination": "input_text.defiant_destination",
-    "underway.dest_lat":    "input_number.defiant_destination_latitude",
-    "underway.dest_lon":    "input_number.defiant_destination_longitude",
-    "underway.eta":         "input_datetime.defiant_eta",
-}
-
-# (service, payload-key) per HA helper domain.
-_ENTITY_WRITE: dict[str, tuple[str, str]] = {
-    "input_text":     ("set_value",     "value"),
-    "input_number":   ("set_value",     "value"),
-    "input_select":   ("select_option", "option"),
-    "input_datetime": ("set_datetime",  "datetime"),
-}
-
-# Lat/lon are auto-fed by Signal K (~60s cadence) via
-# automation.defiant_sync_signal_k_position_to_helpers; manual writes get
-# overwritten unless SK is offline. Warn but allow.
-_SK_OVERWRITTEN_KEYS = {"location.lat", "location.lon"}
 
 # GitHub: cached so the agent never has to know about node IDs.
 GH_REPO = "norton120/svdefiant"
@@ -170,134 +137,24 @@ def atomic_write_bytes(path: Path, data: bytes) -> None:
 
 # --- state -----------------------------------------------------------------
 
-def _ha_token() -> str | None:
-    t = os.environ.get(HA_TOKEN_ENV)
-    if t:
-        return t
-    env = REPO_ROOT / ".env"
-    if env.exists():
-        for line in env.read_text().splitlines():
-            if line.startswith(f"{HA_TOKEN_ENV}="):
-                return line.split("=", 1)[1].strip().strip('"').strip("'")
-    return None
-
-
-def _ha_request(method: str, path: str, body: dict | None = None) -> dict | list | None:
-    token = _ha_token()
-    if not token:
-        raise RuntimeError(f"{HA_TOKEN_ENV} not set (env or repo .env)")
-    req = urllib.request.Request(
-        f"{HA_URL}{path}",
-        data=json.dumps(body).encode() if body is not None else None,
-        method=method,
-        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
-    )
-    with urllib.request.urlopen(req, timeout=HA_TIMEOUT) as resp:
-        raw = resp.read().decode() or "null"
-        return json.loads(raw)
-
-
-def _ha_get_state(entity_id: str) -> dict | None:
-    try:
-        return _ha_request("GET", f"/api/states/{entity_id}")  # type: ignore[return-value]
-    except urllib.error.HTTPError as e:
-        if e.code == 404:
-            return None
-        raise
-
-
-def _ha_call_service(domain: str, service: str, body: dict) -> None:
-    _ha_request("POST", f"/api/services/{domain}/{service}", body)
-
-
-def _normalize_value(eid: str, ha: dict) -> object | None:
-    """HA state → python value, or None for sentinel/unset values.
-
-    `unavailable` is always treated as unset. `unknown` is unset for
-    input_text and input_datetime (HA's default for never-set values), but
-    NOT for input_select where `unknown` is an explicit option in the
-    defiant_mode enum.
-    """
-    raw = ha.get("state")
-    if raw in (None, "unavailable", ""):
-        return None
-    domain = eid.split(".", 1)[0]
-    if domain in ("input_text", "input_datetime") and raw == "unknown":
-        return None
-    if domain == "input_number":
-        try:
-            return float(raw)
-        except ValueError:
-            return None
-    if domain == "input_datetime":
-        # HA returns "YYYY-MM-DD HH:MM:SS" (local-naive). Surface as ISO-Z so
-        # downstream consumers can fromisoformat it.
-        try:
-            dt = datetime.strptime(raw, "%Y-%m-%d %H:%M:%S")
-            return dt.strftime("%Y-%m-%dT%H:%M:%SZ")
-        except ValueError:
-            return raw
-    return raw
-
-
-def _save_state_cache(state: dict) -> None:
-    try:
-        payload = {**state, "_cached_at": now_iso()}
-        atomic_write_bytes(STATE_CACHE, tomli_w.dumps(payload).encode())
-    except Exception as e:
-        # Cache write failures shouldn't block reads — just stderr-warn.
-        print(f"warning: state cache write failed: {e}", file=sys.stderr)
-
-
-def _load_state_cache() -> dict | None:
+def load_state() -> dict:
+    """Return the state dict from STATE_CACHE, or {} if it's missing/unreadable.
+    (Home Assistant used to be canonical; since it was retired the local file
+    is the only store.)"""
     if not STATE_CACHE.exists():
-        return None
+        return {}
     try:
         with STATE_CACHE.open("rb") as f:
-            return tomllib.load(f)
-    except Exception:
-        return None
-
-
-def _load_state_from_ha() -> dict:
-    out: dict = {}
-    last_per_section: dict[str, str] = {}
-    for dotted, eid in STATE_ENTITIES.items():
-        section, _, field = dotted.partition(".")
-        ha = _ha_get_state(eid)
-        if ha is None:
-            continue
-        val = _normalize_value(eid, ha)
-        if val is None:
-            continue
-        out.setdefault(section, {})[field] = val
-        last = ha.get("last_updated")
-        if last and (section not in last_per_section or last < last_per_section[section]):
-            last_per_section[section] = last
-    for sec, lu in last_per_section.items():
-        out[sec]["updated"] = lu
-    return out
-
-
-def load_state() -> dict:
-    """Return state dict, preferring HA. Falls back to cache (with stderr
-    warning) on HA error. Returns {} if both are unavailable — write commands
-    still run, read commands just see no data."""
-    try:
-        state = _load_state_from_ha()
-        _save_state_cache(state)
-        return state
+            state = tomllib.load(f)
     except Exception as e:
-        cache = _load_state_cache()
-        if cache:
-            cached_at = cache.pop("_cached_at", "?")
-            print(
-                f"# WARNING: HA unreachable ({e}); serving cached state from {cached_at}",
-                file=sys.stderr,
-            )
-            return cache
-        print(f"warning: HA unreachable ({e}) and no cache available", file=sys.stderr)
+        print(f"warning: could not read {STATE_CACHE}: {e}", file=sys.stderr)
         return {}
+    state.pop("_cached_at", None)  # leftover from the HA-cache era
+    return state
+
+
+def save_state(state: dict) -> None:
+    atomic_write_bytes(STATE_CACHE, tomli_w.dumps(state).encode())
 
 
 def coerce_for_set(dotted: str, raw: str) -> object:
@@ -347,35 +204,11 @@ def cmd_state_get(args, state):
 
 def cmd_state_set(args, state):
     coerced = coerce_for_set(args.key, args.value)
-    eid = STATE_ENTITIES.get(args.key)
-    if not eid:
-        die(f"key {args.key!r} has no HA entity mapping")
-
-    if args.key in _SK_OVERWRITTEN_KEYS:
-        print(
-            f"warning: {args.key} is auto-fed by Signal K (~60s cadence). "
-            f"Manual value will stick only if SK is offline or the sync "
-            f"automation is disabled.",
-            file=sys.stderr,
-        )
-
-    domain = eid.split(".", 1)[0]
-    service, payload_key = _ENTITY_WRITE[domain]
-    payload_value: object = coerced
-    if domain == "input_datetime":
-        # set_datetime accepts "YYYY-MM-DD HH:MM:SS"; coerce_for_set already
-        # validated ISO format.
-        try:
-            dt = datetime.fromisoformat(str(coerced).replace("Z", "+00:00"))
-            payload_value = dt.strftime("%Y-%m-%d %H:%M:%S")
-        except ValueError:
-            die(f"{args.key}: could not parse datetime {coerced!r}")
-
-    body = {"entity_id": eid, payload_key: payload_value}
-    try:
-        _ha_call_service(domain, service, body)
-    except Exception as e:
-        die(f"HA write failed for {eid}: {e}")
+    section, _, field = args.key.partition(".")
+    sec = state.setdefault(section, {})
+    sec[field] = coerced
+    sec["updated"] = now_iso()
+    save_state(state)
     print(f"set {args.key} = {args.value}")
 
 
@@ -2346,7 +2179,7 @@ def cmd_wiki_replace(args):
 
 GH_REMOTE = "https://github.com/norton120/svdefiant.git"
 STATIC_IMAGES_DIR = REPO_ROOT / "static" / "images"
-IMG_MAX_DIM = 2400
+IMG_MAX_DIM = 1200
 IMG_JPEG_QUALITY = 85
 IMG_NAME_RE = re.compile(r"[^a-z0-9._-]+")
 
@@ -2974,7 +2807,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     iv_add = iv_img.add_parser(
         "add",
-        help="optimize an image (≤2400px JPEG q85) and commit it to static/images/",
+        help="optimize an image (≤1200px JPEG q85) and commit it to static/images/",
     )
     iv_add.add_argument("name", help="output filename stem; sanitized to [a-z0-9._-], '.jpg' appended")
     iv_add.add_argument("--stem", required=True,

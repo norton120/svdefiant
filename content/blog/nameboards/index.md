@@ -10,11 +10,11 @@ Not all projects come out perfect. There is a learning curve to everything on a 
 
 Why did I hunt down a boat with so much teak and such a massively oversized bowsprit? Because I wanted a pirate ship of course. And nothing says pirate ship more than a pair of oversized teak nameboards scrolled across the backside of a wineglass stern. When I first took possession of *Defiant* her previous name and hailing port were a combination of stick-on letters; they were peeling and faded, but the positioning looked good. I went to work taking careful measurements of where the lettering was currently positioned, then labored for days with a heat gun to remove the old lettering.
 
-{{< figure src="image0.png" caption="<i>Defiant</i>, formerly <i>Miracles</i>, in need of a butt-lift" >}}
+{{< figure src="image0.jpg" caption="<i>Defiant</i>, formerly <i>Miracles</i>, in need of a butt-lift" >}}
 
 The name was ghosted pretty badly on the transom even after I scrubbed away the tea stains, but every person I talked to assured me that it would quickly fade away in the sun, and it was nothing to worry about (it's been six months, I'm still waiting for them to fade :confused: ).
 
-{{< figure src="image8.png"  >}}
+{{< figure src="image8.jpg"  >}}
 
 In addition to the transom nameboards, *Defiant* has two nameboard mounts moulded forward near the bow - and so I commissioned all four boards to be made for with her name and hailing port.
 
@@ -34,7 +34,7 @@ Unfortunately, the backstay actually sits at a pretty dramatic angle across the 
 
 So on to the next challenge, curving the boards to follow the transom. *Defiant* isn’t exactly a double-ender, but her tail does have a good bit of bend. I watched videos and read woodworking posts, asked the robots, and it seemed to me that even with these 1” thick slabs of teak, I should be able to bend them if I was slow and deliberate about it.
 
-{{< figure src="image3.png" caption="Lots of steam, not a lot of bending" >}}
+{{< figure src="image3.jpg" caption="Lots of steam, not a lot of bending" >}}
 
 I aligned the boards, drilled holes in each end of them when the bolts would eventually live, and passed several feet of ¼” allthread through each hole until they marked the transom. Then I drilled the transom appropriately, fed the allthread into the aft lazarette, where I secured the end with a fender washer and a nut. On the board side, I placed a thin sheet of scrap wood 4” wide between the washer and the nameboard for protection. Then I began to tighten, alternating side to side. The board initially flexed quite a bit, leaving only about a 2” gap on either side when the nuts were wound tight. Per the instructions I had found I poured buckets of near-boiling water on the nameboards, and sure enough they would then take a few more turns.  
 I did this several times a day, every day, for two weeks. Boil water, pour on board, turn a few turns, repeat. The boards did gain a bit of curve and were honestly less than an inch away from the transom, when the allthread snapped in half on the top nameboard. Within minutes the board was nearly flat; this wasn’t going to work.
@@ -43,17 +43,17 @@ I did this several times a day, every day, for two weeks. Boil water, pour on bo
 
 OK, they aren’t straight, and I can’t get them to bend enough to fit the transom. Fine, I thought, I can put blocks between the board back and the transom and they will stand out, and maybe that will look even more pirate-like? Sure. So I cut teak spacers, soft fit it all up, and pulled the boards off to varnish. One of the scrap wood spacers left a shadow across the board, so I let it rest several days until the shadow disappeared. On went the first coat of Epifanes, and when it dried, that shadow had not only returned but become a full-fledged tattoo.
 
-{{< figure src="image5.png" caption="That damn tattoo." >}}
+{{< figure src="image5.jpg" caption="That damn tattoo." >}}
 
 Cooler heads than mine suggested that I sand the first coat off, bring it down until all signs of tattoo are gone, and try again. So I did. This time there was not a trace, the wood was identical across the board. Then a new coat of epifanes and it looked perfect. Great\! Two more coats, and suddenly the tattoo was back.
 
 At this point I was committed; name boards are essential for coast guard registered vessels, so even if they weren’t perfect *they needed to be done*. Nine more coats of epifanes went on, slowly, as the winter cold pushed the drying time into several days per coat. I was nearing the end of the varnish when I noticed another twist: as the varnish was hardening, the gold leaf was becoming harder and harder to see.
-{{< figure src="image4.png" caption="The epifanes started out beautiful" >}}
+{{< figure src="image4.jpg" caption="The epifanes started out beautiful" >}}
 
 ### The Hits Keep On Coming
 
 Now the varnish had settled into that deep, rich gold teak color, and too much of the varnish had been allowed to pool inside the letter carvings. The resulting thicker varnish took on an opaque brown, essentially blocking the gold leaf from view completely. The result is a name board where it is frustratingly difficult to read the name in bright sun (which is a nameboard’s only job really). Goddammit.
-{{< figure src="image6.png" caption="The gold goes away :crying_cat:" >}}
+{{< figure src="image6.jpg" caption="The gold goes away :crying_cat:" >}}
 
 ### Salvaging A Little
 

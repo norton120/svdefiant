@@ -15,7 +15,7 @@ MCP client wants these tools — currently the boat agent in `personal/agent`
 allowlists only the wiki_* tools, passing just GH_TOKEN. A client wanting the
 full tool surface (inbox_*, image_*, etc.) needs to pass the relevant env:
 GH_TOKEN, AWS_ACCESS_KEY_ID/AWS_SECRET_ACCESS_KEY/AWS_DEFAULT_REGION (inbox_*
-/ SES), HOME_ASSISTANT_ACCESS_TOKEN, NEARAI_API_KEY + optional
+/ SES), NEARAI_API_KEY + optional
 DEFIANT_VISION_MODEL (image_analyze).
 
 image_add / image_analyze take a `stem` (inbox filename without extension);
@@ -78,7 +78,7 @@ def _label_props() -> dict:
 TOOLS: list[Tool] = [
     Tool(
         name="state_show",
-        description="Show all boat state from Home Assistant (location, mode, underway sections). Falls back to ~/.defiant/state-cache.toml on HA error (warning included in output).",
+        description="Show all boat state (location, mode, underway sections) from ~/.defiant/state-cache.toml.",
         inputSchema={"type": "object", "properties": {}, "additionalProperties": False},
     ),
     Tool(
@@ -585,7 +585,7 @@ TOOLS: list[Tool] = [
             "inbox photo identified by `stem` (the server resolves "
             "~/.defiant/photos/inbox/<stem>.<ext>, preferring HEIC > JPEG > "
             "PNG > TIFF; the Live Photo .mov is never used), optimizes it "
-            "(resize ≤2400px long-side, EXIF auto-orient, strip metadata, "
+            "(resize ≤1200px long-side, EXIF auto-orient, strip metadata, "
             "JPEG q85), and commits it to static/images/<name>.jpg on the "
             "main branch of norton120/svdefiant. CI rebuilds the site "
             "(~1-2 min), after which the image is hotlinkable at "

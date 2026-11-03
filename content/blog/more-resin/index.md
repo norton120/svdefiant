@@ -1,7 +1,7 @@
 ---
 title: "More Resin"
 summary: "There are few things that cannot be repaired with more epoxy"
-cardimage: "cover.png"
+cardimage: "cover.jpg"
 date: 2026-05-18
 draft: false
 ---
@@ -14,7 +14,7 @@ The salon table was a monstrosity, and I am very thankful to the previous owners
 
 
 
-{{< figure src="broken_edge.png" caption="what a weird place to put screw holes" >}}
+{{< figure src="broken_edge.jpg" caption="what a weird place to put screw holes" >}}
 
 
 
@@ -30,7 +30,7 @@ First I built up a frame with popsicle sticks and packing tape, giving it about 
 
 
 
-{{< figure src="jig.png" caption="The jig" >}}
+{{< figure src="jig.jpg" caption="The jig" >}}
 
 
 
@@ -38,7 +38,7 @@ Then I mixed up enough epoxy to both fill the gaps and layer on a ridiculously t
 
 
 
-{{< figure src="first_pass.png" caption="five pumps of West Systems epoxy" >}}
+{{< figure src="first_pass.jpg" caption="five pumps of West Systems epoxy" >}}
 
 
 
@@ -46,7 +46,7 @@ The finished ledge was a little overbuilt, and it needed to be ground down to al
 
 
 
-{{< figure src="big_ledge.png" caption="After a second pass, the table ledge was pretty much indestructible" >}}
+{{< figure src="big_ledge.jpg" caption="After a second pass, the table ledge was pretty much indestructible" >}}
 
 
 
@@ -54,4 +54,4 @@ The newly reassembled table fits perfectly. At some point I'll refinish the whol
 
 
 
-{{< figure src="done.png" caption="It took about 30 seconds to cover the table with projects" >}}
+{{< figure src="done.jpg" caption="It took about 30 seconds to cover the table with projects" >}}

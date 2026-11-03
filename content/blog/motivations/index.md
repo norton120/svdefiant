@@ -52,7 +52,7 @@ Sailing and living aboard were the red pill, stripping away the tranquilizers of
 
 Again I was more right than wrong on this one, though not in exactly the way I had expected. Life aboard is a life of extreme highs and lows, often several of each in a single day. Compared to the near-comatose flatline of bohemian existence, it is as if a resistor has been removed from the sensor and the needle is allowed to swing wide across the page. This intensity is often exhausting, especially when there are several lows back-to-back between wins. But I cannot describe the self-satisfaction felt when I wash my hands after a dozen trips hauling jerry cans to refill our water tank, or warming my feet in front of the air vent after successfully repairing the diesel heater yet again. Yes, having your morning coffee alongside a pod of dolphins is cool - but the most prosaic of accomplishments are often the most rewarding. Arriving almost anywhere in the western world by conventional means is yawn-inspiring; you can cross 3,000 miles of the USA in complete comfort, never planning ahead for fuel or food or conditions. You don't have to worry about interstate 80 being too dangerous to traverse for a week, or your flight from Tampa running out of fuel midway to NYC, or all the gas stations in Iowa being closed for a month;  even in the driver's seat you are a mostly passive passenger in the transportation process. On the water, everything can go wrong and often does, sometimes all at once. Pulling into a parking space at the Hilton Honors is a non-event, but tying off at your destination always signifies the end of an adventure. 
 
-{{< figure src="ekg.png" caption="sailboat life is, above all, intensity" >}}
+{{< figure src="ekg.jpg" caption="sailboat life is, above all, intensity" >}}
 
 ## ⛔ Relationships
 
@@ -78,7 +78,7 @@ Does living on a sailboat make for an improved relationship? My hypothesis still
 
 Like a lot of people, I wasn't overly fond of world trends in and around 2024. Politically and socially in particular, let's say there was a lot to be desired. But there was another thing, a thing that had been growing. A sense that I no longer belonged - at least in Philly, but maybe in all of the USA, or maybe on Earth. Pedro Pascal was suddenly the *correct* archetype of masculinity. Everyone's outside shoes were very soft. It felt as if a daddy longlegs spider could crawl across the table, and all of Philadelphia would collectively huddle in the corner while shrieking for someone to kill it - and then they would collectively resent me for squashing the spider and going about my day. 
 
-{{< figure src="pascal.png" caption="the new pinnacle of manliness" >}}
+{{< figure src="pascal.jpg" caption="the new pinnacle of manliness" >}}
 
 I didn't know what to expect out in the world, but I had hope that my view of sanity still kept a foothold somewhere - or if not, I could wait out the crazy on my own floating sovereignty. 
 
@@ -110,7 +110,7 @@ I realize these are two adjacent wings of the same insane asylum, and the only r
 
 **A lot of what I was at odds with is completely universal.** You can walk into a bar in Fayetteville or Brooklyn and find an equal number of people dressed like extras from _Idiocracy_. The waitress that finds your request for ketchup "triggering" might be in a Philly dive bar, or a Daytona beach hotdog stand. "Socially acceptable masculinity" is just as confused in the rural south as it is in the urban north - maybe more so, oscillating between Pedro Pascal and Andrew Tate. 
 
-{{< figure src="idiocracy.png" caption="business casual 2026" >}}
+{{< figure src="idiocracy.jpg" caption="business casual 2026" >}}
 
 It is a weird time to be alive, and living aboard _has_ given me the buffer I needed from the more frightening zeitgeist. Some of the effects have been practical - my music and movie library is 26TB of 20th century content, so no '26 version of *Masters of the Universe* proclaims on my TV that "The most powerful weapon in the universe is empathy" :vomiting_face:. Most importantly, I feel unattached, ephemeral to any specific culture or lifestyle. If I am able to sail into NY Harbor in a month and find community there, great. Or I might find people that I relate to in a hidden anchorage off the coast of North Carolina, and that will be just fine. Still, maybe this ephemeral world _is_ the world that makes sense to me. Maybe staying out on the edge and never getting bogged down in the mire is where I'll belong. 
 
@@ -172,7 +172,7 @@ Traveling by sail requires a truly seaworthy vessel, both sound to sail and soun
 
 The problem lies with cognitive dissonance across the different models of "boat life." Each model is partially applicable, but together they are wholly incompatible. What are these models? There is the YouTube-famous influencer model, where young kids acquire a beat-up old sailboat and see the world while they fancy-camp on water. These descendants of Lin and Larry Pardey chant "go small, go simple, but go now!" as the universal answer. Then there is the floating condo owner model, whose members traverse the globe in 65ft catamarans, showering and changing polo shirts between lunch and dinner engagements. A third model that I think got lost in the mix but actually held the most relevance to my situation is the long-term refit sailor model, whose vessels are littered all over boat yards while their owners chip away via weekend projects for years, sometimes decades, planning on setting out "someday."
 
-{{< figure src="boat_pee.png" caption="toilet not included" >}}
+{{< figure src="boat_pee.jpg" caption="toilet not included" >}}
 
 <a font-size="2px" href="https://www.youtube.com/watch?v=TId5jmWaJ-I" target="_BLANK"><sub>Source Video</sub></a>
 

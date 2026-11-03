@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Shrink staged images before they're committed (see bin/shrink-images).
+#
+# Enable once per clone:   git config core.hooksPath .githooks
+# Bypass for one commit:   git commit --no-verify
+set -euo pipefail
+
+root="$(git rev-parse --show-toplevel)"
+cd "$root"
+
+shopt -s nocasematch
+images=()
+while IFS= read -r -d '' f; do
+  case "$f" in
+    *.jpg|*.jpeg|*.png|*.webp|*.heic|*.heif) images+=("$f") ;;
+  esac
+done < <(git diff --cached --name-only -z --diff-filter=ACMR)
+
+[[ ${#images[@]} -eq 0 ]] && exit 0
+
+if ! command -v uv >/dev/null 2>&1; then
+  echo "pre-commit: uv is required to shrink images (brew install uv)," >&2
+  echo "or bypass with: git commit --no-verify" >&2
+  exit 1
+fi
+
+# The hook rewrites the working-tree file and re-stages it, so a file with
+# unstaged edits on top of staged ones would have those edits swept in.
+for f in "${images[@]}"; do
+  if ! git diff --quiet -- "$f"; then
+    echo "pre-commit: $f has unstaged changes; stage or discard them first." >&2
+    exit 1
+  fi
+done
+
+echo "pre-commit: checking ${#images[@]} staged image(s)..."
+status=0
+bin/shrink-images "${images[@]}" || status=$?
+# Re-stage whatever was shrunk even if we're blocking the commit, so the
+# retry doesn't trip the unstaged-changes check above. (Files --convert
+# renamed away are already handled; skip paths that no longer exist.)
+for f in "${images[@]}"; do
+  [[ -e "$f" ]] && git add -- "$f"
+done
+exit "$status"

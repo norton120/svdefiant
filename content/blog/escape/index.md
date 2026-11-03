@@ -43,7 +43,7 @@ By Friday afternoon the list was now very short:
 
 To tackle the name board I first needed to deal with the dinghy situation (so I could use the dinghy to get to it). My plan was to lower the dinghy into the water, swim in and pull the drain plug, secure the cover, and hoist it back up. This is where things got weirdly Truman-show-esque. 
 
-{{< figure src="jellys.png" caption="This is not their home planet. No way." >}}
+{{< figure src="jellys.jpg" caption="This is not their home planet. No way." >}}
 
 _Defiant_ was suddenly surrounded by hundreds of jellyfish. I have no idea why. No other boat in the marina had this weird fan base at the time :shrug:. So I improvised. The dinghy pulled out vertical, draining enough so I could beach it on the dock. Then back into the water it went, and I was now standing on my soft-bottom tender while I screwed, taped and epoxied the board back into place. The whole thing felt like a live action game of Super Mario, my ungraceful self balancing on a wobbly plank across a tiny inflatable boat while angry sting-monsters pulsed in the water below me. 
 
@@ -57,7 +57,7 @@ I started looking for a bail-out spot, figured I'd drop an anchor and wait for e
 
 An hour passed, then another. I forced myself to eat an orange, which was weirdly enough to settle my body without making me seasick. Then, right below the Potomac, there was suddenly wind! Not a ton, 7kts on a beam reach, but I'd take it. Our steady speed increased to 3.9kts, and the sail pressure grounded the boat enough to breathe. The swell died down, and by 4pm we were making 5kts with an 8pm ETA at the anchorage. The clouds parted, the sun burned warm on us. Bash moved from his spot cowering in the v-berth pillow mound to splayed out and sunning himself on the leeward gunnel. Jim Carrey could not have imagined a more cinematically triumphant moment. 
 
-{{< figure src="sail-sun.png" caption="eventually the wind blows" >}}
+{{< figure src="sail-sun.jpg" caption="eventually the wind blows" >}}
 
  **We are now underway**. I think I may start publishing a separate captain's log for the _Defiant_ journey stuff, and reserve posts here for things technical, uniquely eventful, or otherwise significant outside of normal sailing. Joshua Slocum's _Sailing Alone Around The World_ is a classic book, but a _lot_ of it is the good Captain describing and re-describing weather. Wind is good, too much wind is bad, big seas are scary - we get it. But that, on repeat, doesn't make for overly engaging reading in my opinion. So I'll try to break things up. 
 

@@ -1,18 +1,18 @@
 ---
 title: "Why Split Power?"
 summary: "The pros and cons of dual isolated power systems onboard"
-cardimage: "power-bank.png"
+cardimage: "power-bank.jpg"
 date: 2026-05-17
 draft: false
 ---
 
 Long ago, _Defiant_ began her life with a pair of lead-acid deep cycle batteries. Even liveaboard electrical consumption was pretty trivial in 1989 - there were no laptops or phones constantly drinking juice, no AIS or Starlink. She didn't have autohelm or an electric windlass from the factory - so power needs more closely resembled a big car than a small floating house. As was the standard setup then, you had two batteries (main and backup) that started the motor, powered all the boat's energy needs, and recharged from the alternator. 
 
-{{< figure src="stock.png" caption="standard 2 battery lead acid setup from the 1980's" >}}
+{{< figure src="stock.jpg" caption="standard 2 battery lead acid setup from the 1980's" >}}
 
 When I inherited _Defiant_ the setup had shifted to a set of three carbon foam firefly batteries. These were still do-all power blocks that started the motor, supplied all the boat's systems, and charged from the alternator while the motor was running. But now the system was expanded to several solar panels and a wind generator that also charged these batteries (sort of). Carbon foam handles extreme temperatures better than lithium and discharges deeper than traditional lead acid, but the batteries are insanely heavy and bulky, and to get the power wall I needed half the cabin would have needed to be battery bricks. So I converted to Lithium.
 
-{{< figure src="firefly.png" caption="these things were huge pigs. I fit 900ah of lithium in nearly the same space" >}}
+{{< figure src="firefly.jpg" caption="these things were huge pigs. I fit 900ah of lithium in nearly the same space" >}}
 
 One of the key changes I made was splitting the electrical into two completely independent systems:
 
@@ -28,7 +28,7 @@ These systems have zero crossover.
 
 A diesel engine depleting a 100ah battery when the only load* is the starter is very unlikely. Even with a blown alternator, the starter battery would cover dozens, maybe even hundreds of starts - plenty of juice to limp for repairs. Household loads, on the other hand, can be both massive and mistake-prone. _Defiant_ could be crippled with her house power completely spent - no lights, running water, chart plotter or instruments - but still fire up the motor and limp into port without issue. On the flip side, I could find myself stranded with a dead starter battery even though I still have enough excess house juice for a week long *Murder, She Wrote* marathon.
 
-{{< figure src="power-bank.png" caption="My home bank now lives inside completely independent from the lead acid starter under the quarterberth" >}}
+{{< figure src="power-bank.jpg" caption="My home bank now lives inside completely independent from the lead acid starter under the quarterberth" >}}
 
 ### Lithium ≠ Lead Acid
 

@@ -8,11 +8,11 @@ date: 2026-07-01
 
 draft: false
 
-cardimage: "nameplate.png"
+cardimage: "nameplate.jpg"
 
 --- 
 
-{{< figure src="firefly.png" caption="Serenity Now" >}}
+{{< figure src="firefly.jpg" caption="Serenity Now" >}}
 
 
 
@@ -28,7 +28,7 @@ I sailed into Windmill Point the first week of June with high hopes. The trip do
 
 
 
-{{< figure src="sailing_back.png" caption="A little worse for wear, but Defiant was seeming ready to set sail" >}}
+{{< figure src="sailing_back.jpg" caption="A little worse for wear, but Defiant was seeming ready to set sail" >}}
 
 
 
@@ -78,7 +78,7 @@ The new HVAC guy's theory was that solder or atmospheric gunk had collected in t
 
 
 
-{{< figure src="icebox.png" caption="nice broken, not-cold icebox you got there" >}}
+{{< figure src="icebox.jpg" caption="nice broken, not-cold icebox you got there" >}}
 
 
 
@@ -96,7 +96,7 @@ I have gone over the mistake in my head a dozen times, and I still do not know h
 
 
 
-{{< figure src="furler.png" caption="brand new furler on the inside, minus sail" >}}
+{{< figure src="furler.jpg" caption="brand new furler on the inside, minus sail" >}}
 
 
 
@@ -112,7 +112,7 @@ The very last straw was this:
 
 
 
-{{< figure src="nameplate.png" caption="ah fuck right off" >}}
+{{< figure src="nameplate.jpg" caption="ah fuck right off" >}}
 
 
 

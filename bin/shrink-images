@@ -1,0 +1,307 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = ["pillow", "pillow-heif"]
+# ///
+"""shrink-images — keep committed images small.
+
+Used by .githooks/pre-commit on staged images, and runnable by hand.
+
+Default mode (in place, never renames):
+  * caps the long side at 1200px (2400px under content/gallery/, whose
+    lightbox serves up to 2400px)
+  * applies EXIF orientation, then strips EXIF (incl. GPS); keeps ICC
+  * re-encodes oversized JPEG/WebP at q85; re-saves PNG losslessly
+  * skips GIFs (animation) and SVGs
+
+Some files can't be fixed in place because the fix changes the extension:
+  * HEIC/HEIF (Hugo can't process them)
+  * photos saved as PNG (lossless PNG is ~5-10x larger than a q85 JPEG)
+These are reported and the command exits 1, unless --convert is given, in
+which case they become <stem>.jpg, references in the page bundle's .md
+files (or content/config, for assets/ and static/) are rewritten, and the
+changes are staged.
+
+Usage:
+  bin/shrink-images [--convert] [--dry-run] FILE...
+  bin/shrink-images [--convert] [--dry-run] --all     # every tracked image
+"""
+from __future__ import annotations
+
+import argparse
+import io
+import re
+import subprocess
+import sys
+from pathlib import Path
+
+from PIL import Image, ImageOps
+
+try:
+    import pillow_heif
+
+    pillow_heif.register_heif_opener()
+except ImportError:  # pragma: no cover
+    pass
+
+REPO = Path(__file__).resolve().parent.parent
+MAX_DIM = 1200
+GALLERY_MAX_DIM = 2400
+JPEG_QUALITY = 85
+# Re-encode a JPEG under the size cap only if it's heavier than this
+# (q85 photos land around 0.2-0.35 bytes/pixel).
+JPEG_MAX_BPP = 0.6
+# Photo-vs-graphic PNG heuristic, calibrated on this repo: screenshots and
+# diagrams compress <=3.3x better as PNG-vs-JPEG ratio; photos are >=4.5x.
+PHOTO_PNG_RATIO = 4.0
+PHOTO_PNG_MIN_BYTES = 100_000
+
+IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".heic", ".heif"}
+HEIC_EXTS = {".heic", ".heif"}
+REF_GLOBS = ("content/**/*.md", "config/**/*.yaml", "config/**/*.toml")
+
+
+def git(*args: str, check: bool = True) -> subprocess.CompletedProcess:
+    return subprocess.run(["git", "-C", str(REPO), *args], check=check,
+                          capture_output=True, text=True)
+
+
+def is_tracked(p: Path) -> bool:
+    return git("ls-files", "--error-unmatch", str(p), check=False).returncode == 0
+
+
+def max_dim_for(p: Path) -> int:
+    rel = p.resolve().relative_to(REPO).as_posix()
+    return GALLERY_MAX_DIM if rel.startswith("content/gallery/") else MAX_DIM
+
+
+def human(n: int) -> str:
+    return f"{n / 1024 / 1024:.1f}MB" if n >= 1024 * 1024 else f"{n // 1024}KB"
+
+
+def has_alpha(im: Image.Image) -> bool:
+    if im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info):
+        return im.convert("RGBA").getchannel("A").getextrema()[0] < 255
+    return False
+
+
+def to_rgb(im: Image.Image) -> Image.Image:
+    if im.mode in ("RGBA", "LA", "P"):
+        im = im.convert("RGBA")
+        bg = Image.new("RGB", im.size, (255, 255, 255))
+        bg.paste(im, mask=im.getchannel("A"))
+        return bg
+    return im.convert("RGB") if im.mode != "RGB" else im
+
+
+def jpeg_bytes(im: Image.Image, icc: bytes | None) -> bytes:
+    buf = io.BytesIO()
+    kw = {"icc_profile": icc} if icc else {}
+    to_rgb(im).save(buf, "JPEG", quality=JPEG_QUALITY, optimize=True,
+                    progressive=True, **kw)
+    return buf.getvalue()
+
+
+def load(p: Path) -> tuple[Image.Image, bool, bool]:
+    """Open, apply EXIF orientation, cap size. Returns (image, rotated, resized)."""
+    im = Image.open(p)
+    im.load()
+    exif = im.getexif()
+    had_exif = bool(im.info.get("exif")) or bool(exif)
+    rotated = exif.get(0x0112, 1) != 1
+    icc = im.info.get("icc_profile")
+    im = ImageOps.exif_transpose(im)
+    if icc:
+        im.info["icc_profile"] = icc
+    limit = max_dim_for(p)
+    resized = max(im.size) > limit
+    was_palette = im.mode == "P"
+    if resized:
+        if im.mode == "P":
+            im = im.convert("RGBA")
+        im.thumbnail((limit, limit), Image.LANCZOS)
+    im.info["_had_exif"] = had_exif
+    im.info["_was_palette"] = was_palette
+    return im, rotated, resized
+
+
+def needs_conversion(p: Path) -> str | None:
+    ext = p.suffix.lower()
+    if ext in HEIC_EXTS:
+        return "HEIC"
+    if ext != ".png":
+        return None
+    size = p.stat().st_size
+    if size < PHOTO_PNG_MIN_BYTES:
+        return None
+    im = Image.open(p)
+    if has_alpha(im):
+        return None
+    ratio = size / len(jpeg_bytes(im, None))
+    return f"photo saved as PNG ({ratio:.1f}x larger than JPEG)" if ratio >= PHOTO_PNG_RATIO else None
+
+
+def strip_jpeg_metadata(data: bytes) -> bytes:
+    """Losslessly drop EXIF/XMP (APP1), Photoshop/IPTC (APP13) and comments
+    from a JPEG, keeping everything else (incl. the APP2 ICC profile).
+    The compressed image data is copied byte-for-byte."""
+    if data[:2] != b"\xff\xd8":
+        raise ValueError("not a JPEG")
+    out, i = bytearray(b"\xff\xd8"), 2
+    while i + 4 <= len(data):
+        if data[i] != 0xFF:
+            raise ValueError("bad JPEG marker")
+        marker = data[i + 1]
+        if marker == 0xDA:  # start of scan: the rest is image data
+            out += data[i:]
+            return bytes(out)
+        seg_len = int.from_bytes(data[i + 2:i + 4], "big")
+        seg = data[i:i + 2 + seg_len]
+        if marker not in (0xE1, 0xED, 0xFE):
+            out += seg
+        i += 2 + seg_len
+    raise ValueError("truncated JPEG")
+
+
+def shrink_in_place(p: Path, dry: bool) -> tuple[str, int] | None:
+    """Returns (what was done, bytes saved), or None if untouched."""
+    ext = p.suffix.lower()
+    before = p.stat().st_size
+    im, rotated, resized = load(p)
+    icc = im.info.get("icc_profile")
+    had_exif = im.info.pop("_had_exif", False)
+
+    if ext in (".jpg", ".jpeg"):
+        bpp = before / (im.width * im.height)
+        if not (resized or rotated or had_exif or bpp > JPEG_MAX_BPP):
+            return None
+        if had_exif and not (resized or rotated or bpp > JPEG_MAX_BPP):
+            data = strip_jpeg_metadata(p.read_bytes())
+            if not dry:
+                p.write_bytes(data)
+            return "stripped EXIF (lossless)", before - len(data)
+        data = jpeg_bytes(im, icc)
+        must = resized or rotated or had_exif  # privacy/orientation even if not smaller
+    elif ext == ".webp":
+        if not (resized or rotated or had_exif):
+            return None
+        buf = io.BytesIO()
+        im.save(buf, "WEBP", quality=JPEG_QUALITY, method=6,
+                **({"icc_profile": icc} if icc else {}))
+        data, must = buf.getvalue(), True
+    elif ext == ".png":
+        clean = im.copy()
+        if im.info.get("_was_palette") and clean.mode != "P":
+            # resizing expanded the palette to RGBA; squash it back so a
+            # resized diagram doesn't come out several times larger
+            clean = clean.quantize(256, method=Image.Quantize.FASTOCTREE)
+        clean.info = {}
+        buf = io.BytesIO()
+        clean.save(buf, "PNG", optimize=True, **({"icc_profile": icc} if icc else {}))
+        data, must = buf.getvalue(), resized or rotated or had_exif
+    else:
+        return None
+
+    if not must and len(data) > before * 0.98:  # not worth a rewrite
+        return None
+    if not dry:
+        p.write_bytes(data)
+    what = ", ".join(w for w, on in (("resized", resized), ("rotated", rotated),
+                                     ("stripped EXIF", had_exif)) if on) or "recompressed"
+    return what, before - len(data)
+
+
+def find_refs(old: Path) -> list[Path]:
+    """Text files whose references to `old` should follow a rename."""
+    rel = old.resolve().relative_to(REPO)
+    if rel.parts[0] == "content":
+        return sorted(old.parent.glob("*.md"))
+    # assets/ and static/: anything in content/config may point at it, unless
+    # the referencing bundle has its own same-named file (which wins in Hugo).
+    out = []
+    for g in REF_GLOBS:
+        for f in REPO.glob(g):
+            if (f.parent / old.name).exists() and f.parent != old.parent:
+                continue
+            out.append(f)
+    return out
+
+
+def convert(p: Path, dry: bool) -> tuple[Path, int]:
+    new = p.with_suffix(".jpg")
+    if new.exists():
+        raise SystemExit(f"error: can't convert {p}: {new.name} already exists")
+    before = p.stat().st_size
+    im, _, _ = load(p)
+    data = jpeg_bytes(im, im.info.get("icc_profile"))
+    pat = re.compile(r"(?<![\w-])" + re.escape(p.name) + r"(?![\w.-])")
+    edited = []
+    for f in find_refs(p):
+        text = f.read_text()
+        new_text = pat.sub(new.name, text)
+        if new_text != text:
+            edited.append(f)
+            if not dry:
+                f.write_text(new_text)
+    if not dry:
+        tracked = is_tracked(p)
+        new.write_bytes(data)
+        if tracked:
+            git("rm", "-q", "--cached", str(p))
+        p.unlink()
+        git("add", str(new), *map(str, edited))
+    for f in edited:
+        print(f"    updated reference in {f.relative_to(REPO)}")
+    return new, before - len(data)
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("files", nargs="*", type=Path)
+    ap.add_argument("--all", action="store_true", help="process every tracked image")
+    ap.add_argument("--convert", action="store_true",
+                    help="convert HEIC / photo PNGs to .jpg and fix references")
+    ap.add_argument("--dry-run", action="store_true")
+    a = ap.parse_args()
+
+    if a.all:
+        files = [REPO / f for f in git("ls-files", "-z").stdout.split("\0") if f]
+    else:
+        files = [f.resolve() for f in a.files]
+    files = [f for f in files if f.suffix.lower() in IMAGE_EXTS and f.is_file()]
+
+    saved, blocked = 0, []
+    for p in files:
+        rel = p.relative_to(REPO)
+        reason = needs_conversion(p)
+        if reason:
+            if not a.convert:
+                blocked.append((rel, reason))
+                continue
+            new, s = convert(p, a.dry_run)
+            print(f"  converted {rel} -> {new.name}: -{human(s)}  ({reason})")
+            saved += s
+            continue
+        r = shrink_in_place(p, a.dry_run)
+        if r:
+            what, s = r
+            delta = f"-{human(s)}" if s >= 0 else f"+{human(-s)}"
+            print(f"  {rel}: {what}, {delta}")
+            saved += s
+
+    if saved:
+        print(f"Saved {human(saved)}{' (dry run)' if a.dry_run else ''}.")
+    if blocked:
+        print("\nThese need converting to .jpg (changes the filename):", file=sys.stderr)
+        for rel, reason in blocked:
+            print(f"  {rel}  — {reason}", file=sys.stderr)
+        print("\nRun:  bin/shrink-images --convert " +
+              " ".join(f"'{r}'" for r, _ in blocked), file=sys.stderr)
+        print("It renames them, rewrites references in the bundle's .md, and "
+              "stages the result.", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
