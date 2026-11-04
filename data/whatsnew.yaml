@@ -113,3 +113,8 @@ entries:
     url: "https://github.com/norton120/svdefiant/wiki/Vessel-Management-System"
     summary: "Migrated from Home Assistant to Signal K and OpenPlotter as the data hub."
     source: "wiki"
+  - date: "2026-11-04"
+    title: "Adventures Gallery Expansion"
+    url: "/gallery/adventures/"
+    summary: "Added 26 new adventure photos from the recent ICW journey and travels."
+    source: "gallery"
