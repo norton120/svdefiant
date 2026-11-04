@@ -62,11 +62,25 @@ for f in "${inputs[@]}"; do
   stem="${base%.*}"
   out="$dst/${stem}.jpg"
 
-  ffmpeg -y -loglevel error -i "$f" \
-    -vf "scale='min(${MAX_DIM},iw)':'min(${MAX_DIM},ih)':force_original_aspect_ratio=decrease" \
-    -map_metadata -1 \
-    -q:v "$QSCALE" \
-    "$out"
+  scale="scale='min(${MAX_DIM},iw)':'min(${MAX_DIM},ih)':force_original_aspect_ratio=decrease"
+
+  case "$base" in
+    *.[hH][eE][iI][cC]|*.[hH][eE][iI][fF])
+      # iPhone HEICs are tiled grids; ffmpeg reassembles them with an
+      # implicit complex filtergraph, which can't be combined with -vf.
+      # Decode (and auto-rotate) to PNG first, then scale/encode.
+      ffmpeg -loglevel error -i "$f" -map_metadata -1 -f image2pipe -c:v png - \
+        | ffmpeg -y -loglevel error -f png_pipe -i - \
+            -vf "$scale" -q:v "$QSCALE" "$out"
+      ;;
+    *)
+      ffmpeg -y -loglevel error -i "$f" \
+        -vf "$scale" \
+        -map_metadata -1 \
+        -q:v "$QSCALE" \
+        "$out"
+      ;;
+  esac
 
   count=$((count + 1))
   printf '\r  [%d/%d] %s' "$count" "$total" "$base"
