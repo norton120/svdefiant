@@ -3,7 +3,7 @@ title: "The ICW"
 date: 2026-11-03
 cardimage: "first-bridge.jpg"
 summary: "The race to nowhere"
-draft: false
+draft: true
 ---
 
 Sometimes things happen fast. August took Bash and I up the bay to St. Michaels, where _Defiant_ lost helm control (in the middle of the town entrance, no less). 
