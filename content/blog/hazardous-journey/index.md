@@ -21,7 +21,7 @@ Before leaving New Bern, _Defiant's_ standing rigging needs review by an adult. 
 
 ### ICW to Charleston, SC
 
-Continuing down the ICW to Charleston gives Bash and I a chance to take some of the inside path at a slower pace. We've been sprinting since we left Annapolis, so a week or  so bouncing along anchorages, checking out towns, and taking a few breaks along the way would be a nice change of pace. The Charleston leg will also give us a few places we need to tide-hop (timing our day so we catch high water across shallow stretches), and I didn't want to leave the ICW without having some experience playing that game. 
+Continuing down the ICW to Charleston gives Bash and I a chance to take some of the inside path at a slower pace. We've been sprinting since we left Annapolis, so a week or  so bouncing along anchorages, checking out towns, and taking a few breaks along the way would be a nice change. The Charleston leg will also give us a few places we need to tide-hop (timing our day so we catch high water across shallow stretches), and I didn't want to leave the ICW without having some experience playing that game. 
 
 ### Charleston Stage
 
@@ -47,19 +47,19 @@ Additional crew will be whatever it may be - I won't call extra hands a necessit
 
 ### On The Ball
 
-Once we are in St. Augustine, life slows _way_ down (and the plan resolution gets awful fuzzy from here, so take it with a grain of salt). Cosmetic projects (like the head refit and installing the hard top) can take priority. Maybe I'll finally get the damn bathroom faucet to stop leaking for good. It'll also be a good time to settle into the town a bit - take some trips on the motorcycle, spark some non-boat-related hobbies again, visit doctors and veterinarians and barbers and all the other routine things that get put aside on the water. I'll get Bash out for proper walks again, before he turns into a fuzzy Orson Wells. 
+Once we are in St. Augustine, life slows _way_ down (and the plan resolution gets awful fuzzy from here, so take it with a grain of salt). Cosmetic projects (like the head refit and installing the hard top) can take priority. Maybe I'll finally get the damn bathroom faucet to stop leaking for good. It'll also be a good time to settle into the town a bit - take some trips on the motorcycle, spark some non-boat-related hobbies again, visit doctors and veterinarians and barbers and all the other routine things that get put aside on the water. Bash will have regular, proper walks again, before he turns into a fuzzy Orson Wells. 
 
 ### On The Hard
 
-There is a well-known DIY boatyard about 20nm from St. Augustine, and late February seems like a good time to dig into much-needed refit work. _Defiant_ needs paint, and plumbing, and enormous amounts of brightwork. She has old thru hulls to be replaced and hardware to be rebedded. If I want her to be a better single-hand vessel then all lines need to be run to the cockpit. February to April of 2027 is admittedly a lifetime away from the dock here in New Bern; but from where I'm sitting that seems like the right time to get it done. 
+There is a well-known DIY boatyard about 20nm from St. Augustine, and late February seems like a good time to dig into much-needed refit work. _Defiant_ needs paint, and plumbing, and enormous amounts of brightwork. She has old thru hulls to be replaced and hardware to be rebedded. If I want her to be a better single-hand vessel then all lines need to be run to the cockpit. February => April '27 is admittedly a lifetime away from my current seat on the dock in New Bern; but from here, winter in Florida seems like the right time and place to get restorative work done. 
 
 ### Miami
 
-Once _Defiant_ is all shiny and new, it just makes sense to sail her to _Vice City_. A short offshore passage in April (or a string of bridge crossings inside) will get us to the city mooring fields for a few weeks - and that seems like a proper send-off for _Defiant's_ first year pilgrimage. 
+Once _Defiant_ is all shiny and new, it just makes sense to sail her to _Vice City_. An offshore passage in April (or a string of bridge crossings inside) will get us to the Miami mooring fields for a few weeks - a proper send-off for _Defiant's_ first year of pilgrimage. 
 
 ### Northward Bound
 
-Any sailing plan I might have for almost six months out is effectively a fairy tale. But it helps to have that far-off idea, just in case things actually work out the way you wanted them to. If by some miracle April finds Bash and I aboard a newly refitted _Defiant_, hanging on a Miami city mooring ball, it will be time to start plotting our course north. I have no idea if I'll favor outside passages or stick to the ICW in certain parts, I don't even know **what** I don't know at the moment. 
+Any sailing plan stretching half a year out is effectively a fairy tale; but it helps to have that far-off idea, just in case things actually work the way you intended. If by some miracle, April '27 finds Bash and I aboard a newly refitted _Defiant_ outside Miami, it will be time to start plotting our course north. I have no idea if I'll favor outside passages or stick to the ICW in certain parts by then, I don't even know **what** I don't know at the moment. 
 
 ### The Hazardous Journey
 
@@ -67,10 +67,12 @@ Any sailing plan I might have for almost six months out is effectively a fairy t
 > 
 > ~ Ernest Shackleton, maybe
 
-Yes I know that Shackleton most likely never ran that ad, and deconstructionists love the idea that yet another example of historic fortitude may be torn apart from the warm, safe cocoon of the present. Like most good quotes it does not matter if the source material is genuine - it matters that the message fits. 
+Yes, I am aware that Shackleton most likely never ran that ad, and deconstructionists love yet another example where historic fortitude may be torn apart from the warm, safe cocoon of the present. Like most good quotes it does not matter if the source material is genuine - it matters that the message fits. 
+
+This is a relatively tame endeavor in the grand scheme of things. Yes, most every single day offers genuine opportunities for participants to die - really die, not get their feelings hurt or get pwned in a video game. The risk is relatively contained and reasonably mitigated along the way; still, there is a great semantic distance between this experience and your average suburban weekend spent scouring Whole Foods for the most asymmetrical heritage squash that would be perfect in a fall table setting. 
 
 
 
-This is a relatively tame endeavor in the grand scheme of things. Yes, most every single day offers genuine opportunities for participants to die - really die, not get their feelings hurt or get pwned in a video game - but the risk is relatively contained and reasonably mitigated along the way. Still, there is a great semantic distance between this experience and your average suburban weekend spent scouring Whole Foods for the most asymmetrical heritage squash for your table setting. 
+Let's see how this journey goes. 
 
 
