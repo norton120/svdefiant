@@ -118,3 +118,8 @@ entries:
     url: "/gallery/adventures/"
     summary: "Added 26 new adventure photos from the recent ICW journey and travels."
     source: "gallery"
+  - date: "2026-11-22"
+    title: "The ICW"
+    url: "/blog/the-icw/"
+    summary: "A major voyage update with detailed sailing stories, technical challenges, and adventures down the Intracoastal Waterway with Bash."
+    source: "blog"
