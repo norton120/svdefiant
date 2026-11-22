@@ -123,3 +123,8 @@ entries:
     url: "/blog/the-icw/"
     summary: "A major voyage update with detailed sailing stories, technical challenges, and adventures down the Intracoastal Waterway with Bash."
     source: "blog"
+  - date: "2026-11-22"
+    title: "The ICW"
+    url: "/blog/the-icw/"
+    summary: "Defiant heads south for winter—join the adventure down the Intracoastal Waterway."
+    source: "blog"
