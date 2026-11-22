@@ -128,3 +128,8 @@ entries:
     url: "/blog/the-icw/"
     summary: "Defiant heads south for winter—join the adventure down the Intracoastal Waterway."
     source: "blog"
+  - date: "2026-11-22"
+    title: "The (Not So) Hazardous Journey"
+    url: "/blog/hazardous-journey/"
+    summary: "Plans for Defiant's voyage south from New Bern through Charleston to Miami over the next six months."
+    source: "blog"
