@@ -15,8 +15,6 @@ Limped into Annapolis on auto helm, then September to repair the steering, go ov
 
 October brought the Annapolis boat show, and immediately after... our voyage south began.
 
-
-
 ### Into the Meat Grinder
 
 For the first week the bay was brutal. A small craft advisory brought North winds between 20-30kt all week - plenty of sailboat rocket fuel headed in the right direction, but wind at odds with the sea that made for short, violent waves. The sea pounded _Defiant_ between a beam and broad reach, rolling her and tossing the cabin like a kid shaking Christmas presents to figure out what's inside. There was no way I could work at the laptop underway, and the exhausting conditions made it a fight to squeeze thirty miles out of each day. 
@@ -43,7 +41,7 @@ While underway I washed dishes and made pizza. I read most of an Ian Fleming nov
 
 <figure>
 
-    <video src="dishes.mov" controls/>
+<iframe src="https://www.youtube-nocookie.com/embed/RGXkEujMfhw" title="Dish rack" style="display:block;margin:0 auto;width:100%;max-width:360px;aspect-ratio:9/16;border:0;" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 <figcaption> the dish rack amazingly fits <i>exactly</i> between ledges. Go figure.</figcaption>
 
